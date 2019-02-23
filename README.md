@@ -23,22 +23,23 @@
 
 ## Usage
 
-### Manual
+#### Manual
 You can download and use `dist/jil.js`
 
-### NPM
+#### NPM
 Coming soon ...
 
 ---
+
 ## Dev Usage
 
-### Install
+#### Install
 ```
 npm install
 ```
  - clone this repository and run this command
 
-### Dev
+#### Dev
 ```
 npm run dev
 ```

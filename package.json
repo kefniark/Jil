@@ -1,15 +1,17 @@
 {
   "name": "jil",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "UI Framework for HTML5 Games",
+  "author": "kefniark@gmail.com",
+  "repository": "github:kefniark/jil",
+  "license": "MIT",
+  "keywords": [ "html5", "game", "game-development", "ui", "framework" ],
+  "main": "dist/jil.js",
   "scripts": {
     "build": "webpack --mode=production",
     "dev": "webpack-dev-server",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts'"
   },
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "fatina": "^2.1.0",
     "maquette": "^3.3.3"
