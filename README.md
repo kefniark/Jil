@@ -7,6 +7,8 @@ UI Framework for HTML5 Games:
 
 This is still a project in early development
 
+* [Demo](https://kefniark.github.io/jil/dist/samples/)
+
 ---
 
 ## Usage
