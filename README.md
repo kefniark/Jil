@@ -1,12 +1,21 @@
 # JIL - HTML5 Game UI
 
-UI Framework for HTML5 Games:
+![Logo](./logo.png)
+
+**UI Framework for HTML5 Games**:
  * Autoscale and centering
  * Vector positioning (`pivot`, `anchor`, `position`, `scale`, `rotation`)
- * Fast HTML/CSS based (Use CSS3 transform & Virtual dom)
+ * Fast HTML5/CSS3 (Use CSS3 transform & Virtual dom)
  * Tween integration (Provide an easy way to write animation)
+ * Layer system make it easy to organize UI
+ * Engine agnostic (Work with HTML canvas and dont interfer with 2D/3D Engine):
+   - Babylon.js
+   - Pixi
+   - Phaser
+   - Three.js
+   - ...
 
-This is still a project in early development
+> This is still a project in early development
 
 * [Demo](https://kefniark.github.io/jil/dist/samples/)
 
