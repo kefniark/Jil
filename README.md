@@ -4,6 +4,7 @@ UI Framework for HTML5 Games:
  * Autoscale and centering
  * Vector positioning (`pivot`, `anchor`, `position`, `scale`, `rotation`)
  * Fast HTML/CSS based (Use CSS3 transform & Virtual dom)
+ * Tween integration (Provide an easy way to write animation)
 
 This is still a project in early development
 
@@ -12,6 +13,15 @@ This is still a project in early development
 ---
 
 ## Usage
+
+### Manual
+You can download and use `dist/jil.js`
+
+### NPM
+Coming soon ...
+
+---
+## Dev Usage
 
 ### Install
 ```
