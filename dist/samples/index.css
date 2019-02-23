@@ -1,0 +1,49 @@
+body {
+	margin: 0px;
+	background-color: black !important;
+	overflow: hidden;
+}
+
+.scene {
+	position: absolute;
+	outline: none;
+	user-select: none;
+	pointer-events: all;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+.layer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.fader.layer {
+	background-color: black;
+}
+
+.scene button {
+	position: absolute;
+	margin-bottom: 1vw;
+	height: 5vw;
+	font-size: 2vw;
+	pointer-events: all;
+	backface-visibility: hidden;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.scene img {
+	position: absolute;
+	pointer-events: all;
+}
+
+.scene .text {
+	position: absolute;
+	font-size: 2vw;
+}
+
+.scene .panel {
+	position: absolute;
+	overflow: hidden;
+}

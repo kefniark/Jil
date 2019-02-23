@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <title>Panel</title>
+        <script src="../jil.js"></script>
+		<link rel="stylesheet" href="./index.css">
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                background-color: #000000;
+            }
+
+			#intro.scene {
+                background-color: #222222;
+            }
+
+			#panelLeft {
+				border: 1px solid #5555DD;
+			}
+
+			#panelRight {
+				border: 1px solid #DD5555;
+			}
+
+			#panelCenter {
+				border: 1px solid #55DD55;
+			}
+        </style>
+    </head>
+    <body>
+        <script>
+            window.scene.init();
+            var sceneIntro = window.scene.create("intro");
+			var layer = sceneIntro.createLayer("layer");
+
+			var panelCenter = layer.createPanel("panelCenter");
+			panelCenter.anchor.set(0.5, 0.5);
+			panelCenter.pivot.set(0.5, 0.5);
+			panelCenter.size.set(0.65, 0.8);
+
+			var panelLeft = layer.createPanel("panelLeft");
+			panelLeft.size.set(0.25, 0.9);
+			panelLeft.position.set(0.01, 0.05);
+
+			var panelRight = layer.createPanel("panelRight");
+			panelRight.anchor.set(1, 0)
+			panelRight.pivot.set(1, 0)
+			panelRight.size.set(0.25, 0.9);
+			panelRight.position.set(-0.02, 0.05);
+
+			var woodTex = panelRight.createImage("woodTexture", "https://png.pngtree.com/thumb_back/fw800/back_pic/04/01/08/47580035e36232e.jpg");
+
+			var panelLeftClose = panelLeft.createButton("panelLeftClose", "<<");
+			panelLeftClose.anchor.set(0.5, 0.5);
+			panelLeftClose.pivot.set(0.5, 0.5);
+			panelLeftClose.size.set(0.2, 0.1);
+			panelLeftClose.onClick(() => {
+				panelLeft.moveX(-0.25);
+				panelLeftOpen.show();
+			})
+
+			var panelLeftOpen = layer.createButton("panelLeftOpen", ">>");
+			panelLeftOpen.size.set(0.05, 0.05);
+			panelLeftOpen.position.set(0.01, 0.05);
+			panelLeftOpen.onClick(() => {
+				panelLeft.moveX(0.01);
+				panelLeftOpen.hide();
+			});
+			panelLeftOpen.opacity = 0;
+
+
+			var panelRightClose = panelRight.createButton("panelRightClose", ">>");
+			panelRightClose.anchor.set(0.5, 0.5);
+			panelRightClose.pivot.set(0.5, 0.5);
+			panelRightClose.size.set(0.2, 0.1);
+			panelRightClose.onClick(() => {
+				panelRight.moveX(0.25);
+				panelRightOpen.show();
+			})
+
+			var panelRightOpen = layer.createButton("panelRightOpen", "<<");
+			panelRightOpen.size.set(0.05, 0.05);
+			panelRightOpen.anchor.set(1, 0);
+			panelRightOpen.pivot.set(1, 0);
+			panelRightOpen.position.set(-0.02, 0.05);
+			panelRightOpen.onClick(() => {
+				panelRight.moveX(-0.02);
+				panelRightOpen.hide();
+			});
+			panelRightOpen.opacity = 0;
+
+			var imgTopLeft = panelLeft.createImage("imgTopLeft", "http://endlessicons.com/wp-content/uploads/2012/09/arrow-icon-614x460.png");
+			imgTopLeft.size.set(0.2, 0.1);
+			imgTopLeft.scale.set(-1, 1);
+			imgTopLeft.position.set(0.2, 0);
+
+			var imgTopRight = panelLeft.createImage("imgTopLeft", "http://endlessicons.com/wp-content/uploads/2012/09/arrow-icon-614x460.png");
+			imgTopRight.anchor.set(1, 0);
+			imgTopRight.pivot.set(1, 0);
+			imgTopRight.size.set(0.2, 0.1);
+
+			var imgBottomRight = panelLeft.createImage("imgTopLeft", "http://endlessicons.com/wp-content/uploads/2012/09/arrow-icon-614x460.png");
+			imgBottomRight.anchor.set(1, 1);
+			imgBottomRight.pivot.set(1, 1);
+			imgBottomRight.size.set(0.2, 0.1);
+			imgBottomRight.position.set(0.2, 0);
+			imgBottomRight.rotation = 90;
+
+			var imgBunny = panelCenter.createImage("imageBunny", {
+				src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png",
+				objectFit: 'contain',
+				imageRendering: 'pixelated'
+			});
+			imgBunny.anchor.set(0.5, 0.5);
+			imgBunny.pivot.set(0.5, 0.5);
+			imgBunny.onClick(() => {
+				imgBunny.scale.set(Math.random() + 0.5, Math.random() + 0.5);
+			});
+
+			window.scene.use("intro");
+        </script>
+    </body>
+</html>
