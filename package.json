@@ -15,11 +15,13 @@
   "main": "dist/jil.js",
   "scripts": {
     "build": "webpack --mode=production",
+    "definition": "dts-generator --project . --out dist/jil.d.ts",
     "dev": "webpack-dev-server",
     "docs-expose": "http-server ./dist/docs -p 8080 -c-1",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts'"
   },
   "dependencies": {
+    "dts-generator": "^3.0.0",
     "fatina": "^2.1.0",
     "maquette": "^3.3.3"
   },
