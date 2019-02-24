@@ -33,7 +33,9 @@
 You can download and use `dist/jil.js`
 
 #### NPM
-Coming soon ...
+```
+npm install jil
+```
 
 ---
 
@@ -50,3 +52,12 @@ npm install
 npm run dev
 ```
  - this will start a dev server on http://localhost:8080
+
+#### Build
+```
+npm run build
+```
+ - this will update the `dist` folder
+    - code
+    - documentation
+    - typescript definition file `jil.d.ts`
