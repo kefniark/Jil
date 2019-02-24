@@ -40,7 +40,6 @@ const sceneList: Scene[] = [];
 	},
 
 	create (id: string) {
-		console.log('create', id);
 		scenes[id] = new Scene(id, this.projector);
 		sceneList.push(scenes[id]);
 		this.projector.scheduleRender();
@@ -48,7 +47,6 @@ const sceneList: Scene[] = [];
 	},
 
 	use (id: string) {
-		console.log('use', id);
 		if (this.current === scenes[id]) return;
 
 		FadeInOut(this.current, scenes[id]);

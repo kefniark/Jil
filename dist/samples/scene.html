@@ -33,6 +33,8 @@
 		var introScene = window.scene.create("intro");
 		var introLayer = introScene.createLayer("introLayer");
 
+		introLayer.createImage("background", "https://hdqwalls.com/download/gradient-geometry-background-abstract-lu-1280x720.jpg");
+
 		var scaleBtn = introLayer.createImage("scaleLogo", "https://cdn3.iconfinder.com/data/icons/interface/100/fullscreen-128.png");
 		scaleBtn.pivot.set(1, 0);
 		scaleBtn.anchor.set(1, 0);
@@ -51,14 +53,15 @@
 		var introLogo = introLayer.createImage("introLogo", "https://seravo.fi/wp-content/uploads/2013/12/HTML5logo.png");
 		introLogo.pivot.set(0.5, 0.5);
 		introLogo.anchor.set(0.5, 0.5);
-		introLogo.size.set(0.25, 0.25);
-		introLogo.position.set(0, -0.15);
+		introLogo.sizePx.set(512, 512);
+		introLogo.positionPx.set(0, -108);
+		introLogo.moveY(-0.1, 2500).yoyo(250);
 
 		var introBtn = introLayer.createButton("introBtn", "Next");
 		introBtn.pivot.set(0.5, 0.5);
 		introBtn.anchor.set(0.5, 0.5);
 		introBtn.size.set(0.35, 0.25);
-		introBtn.position.set(0, 0.2);
+		introBtn.position.set(0, 0.35);
 		introBtn.onClick(() => window.scene.use('menu'));
 
 		var introText = introLayer.createText("sceneText", {
@@ -75,6 +78,8 @@
 
 		var menuScene = window.scene.create("menu");
 		var menuLayer = menuScene.createLayer("menuLayer");
+
+		menuLayer.createImage("backgroundMenu", "https://wallpapersite.com/images/pages/pic_w/901.jpg");
 
 		var menuBtn = menuLayer.createButton("menuBtn", "Back");
 		menuBtn.pivot.set(0, 0);

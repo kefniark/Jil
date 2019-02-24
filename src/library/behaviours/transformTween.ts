@@ -7,11 +7,8 @@ export class TransformTween {
 	private fadeTween: Fatina.ITween | undefined;
 
 	private _moveTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		// console.log('Create MoveTween', this, data, duration, autostart, autokill);
 		const self = this as any;
 		const tween = Fatina.tween(self.position)
-			// .onStart(() => console.log('move start', self.position))
-			// .onComplete(() => console.log('move complete', self.position))
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 
@@ -40,11 +37,8 @@ export class TransformTween {
 	}
 
 	private _fadeTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		// console.log('Create FadeTween', this, data, duration, autostart, autokill);
 		const self = this as any;
 		const tween = Fatina.tween(this)
-			// .onStart(() => console.log('fade start', self.opacity))
-			// .onComplete(() => console.log('fade complete', self.opacity))
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 
@@ -68,11 +62,8 @@ export class TransformTween {
 	}
 
 	private _rotateTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		// console.log('Create FadeTween', this, data, duration, autostart, autokill);
 		const self = this as any;
 		const tween = Fatina.tween(this)
-			// .onStart(() => console.log('fade start', self.opacity))
-			// .onComplete(() => console.log('fade complete', self.opacity))
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 

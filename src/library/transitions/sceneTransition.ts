@@ -15,7 +15,6 @@ export function FadeInOut (sceneSrc: Scene | undefined, SceneDst: Scene) {
 	} else {
 		sequence.appendInterval(500);
 	}
-	sequence.appendCallback(() => console.log('Scene Transition Middle', sceneSrc, SceneDst));
 	const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader') as Layer;
 	faderDst.opacity = 1;
 	sequence.appendCallback(() => SceneDst.enter());

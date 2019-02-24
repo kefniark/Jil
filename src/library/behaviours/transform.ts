@@ -7,7 +7,9 @@ export class Transform {
 	public anchor: Vector2 = undefined as any;
 	public pivot: Vector2 = undefined as any;
 	public position: Vector2 = undefined as any;
+	public positionPx: Vector2 = undefined as any;
 	public size: Vector2 = undefined as any;
+	public sizePx: Vector2 = undefined as any;
 	public scale: Vector2 = undefined as any;
 	public opacity = 1;
 	public rotation = 0;
@@ -25,12 +27,39 @@ export class Transform {
 				return true;
 			}
 		};
+		const resolution = { x: 1280, y: 720 };
+		const handlerPos = {
+			get: (obj, prop) => {
+				if (prop !== 'x' && prop !== 'y') return obj[prop];
+				return self.position[prop] * resolution[prop];
+			},
+			set: (obj, prop, value) => {
+				if (prop !== 'x' && prop !== 'y') return obj[prop] = value;
+				else self.position[prop] = value / resolution[prop];
+				return true;
+			}
+		};
+		// tslint:disable:no-console
+		const handlerSize = {
+			get: (obj, prop) => {
+				if (prop !== 'x' && prop !== 'y') return obj[prop];
+				return self.size[prop] * resolution[prop];
+			},
+			set: (obj, prop, value) => {
+				if (prop !== 'x' && prop !== 'y') return obj[prop] = value;
+				else self.size[prop] = value / resolution[prop];
+				return true;
+			}
+		};
 		this.enable = true;
 		this.anchor = new Proxy(new Vector2(), handler);
 		this.pivot = new Proxy(new Vector2(), handler);
 		this.position = new Proxy(new Vector2(), handler);
+		this.positionPx = new Proxy(new Vector2(), handlerPos);
 		this.size = new Proxy(new Vector2(1, 1), handler);
+		this.sizePx = new Proxy(new Vector2(), handlerSize);
 		this.scale = new Proxy(new Vector2(1, 1), handler);
+
 		this.opacity = 1;
 		this.rotation = 0;
 	}

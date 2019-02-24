@@ -26,17 +26,13 @@ export class Node {
 		this._childrens = [];
 		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
 		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();
-		// tslint:disable:no-console
-		console.log('resetTransform', this.id, this.createEvent, this.destroyEvent);
 	}
 
 	protected handlerAfterCreate () {
-		console.log('handlerAfterCreate', this.id, this.createEvent);
 		if (this.createEvent) this.createEvent.post();
 	}
 
 	protected handleAfterRemoved () {
-		console.log('handleAfterRemoved', this.id, this.destroyEvent);
 		if (this.destroyEvent) this.destroyEvent.post();
 	}
 
@@ -55,8 +51,6 @@ export class Node {
 
 	public removeChild (element: Node) {
 		const i = this._childrens.indexOf(element);
-		// tslint:disable:no-console
-		console.log('remove child', element, i);
 		if (i !== -1) {
 			this._childrens.splice(i, 1);
 		}
@@ -64,7 +58,6 @@ export class Node {
 	}
 
 	public destroy () {
-		console.log('destroy', this.id, this._parent);
 		if (this._parent) this._parent.removeChild(this);
 	}
 

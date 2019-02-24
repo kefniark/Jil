@@ -30,12 +30,15 @@ body {
 	font-size: 32px;
 	pointer-events: all;
 	backface-visibility: hidden;
+	cursor: pointer;
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 .scene img {
 	position: absolute;
 	pointer-events: all;
+	user-select: none;
+	-webkit-user-drag: none;
 }
 
 .scene .text {
