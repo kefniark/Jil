@@ -47,3 +47,8 @@ body {
 	position: absolute;
 	overflow: hidden;
 }
+
+.scene .canvas {
+	position: absolute;
+	pointer-events: all;
+}

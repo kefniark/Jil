@@ -1,4 +1,5 @@
 import { h, VNode, Projector } from 'maquette';
+import { SyncEvent } from 'ts-events';
 
 export class Node {
 	public id?: string;
@@ -6,8 +7,33 @@ export class Node {
 	public _parent?: Node;
 	public _childrens: Node[] = [];
 
+	private createEvent: SyncEvent<void> | undefined;
+	private destroyEvent: SyncEvent<void> | undefined;
+
 	public resetTransform () {
 		this._childrens = [];
+		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
+		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();
+		// tslint:disable:no-console
+		console.log('resetTransform', this.id, this.createEvent, this.destroyEvent);
+	}
+
+	protected handlerAfterCreate () {
+		console.log('handlerAfterCreate', this.id, this.createEvent);
+		if (this.createEvent) this.createEvent.post();
+	}
+
+	protected handleAfterRemoved () {
+		console.log('handleAfterRemoved', this.id, this.destroyEvent);
+		if (this.destroyEvent) this.destroyEvent.post();
+	}
+
+	public onLoad (cb: () => void) {
+		if (this.createEvent) this.createEvent.attach(cb);
+	}
+
+	public onDestroy(cb: () => void) {
+		if (this.destroyEvent) this.destroyEvent.attach(cb);
 	}
 
 	public addChild (element: Node) {

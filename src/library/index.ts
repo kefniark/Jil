@@ -4,18 +4,23 @@ import { Button } from './components/button';
 import { Panel } from './components/panel';
 import { Image } from './components/image';
 import { Text } from './components/text';
-export { Scene, Button, Panel, Layer, Text };
+import { Canvas } from './components/canvas';
 
 import { register } from './behaviours/factory';
 import { createProjector, h } from 'maquette';
 import { FadeInOut } from './transitions/sceneTransition';
 import * as Fatina from 'fatina';
 
+// export class
+export { Scene, Button, Panel, Layer, Text, Canvas };
+
+// register to factory
 register('button', Button);
 register('panel', Panel);
 register('layer', Layer);
 register('image', Image);
 register('text', Text);
+register('canvas', Canvas);
 
 // tslint:disable:no-console
 const scenes: {[id: string]: Scene} = {};

@@ -31,6 +31,7 @@ export class Layer {
 	public createButton = (id: string, params: string | any) => this.create('button', id, params) as Node;
 	public createImage = (id: string, params: string | any) => this.create('image', id, params) as Node;
 	public createText = (id: string, params: string | any) => this.create('text', id, params) as Node;
+	public createCanvas = (id: string, params: string | any) => this.create('canvas', id, params) as Node;
 
 	private resizeHandler () {
 		this.refresh();

@@ -1,42 +1,52 @@
 <html>
-    <head>
-        <title>Sample</title>
-        <style>
-			body {
-				margin: 0px;
-				padding: 0px;
-			}
 
-            ul {
-                position: absolute;
-				margin: 0px;
-				padding: 0px;
-				list-style-type: none;
-            }
+<head>
+    <title>Sample</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
 
-            ul li {
-                float: left;
-				margin: 0px;
-				padding: 10px;
-            }
+        ul {
+            position: absolute;
+            margin: 0px;
+            padding: 0px;
+            list-style-type: none;
+        }
 
-            iframe {
-                position: absolute;
-                border: 0px;
-                left: 1vw;
-                top: 40px;
-                width: 98vw;
-                height: calc(100vh - 45px);
-                padding: 0px;
-                margin: 0px;
-            }
-        </style>
-    </head>
-    <body>
-        <ul>
-            <li><a href="./scene.html" target="frame">Scene Manager</a></li>
-			<li><a href="./panel.html" target="frame">Panel</a></li>
-        </ul>
-        <iframe id="frame" name="frame" src="./scene.html"></frame>
-    <script type="text/javascript" src="../jil.js"></script></body>
+        ul li {
+            float: left;
+            margin: 0px;
+            padding: 10px;
+        }
+
+        ul li a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        iframe {
+            position: absolute;
+            border: 0px;
+            left: 1vw;
+            top: 40px;
+            width: 98vw;
+            height: calc(100vh - 45px);
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><a href="./scene.html" target="frame">Scene Manager</a></li>
+        <li><a href="./panel.html" target="frame">Panel</a></li>
+        <li><a href="./babylon.html" target="frame">Babylon</a></li>
+        <li><a href="./pixi.html" target="frame">Pixi</a></li>
+    </ul>
+    <iframe id="frame" name="frame" src="./scene.html"></frame>
+<script type="text/javascript" src="../jil.js"></script></body>
+
 </html>

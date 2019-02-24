@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <title>Panel</title>
+    <script src="../jil.js"></script>
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+
+        #panelLeft {
+            border: 1px solid #5555DD;
+        }
+
+        #panelRight {
+            border: 1px solid #DD5555;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function initBabylonScene() {
+            var canvas = document.getElementById("renderCanvas");
+            console.log('initBabylonScene', canvas)
+            var engine = new BABYLON.Engine(canvas, true);
+
+            /******* Add the create scene function ******/
+            var createScene = function () {
+
+                // Create the scene space
+                var scene = new BABYLON.Scene(engine);
+
+                // This creates and positions a free camera (non-mesh)
+                var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+                camera.setTarget(BABYLON.Vector3.Zero());
+                camera.attachControl(canvas, true);
+
+                // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+                var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+                light.intensity = 0.7;
+
+                // Add and manipulate meshes in the scene
+                var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+                sphere.position.y = 1;
+                var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+
+                return scene;
+            };
+            /******* End of the create scene function ******/
+
+            var scene = createScene(); //Call the createScene function
+
+            // Register a render loop to repeatedly render the scene
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+        }
+    </script>
+    <script>
+        window.scene.init();
+        var sceneIntro = window.scene.create("intro");
+
+        var layer = sceneIntro.createLayer("gamelayer");
+        var gameCanvas = layer.createCanvas("renderCanvas");
+        gameCanvas.onLoad(initBabylonScene);
+
+        var uilayer = sceneIntro.createLayer("uilayer");
+
+        var panelLeft = uilayer.createPanel("panelLeft");
+        panelLeft.size.set(0.25, 0.9);
+        panelLeft.position.set(0.01, 0.05);
+
+        var panelRight = uilayer.createPanel("panelRight");
+        panelRight.anchor.set(1, 0);
+        panelRight.pivot.set(1, 0);
+        panelRight.size.set(0.25, 0.9);
+        panelRight.position.set(-0.02, 0.05);
+
+        var woodTex = panelLeft.createImage("woodTexture", "https://png.pngtree.com/thumb_back/fw800/back_pic/04/01/08/47580035e36232e.jpg");
+
+        window.scene.use("intro");
+    </script>
+</body>
+
+</html>

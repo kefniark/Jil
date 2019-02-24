@@ -5,7 +5,13 @@
   "author": "kefniark@gmail.com",
   "repository": "github:kefniark/jil",
   "license": "MIT",
-  "keywords": [ "html5", "game", "game-development", "ui", "framework" ],
+  "keywords": [
+    "html5",
+    "game",
+    "game-development",
+    "ui",
+    "framework"
+  ],
   "main": "dist/jil.js",
   "scripts": {
     "build": "webpack --mode=production",
@@ -13,6 +19,7 @@
     "lint": "tslint --project tsconfig.json 'src/**/*.ts'"
   },
   "dependencies": {
+    "basic": "^2.0.3",
     "fatina": "^2.1.0",
     "maquette": "^3.3.3"
   },
