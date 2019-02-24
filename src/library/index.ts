@@ -23,7 +23,13 @@ register('text', Text);
 register('canvas', Canvas);
 
 // tslint:disable:no-console
+/**
+ * @ignore
+ */
 const scenes: {[id: string]: Scene} = {};
+/**
+ * @ignore
+ */
 const sceneList: Scene[] = [];
 (window as any).scene = {
 	init () {

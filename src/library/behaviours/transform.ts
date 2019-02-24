@@ -12,6 +12,9 @@ export class Transform {
 	public opacity = 1;
 	public rotation = 0;
 
+	/**
+	 * @ignore
+	 */
 	public resetStyle () {
 		const self = this as any;
 		const handler = {
@@ -32,6 +35,9 @@ export class Transform {
 		this.rotation = 0;
 	}
 
+	/**
+	 * @ignore
+	 */
 	public getStyle () {
 		const x = ((this.anchor.x / this.size.x) - this.pivot.x + (this.position.x / this.size.x)) * 100;
 		const y = ((this.anchor.y / this.size.y) - this.pivot.y + (this.position.y / this.size.y)) * 100;

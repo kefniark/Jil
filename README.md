@@ -19,7 +19,11 @@
 >
 > I plan later, to make a small editor to design scene UI and export them in `*.json`
 
-* [Demo](https://kefniark.github.io/jil/dist/samples/)
+---
+
+## Links
+* [**Demo**](https://kefniark.github.io/jil/dist/samples/)
+* [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
 
 ---
 

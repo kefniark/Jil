@@ -10,12 +10,22 @@ import { Vector2 } from '../helpers/vector2';
 export interface Scene extends Node, Transform, Factory { }
 
 export class Scene {
+	/**
+	 * @ignore
+	 */
 	@use(Node, Transform, Factory) public this: any;
 
+	/**
+	 * Game Resolution (need to be remove)
+	 * @deprecated
+	 *
+	 * @type {Vector2}
+	 * @memberof Scene
+	 */
 	public resolution: Vector2;
 
-	public enterEvent: SyncEvent<void>;
-	public leaveEvent: SyncEvent<void>;
+	private enterEvent: SyncEvent<void>;
+	private leaveEvent: SyncEvent<void>;
 
 	constructor (id: string, projector: Projector) {
 		this.id = id;
@@ -28,6 +38,15 @@ export class Scene {
 		this.enable = false;
 	}
 
+	/**
+	 * Enter the scene
+	 *  - Make it visible
+	 *  - Trigger events
+	 *  - Refresh UI
+	 *
+	 * @returns
+	 * @memberof Scene
+	 */
 	public enter () {
 		if (this.enable) return;
 		this.enable = true;
@@ -35,6 +54,15 @@ export class Scene {
 		this.refresh();
 	}
 
+	/**
+	 * Leave the scene
+	 *  - Hide it
+	 *  - Trigger events
+	 *  - Refresh UI
+	 *
+	 * @returns
+	 * @memberof Scene
+	 */
 	public leave () {
 		if (!this.enable) return;
 		this.enable = false;
@@ -42,8 +70,21 @@ export class Scene {
 		this.refresh();
 	}
 
+	/**
+	 * Create a new Layer in this scene
+	 *
+	 * @param id ID of the new layer (need to be unique)
+	 * @memberof Scene
+	 */
 	public createLayer = (id: string, classname?: string) => this.create('layer', id, classname) as Node;
 
+	/**
+	 * Render the HTML
+	 * @ignore
+	 *
+	 * @returns {VNode}
+	 * @memberof Scene
+	 */
 	public render (): VNode {
 		const styles = {} as any;
 		styles.display = this.enable ? 'block' : 'none';

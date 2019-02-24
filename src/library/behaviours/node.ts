@@ -3,13 +3,25 @@ import { SyncEvent } from 'ts-events';
 
 export class Node {
 	public id?: string;
+	/**
+	 * @ignore
+	 */
 	public _projector?: Projector;
+	/**
+	 * @ignore
+	 */
 	public _parent?: Node;
+	/**
+	 * @ignore
+	 */
 	public _childrens: Node[] = [];
 
 	private createEvent: SyncEvent<void> | undefined;
 	private destroyEvent: SyncEvent<void> | undefined;
 
+	/**
+	 * @ignore
+	 */
 	public resetTransform () {
 		this._childrens = [];
 		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
@@ -32,7 +44,7 @@ export class Node {
 		if (this.createEvent) this.createEvent.attach(cb);
 	}
 
-	public onDestroy(cb: () => void) {
+	public onDestroy (cb: () => void) {
 		if (this.destroyEvent) this.destroyEvent.attach(cb);
 	}
 
@@ -60,6 +72,9 @@ export class Node {
 		if (this._projector) this._projector.scheduleRender();
 	}
 
+	/**
+	 * @ignore
+	 */
 	public render (): VNode {
 		return h('div', this._childrens.map((x) => x.render()));
 	}

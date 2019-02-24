@@ -4,6 +4,9 @@ export function register (type: string, className: any) {
 }
 
 export class Factory {
+	/**
+	 * @ignore
+	 */
 	public create (type: string, id: string, params?: any) {
 		if (!types[type]) {
 			throw new Error(`Cannot create type ${type}`);

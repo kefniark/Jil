@@ -2,8 +2,14 @@ import { SyncEvent } from 'ts-events';
 
 export class Clickable {
 
+	/**
+	 * @ignore
+	 */
 	private clickEvent?: SyncEvent<void>;
 
+	/**
+	 * @ignore
+	 */
 	public resetClickable () {
 		this.clickEvent = new SyncEvent<void>();
 	}

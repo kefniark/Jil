@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 module.exports = {
 	entry: './src/library/index.ts',
@@ -22,6 +23,15 @@ module.exports = {
 		// 	{ from: 'src/samples/panel.html', to: 'samples' },
 		// 	{ from: 'src/samples/scene.html', to: 'samples' }
 		// ]),
+		new TypedocWebpackPlugin({
+			name: 'JIL',
+			theme: 'minimal',
+			out: './docs',
+			mode: 'file',
+			exclude: ['src/library/behaviours/*', 'src/library/helpers/*'],
+			excludePrivate: true,
+			excludeProtected: true
+		}, './src/library')
 	],
 	mode: "development",
 	devServer: {
