@@ -15,7 +15,9 @@
    - Three.js
    - ...
 
-> This is still a project in early development
+> This is still a project in **early development**
+>
+> I plan later, to make a small editor to design scene UI and export them in `*.json`
 
 * [Demo](https://kefniark.github.io/jil/dist/samples/)
 
