@@ -27,7 +27,7 @@ body {
 	position: absolute;
 	margin-bottom: 1vw;
 	height: 5vw;
-	font-size: 2vw;
+	font-size: 32px;
 	pointer-events: all;
 	backface-visibility: hidden;
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -40,7 +40,7 @@ body {
 
 .scene .text {
 	position: absolute;
-	font-size: 2vw;
+	font-size: 32px;
 }
 
 .scene .panel {
