@@ -1,8 +1,15 @@
 # JIL - HTML5 Game UI
 
+[![NPM Version](https://img.shields.io/npm/v/jil.svg)](https://npmjs.org/package/jil)
+[![NPM Downloads](https://img.shields.io/npm/dm/jil.svg)](https://npmjs.org/package/jil)
+[![License](https://img.shields.io/npm/l/jil.svg)](https://npmjs.org/package/jil)
+
+* [**Demo**](https://kefniark.github.io/jil/dist/samples/)
+* [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
+
 ![Logo](./logo.png)
 
-**UI Framework for HTML5 Games**:
+## **UI Framework for HTML5 Games**:
  * Autoscale and centering
  * Vector positioning (`pivot`, `anchor`, `position`, `scale`, `rotation`)
  * Fast HTML5/CSS3 (Use CSS3 transform & Virtual dom)
@@ -18,12 +25,6 @@
 > This is still a project in **early development**
 >
 > I plan later, to make a small editor to design scene UI and export them in `*.json`
-
----
-
-## Links
-* [**Demo**](https://kefniark.github.io/jil/dist/samples/)
-* [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
 
 ---
 
