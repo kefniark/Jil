@@ -67,8 +67,8 @@
 		}
 	</script>
 	<script>
-		jil.SceneManager.init();
-		var sceneIntro = jil.SceneManager.create("intro");
+		jil.init();
+		var sceneIntro = jil.create("intro");
 
 		var layer = sceneIntro.createLayer("gamelayer");
 		var gameCanvas = layer.createCanvas("renderCanvas");
@@ -102,7 +102,7 @@
 
 		var woodTex = panelLeft.createImage("woodTexture", "https://png.pngtree.com/thumb_back/fw800/back_pic/04/01/08/47580035e36232e.jpg");
 
-		jil.SceneManager.use("intro");
+		jil.use("intro");
 	</script>
 </body>
 

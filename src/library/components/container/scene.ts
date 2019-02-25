@@ -1,16 +1,15 @@
 import { use } from 'typescript-mix';
-import { Node } from '../behaviours/node';
-import { Transform } from '../behaviours/transform';
 import { h, VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
-import { Factory } from '../behaviours/factory';
-import { Vector2 } from '../helpers/vector2';
-import { resolution } from '../config';
+import { Node, Transform, Factory } from '../../behaviours';
+import { Vector2 } from '../../helpers';
+import { resolution } from '../../config';
+import { JilLayer } from './layer';
 
 // tslint:disable-next-line:interface-name
-export interface Scene extends Node, Transform, Factory { }
+export interface JilScene extends Node, Transform, Factory { }
 
-export class Scene {
+export class JilScene {
 	/**
 	 * @ignore
 	 */
@@ -77,7 +76,7 @@ export class Scene {
 	 * @param id ID of the new layer (need to be unique)
 	 * @memberof Scene
 	 */
-	public createLayer = (id: string, classname?: string) => this.create('layer', id, classname) as Node;
+	public createLayer = (id: string, classname?: string) => this.create('layer', id, classname) as JilLayer;
 
 	/**
 	 * Render the HTML

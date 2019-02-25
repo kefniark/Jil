@@ -1,15 +1,12 @@
 import { use } from 'typescript-mix';
-import { Node } from '../behaviours/node';
-import { Transform } from '../behaviours/transform';
-import { Clickable } from '../behaviours/clickable';
-import { TransformTween } from '../behaviours/transformTween';
 import { h, VNode, Projector } from 'maquette';
-import { resolution } from '../config';
+import { Node, Transform, Clickable, TransformTween } from '../../behaviours';
+import { resolution } from '../../config';
 
 // tslint:disable-next-line:interface-name
-export interface Canvas extends Node, Transform, Clickable, TransformTween { }
+export interface JilCanvas extends Node, Transform, Clickable, TransformTween { }
 
-export class Canvas {
+export class JilCanvas {
 	@use(Node, Transform, Clickable, TransformTween) public this: any;
 
 	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {

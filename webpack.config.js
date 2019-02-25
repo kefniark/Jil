@@ -32,7 +32,7 @@ module.exports = {
 			theme: 'minimal',
 			out: './docs',
 			mode: 'file',
-			exclude: ['src/library/behaviours/*', 'src/library/helpers/*'],
+			exclude: ['src/library/behaviours/**/*', 'src/library/helpers/*'],
 			excludePrivate: true,
 			excludeProtected: true
 		}, './src/library')

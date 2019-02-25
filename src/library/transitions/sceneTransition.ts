@@ -1,13 +1,12 @@
-import { Scene } from '../components/scene';
-import { Layer } from '../components/layer';
+import { JilLayer, JilScene } from '../components';
 import * as Fatina from 'fatina';
 
-export function FadeInOut (sceneSrc: Scene | undefined, SceneDst: Scene) {
+export function FadeInOut (sceneSrc: JilScene | undefined, SceneDst: JilScene) {
 	const sequence = Fatina.sequence();
 	// tslint:disable:no-console
 	sequence.appendCallback(() => console.log('Scene Transition Start', sceneSrc, SceneDst));
 	if (sceneSrc) {
-		const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader') as Layer;
+		const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader') as JilLayer;
 		faderSrc.opacity = 0;
 		sequence.append(faderSrc.show(250, false));
 		sequence.appendCallback(() => sceneSrc.leave());
@@ -15,7 +14,7 @@ export function FadeInOut (sceneSrc: Scene | undefined, SceneDst: Scene) {
 	} else {
 		sequence.appendInterval(500);
 	}
-	const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader') as Layer;
+	const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader') as JilLayer;
 	faderDst.opacity = 1;
 	sequence.appendCallback(() => SceneDst.enter());
 

@@ -1,15 +1,12 @@
 import { use } from 'typescript-mix';
-import { Node } from '../behaviours/node';
-import { Transform } from '../behaviours/transform';
-import { Clickable } from '../behaviours/clickable';
 import { h, VNode, Projector } from 'maquette';
-import { TransformTween } from '../behaviours/transformTween';
-import { isString } from '../helpers/helpers';
+import { Node, Transform, Clickable, TransformTween } from '../../behaviours';
+import { isString } from '../../helpers';
 
 // tslint:disable-next-line:interface-name
-export interface Image extends Node, Transform, Clickable, TransformTween { }
+export interface JilImage extends Node, Transform, Clickable, TransformTween { }
 
-export class Image {
+export class JilImage {
 	@use(Node, Transform, Clickable, TransformTween) public this: any;
 
 	public src;

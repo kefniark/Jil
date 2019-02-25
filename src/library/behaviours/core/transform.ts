@@ -1,6 +1,5 @@
-
-import { Vector2 } from '../helpers/vector2';
-import { resolution } from '../config';
+import { Vector2 } from '../../helpers';
+import { resolution } from '../../config';
 
 // tslint:disable-next-line:max-classes-per-file
 export class Transform {

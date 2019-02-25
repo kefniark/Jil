@@ -1,14 +1,11 @@
 import { use } from 'typescript-mix';
-import { Node } from '../behaviours/node';
-import { Transform } from '../behaviours/transform';
-import { Clickable } from '../behaviours/clickable';
-import { TransformTween } from '../behaviours/transformTween';
 import { h, VNode, Projector } from 'maquette';
+import { Node, Transform, Clickable, TransformTween } from '../../behaviours';
 
 // tslint:disable-next-line:interface-name
-export interface Button extends Node, Transform, Clickable, TransformTween { }
+export interface JilButton extends Node, Transform, Clickable, TransformTween { }
 
-export class Button {
+export class JilButton {
 	@use(Node, Transform, Clickable, TransformTween) public this: any;
 	public text;
 

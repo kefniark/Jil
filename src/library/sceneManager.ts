@@ -1,4 +1,4 @@
-import { Scene } from './components/scene';
+import { JilScene } from './components';
 import { createProjector, h, Projector } from 'maquette';
 import { FadeInOut } from './transitions/sceneTransition';
 import { resolution } from './config';
@@ -7,11 +7,11 @@ import * as Fatina from 'fatina';
 /**
  * @ignore
  */
-const scenes: {[id: string]: Scene} = {};
+const scenes: {[id: string]: JilScene} = {};
 /**
  * @ignore
  */
-const sceneList: Scene[] = [];
+const sceneList: JilScene[] = [];
 /**
  * @ignore
  */
@@ -19,15 +19,10 @@ let projector: Projector | undefined;
 /**
  * @ignore
  */
-let current: Scene | undefined;
+let current: JilScene | undefined;
 
 /**
  * Scene Manager Object (use UMD: Universal Module Definition)
- *
- * @remarks
- * - Import: `import { SceneManager } from 'jil';`
- * - Require: `const SceneManager = require('jil').SceneManager;`
- * - Web: `<script src="jil.js"></script> ... jil.SceneManager`
  */
 export class SceneManager {
 
@@ -52,11 +47,11 @@ export class SceneManager {
 	 *
 	 * @param id SceneId (need to be unique)
 	 */
-	public static create (id: string): Scene {
+	public static create (id: string): JilScene {
 		if (!projector) {
 			throw new Error('JIL is not initialized, please call .init() before using it');
 		}
-		scenes[id] = new Scene(id, projector);
+		scenes[id] = new JilScene(id, projector);
 		sceneList.push(scenes[id]);
 		projector.scheduleRender();
 		return scenes[id];

@@ -1,19 +1,31 @@
-import { Layer } from './components/layer';
-import { Button } from './components/button';
-import { Panel } from './components/panel';
-import { Image } from './components/image';
-import { Text } from './components/text';
-import { Canvas } from './components/canvas';
-
-import { register } from './behaviours/factory';
+import { JilButton, JilPanel, JilLayer, JilCanvas, JilImage, JilText, JilScene } from './components';
+import { register } from './behaviours/core/factory';
 
 // export class
-export { SceneManager } from './sceneManager';
+import { SceneManager } from './sceneManager';
 
 // register to factory
-register('button', Button);
-register('panel', Panel);
-register('layer', Layer);
-register('image', Image);
-register('text', Text);
-register('canvas', Canvas);
+register('button', JilButton);
+register('panel', JilPanel);
+register('layer', JilLayer);
+register('image', JilImage);
+register('text', JilText);
+register('canvas', JilCanvas);
+
+/**
+ * Init Helper
+ * @function
+ */
+export const init = SceneManager.init;
+/**
+ * Create a new scene
+ * @function
+ */
+export const create = SceneManager.create;
+/**
+ * Switch to a scene
+ * @function
+ */
+export const use = SceneManager.use;
+
+export { SceneManager };

@@ -2729,266 +2729,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./src/library/behaviours/clickable.ts":
-/*!*********************************************!*\
-  !*** ./src/library/behaviours/clickable.ts ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
-class Clickable {
-    /**
-     * @ignore
-     */
-    resetClickable() {
-        this.clickEvent = new ts_events_1.SyncEvent();
-    }
-    click() {
-        if (!this.clickEvent)
-            return;
-        this.clickEvent.post();
-    }
-    // helpers
-    onClick(cb) {
-        if (this.clickEvent)
-            this.clickEvent.attach(cb);
-    }
-}
-exports.Clickable = Clickable;
-
-
-/***/ }),
-
-/***/ "./src/library/behaviours/factory.ts":
-/*!*******************************************!*\
-  !*** ./src/library/behaviours/factory.ts ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.types = {};
-function register(type, className) {
-    exports.types[type] = className;
-}
-exports.register = register;
-class Factory {
-    /**
-     * @ignore
-     */
-    create(type, id, params) {
-        if (!exports.types[type]) {
-            throw new Error(`Cannot create type ${type}`);
-        }
-        const self = this;
-        const child = new exports.types[type](id, params, self, self._projector);
-        self.addChild(child);
-        return child;
-    }
-}
-exports.Factory = Factory;
-
-
-/***/ }),
-
-/***/ "./src/library/behaviours/node.ts":
-/*!****************************************!*\
-  !*** ./src/library/behaviours/node.ts ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
-class Node {
-    constructor() {
-        /**
-         * @ignore
-         */
-        this._childrens = [];
-    }
-    /**
-     * @ignore
-     */
-    resetTransform() {
-        this._childrens = [];
-        if (!this.createEvent)
-            this.createEvent = new ts_events_1.SyncEvent();
-        if (!this.destroyEvent)
-            this.destroyEvent = new ts_events_1.SyncEvent();
-    }
-    handlerAfterCreate() {
-        if (this.createEvent)
-            this.createEvent.post();
-    }
-    handleAfterRemoved() {
-        if (this.destroyEvent)
-            this.destroyEvent.post();
-    }
-    onLoad(cb) {
-        if (this.createEvent)
-            this.createEvent.attach(cb);
-    }
-    onDestroy(cb) {
-        if (this.destroyEvent)
-            this.destroyEvent.attach(cb);
-    }
-    addChild(element) {
-        this._childrens.push(element);
-        this.refresh();
-    }
-    removeChild(element) {
-        const i = this._childrens.indexOf(element);
-        if (i !== -1) {
-            this._childrens.splice(i, 1);
-        }
-        this.refresh();
-    }
-    destroy() {
-        if (this._parent)
-            this._parent.removeChild(this);
-    }
-    refresh() {
-        if (this._projector)
-            this._projector.scheduleRender();
-    }
-    /**
-     * @ignore
-     */
-    render() {
-        return maquette_1.h('div', this._childrens.map((x) => x.render()));
-    }
-    toString() {
-        return `[UI ${this.id}]`;
-    }
-}
-exports.Node = Node;
-
-
-/***/ }),
-
-/***/ "./src/library/behaviours/transform.ts":
-/*!*********************************************!*\
-  !*** ./src/library/behaviours/transform.ts ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const vector2_1 = __webpack_require__(/*! ../helpers/vector2 */ "./src/library/helpers/vector2.ts");
-const config_1 = __webpack_require__(/*! ../config */ "./src/library/config.ts");
-// tslint:disable-next-line:max-classes-per-file
-class Transform {
-    constructor() {
-        this.enable = true;
-        this.anchor = undefined;
-        this.pivot = undefined;
-        this.position = undefined;
-        this.positionPx = undefined;
-        this.size = undefined;
-        this.sizePx = undefined;
-        this.scale = undefined;
-        this.opacity = 1;
-        this.rotation = 0;
-    }
-    /**
-     * @ignore
-     */
-    resetStyle() {
-        const self = this;
-        const handler = {
-            set: (obj, prop, value) => {
-                obj[prop] = value;
-                // tslint:disable-next-line:no-console
-                if (self.refresh)
-                    self.refresh();
-                return true;
-            }
-        };
-        const handlerPos = {
-            get: (obj, prop) => {
-                if (prop !== 'x' && prop !== 'y')
-                    return obj[prop];
-                return self.position[prop] * config_1.resolution[prop];
-            },
-            set: (obj, prop, value) => {
-                if (prop !== 'x' && prop !== 'y')
-                    return obj[prop] = value;
-                else
-                    self.position[prop] = value / config_1.resolution[prop];
-                return true;
-            }
-        };
-        // tslint:disable:no-console
-        const handlerSize = {
-            get: (obj, prop) => {
-                if (prop !== 'x' && prop !== 'y')
-                    return obj[prop];
-                return self.size[prop] * config_1.resolution[prop];
-            },
-            set: (obj, prop, value) => {
-                if (prop !== 'x' && prop !== 'y')
-                    return obj[prop] = value;
-                else
-                    self.size[prop] = value / config_1.resolution[prop];
-                return true;
-            }
-        };
-        this.enable = true;
-        this.anchor = new Proxy(new vector2_1.Vector2(), handler);
-        this.pivot = new Proxy(new vector2_1.Vector2(), handler);
-        this.position = new Proxy(new vector2_1.Vector2(), handler);
-        this.positionPx = new Proxy(new vector2_1.Vector2(), handlerPos);
-        this.size = new Proxy(new vector2_1.Vector2(1, 1), handler);
-        this.sizePx = new Proxy(new vector2_1.Vector2(), handlerSize);
-        this.scale = new Proxy(new vector2_1.Vector2(1, 1), handler);
-        this.opacity = 1;
-        this.rotation = 0;
-    }
-    /**
-     * @ignore
-     */
-    getStyle() {
-        const x = ((this.anchor.x / this.size.x) - this.pivot.x + (this.position.x / this.size.x)) * 100;
-        const y = ((this.anchor.y / this.size.y) - this.pivot.y + (this.position.y / this.size.y)) * 100;
-        let transform = `translate(${x}%, ${y}%) `;
-        if (this.scale.x !== 1 || this.scale.y !== 1) {
-            transform += `scale(${this.scale.x}, ${this.scale.y}) `;
-        }
-        if (this.rotation !== 0) {
-            transform += `rotate(${this.rotation}deg)`;
-        }
-        return {
-            display: this.enable && this.opacity > 0 ? 'block' : 'none',
-            width: `${this.size.x * 100}%`,
-            height: `${this.size.y * 100}%`,
-            transformOrigin: 'top left',
-            opacity: this.opacity.toString(),
-            transform,
-            willChange: 'transform, opacity'
-        };
-    }
-}
-exports.Transform = Transform;
-
-
-/***/ }),
-
-/***/ "./src/library/behaviours/transformTween.ts":
-/*!**************************************************!*\
-  !*** ./src/library/behaviours/transformTween.ts ***!
-  \**************************************************/
+/***/ "./src/library/behaviours/animation/transformTween.ts":
+/*!************************************************************!*\
+  !*** ./src/library/behaviours/animation/transformTween.ts ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3067,61 +2811,293 @@ exports.TransformTween = TransformTween;
 
 /***/ }),
 
-/***/ "./src/library/components/button.ts":
-/*!******************************************!*\
-  !*** ./src/library/components/button.ts ***!
-  \******************************************/
+/***/ "./src/library/behaviours/core/factory.ts":
+/*!************************************************!*\
+  !*** ./src/library/behaviours/core/factory.ts ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
-const clickable_1 = __webpack_require__(/*! ../behaviours/clickable */ "./src/library/behaviours/clickable.ts");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
-const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-class Button {
-    constructor(id, params, parent, projector) {
-        this.id = id;
-        this.text = params;
-        this._parent = parent;
-        this._projector = projector;
-        this.resetClickable();
-        this.resetTransform();
-        this.resetStyle();
-    }
-    render() {
-        return maquette_1.h('button', {
-            id: this.id,
-            key: this.id,
-            type: 'button',
-            class: 'nes-btn',
-            styles: this.getStyle(),
-            onclick: this.click.bind(this)
-        }, [this.text]);
+exports.types = {};
+function register(type, className) {
+    exports.types[type] = className;
+}
+exports.register = register;
+class Factory {
+    /**
+     * @ignore
+     */
+    create(type, id, params) {
+        if (!exports.types[type]) {
+            throw new Error(`Cannot create type ${type}`);
+        }
+        const self = this;
+        const child = new exports.types[type](id, params, self, self._projector);
+        self.addChild(child);
+        return child;
     }
 }
-__decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, clickable_1.Clickable, transformTween_1.TransformTween)
-], Button.prototype, "this", void 0);
-exports.Button = Button;
+exports.Factory = Factory;
 
 
 /***/ }),
 
-/***/ "./src/library/components/canvas.ts":
-/*!******************************************!*\
-  !*** ./src/library/components/canvas.ts ***!
-  \******************************************/
+/***/ "./src/library/behaviours/core/node.ts":
+/*!*********************************************!*\
+  !*** ./src/library/behaviours/core/node.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+class Node {
+    constructor() {
+        /**
+         * @ignore
+         */
+        this._childrens = [];
+    }
+    /**
+     * @ignore
+     */
+    resetTransform() {
+        this._childrens = [];
+        if (!this.createEvent)
+            this.createEvent = new ts_events_1.SyncEvent();
+        if (!this.destroyEvent)
+            this.destroyEvent = new ts_events_1.SyncEvent();
+    }
+    handlerAfterCreate() {
+        if (this.createEvent)
+            this.createEvent.post();
+    }
+    handleAfterRemoved() {
+        if (this.destroyEvent)
+            this.destroyEvent.post();
+    }
+    onLoad(cb) {
+        if (this.createEvent)
+            this.createEvent.attach(cb);
+    }
+    onDestroy(cb) {
+        if (this.destroyEvent)
+            this.destroyEvent.attach(cb);
+    }
+    addChild(element) {
+        this._childrens.push(element);
+        this.refresh();
+    }
+    removeChild(element) {
+        const i = this._childrens.indexOf(element);
+        if (i !== -1) {
+            this._childrens.splice(i, 1);
+        }
+        this.refresh();
+    }
+    destroy() {
+        if (this._parent)
+            this._parent.removeChild(this);
+    }
+    refresh() {
+        if (this._projector)
+            this._projector.scheduleRender();
+    }
+    /**
+     * @ignore
+     */
+    render() {
+        return maquette_1.h('div', this._childrens.map((x) => x.render()));
+    }
+    toString() {
+        return `[UI ${this.id}]`;
+    }
+}
+exports.Node = Node;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/core/transform.ts":
+/*!**************************************************!*\
+  !*** ./src/library/behaviours/core/transform.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+// tslint:disable-next-line:max-classes-per-file
+class Transform {
+    constructor() {
+        this.enable = true;
+        this.anchor = undefined;
+        this.pivot = undefined;
+        this.position = undefined;
+        this.positionPx = undefined;
+        this.size = undefined;
+        this.sizePx = undefined;
+        this.scale = undefined;
+        this.opacity = 1;
+        this.rotation = 0;
+    }
+    /**
+     * @ignore
+     */
+    resetStyle() {
+        const self = this;
+        const handler = {
+            set: (obj, prop, value) => {
+                obj[prop] = value;
+                // tslint:disable-next-line:no-console
+                if (self.refresh)
+                    self.refresh();
+                return true;
+            }
+        };
+        const handlerPos = {
+            get: (obj, prop) => {
+                if (prop !== 'x' && prop !== 'y')
+                    return obj[prop];
+                return self.position[prop] * config_1.resolution[prop];
+            },
+            set: (obj, prop, value) => {
+                if (prop !== 'x' && prop !== 'y')
+                    return obj[prop] = value;
+                else
+                    self.position[prop] = value / config_1.resolution[prop];
+                return true;
+            }
+        };
+        // tslint:disable:no-console
+        const handlerSize = {
+            get: (obj, prop) => {
+                if (prop !== 'x' && prop !== 'y')
+                    return obj[prop];
+                return self.size[prop] * config_1.resolution[prop];
+            },
+            set: (obj, prop, value) => {
+                if (prop !== 'x' && prop !== 'y')
+                    return obj[prop] = value;
+                else
+                    self.size[prop] = value / config_1.resolution[prop];
+                return true;
+            }
+        };
+        this.enable = true;
+        this.anchor = new Proxy(new helpers_1.Vector2(), handler);
+        this.pivot = new Proxy(new helpers_1.Vector2(), handler);
+        this.position = new Proxy(new helpers_1.Vector2(), handler);
+        this.positionPx = new Proxy(new helpers_1.Vector2(), handlerPos);
+        this.size = new Proxy(new helpers_1.Vector2(1, 1), handler);
+        this.sizePx = new Proxy(new helpers_1.Vector2(), handlerSize);
+        this.scale = new Proxy(new helpers_1.Vector2(1, 1), handler);
+        this.opacity = 1;
+        this.rotation = 0;
+    }
+    /**
+     * @ignore
+     */
+    getStyle() {
+        const x = ((this.anchor.x / this.size.x) - this.pivot.x + (this.position.x / this.size.x)) * 100;
+        const y = ((this.anchor.y / this.size.y) - this.pivot.y + (this.position.y / this.size.y)) * 100;
+        let transform = `translate(${x}%, ${y}%) `;
+        if (this.scale.x !== 1 || this.scale.y !== 1) {
+            transform += `scale(${this.scale.x}, ${this.scale.y}) `;
+        }
+        if (this.rotation !== 0) {
+            transform += `rotate(${this.rotation}deg)`;
+        }
+        return {
+            display: this.enable && this.opacity > 0 ? 'block' : 'none',
+            width: `${this.size.x * 100}%`,
+            height: `${this.size.y * 100}%`,
+            transformOrigin: 'top left',
+            opacity: this.opacity.toString(),
+            transform,
+            willChange: 'transform, opacity'
+        };
+    }
+}
+exports.Transform = Transform;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/index.ts":
+/*!*****************************************!*\
+  !*** ./src/library/behaviours/index.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// Core
+var factory_1 = __webpack_require__(/*! ./core/factory */ "./src/library/behaviours/core/factory.ts");
+exports.Factory = factory_1.Factory;
+var node_1 = __webpack_require__(/*! ./core/node */ "./src/library/behaviours/core/node.ts");
+exports.Node = node_1.Node;
+var transform_1 = __webpack_require__(/*! ./core/transform */ "./src/library/behaviours/core/transform.ts");
+exports.Transform = transform_1.Transform;
+// Interaction
+var clickable_1 = __webpack_require__(/*! ./interaction/clickable */ "./src/library/behaviours/interaction/clickable.ts");
+exports.Clickable = clickable_1.Clickable;
+// Animation
+var transformTween_1 = __webpack_require__(/*! ./animation/transformTween */ "./src/library/behaviours/animation/transformTween.ts");
+exports.TransformTween = transformTween_1.TransformTween;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/interaction/clickable.ts":
+/*!*********************************************************!*\
+  !*** ./src/library/behaviours/interaction/clickable.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+class Clickable {
+    /**
+     * @ignore
+     */
+    resetClickable() {
+        this.clickEvent = new ts_events_1.SyncEvent();
+    }
+    click() {
+        if (!this.clickEvent)
+            return;
+        this.clickEvent.post();
+    }
+    // helpers
+    onClick(cb) {
+        if (this.clickEvent)
+            this.clickEvent.attach(cb);
+    }
+}
+exports.Clickable = Clickable;
+
+
+/***/ }),
+
+/***/ "./src/library/components/container/canvas.ts":
+/*!****************************************************!*\
+  !*** ./src/library/components/container/canvas.ts ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3135,13 +3111,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
-const clickable_1 = __webpack_require__(/*! ../behaviours/clickable */ "./src/library/behaviours/clickable.ts");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const config_1 = __webpack_require__(/*! ../config */ "./src/library/config.ts");
-class Canvas {
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+class JilCanvas {
     constructor(id, params, parent, projector) {
         this.id = id;
         this._parent = parent;
@@ -3165,17 +3138,17 @@ class Canvas {
     }
 }
 __decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, clickable_1.Clickable, transformTween_1.TransformTween)
-], Canvas.prototype, "this", void 0);
-exports.Canvas = Canvas;
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+], JilCanvas.prototype, "this", void 0);
+exports.JilCanvas = JilCanvas;
 
 
 /***/ }),
 
-/***/ "./src/library/components/image.ts":
-/*!*****************************************!*\
-  !*** ./src/library/components/image.ts ***!
-  \*****************************************/
+/***/ "./src/library/components/container/layer.ts":
+/*!***************************************************!*\
+  !*** ./src/library/components/container/layer.ts ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3189,67 +3162,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
-const clickable_1 = __webpack_require__(/*! ../behaviours/clickable */ "./src/library/behaviours/clickable.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
-const helpers_1 = __webpack_require__(/*! ../helpers/helpers */ "./src/library/helpers/helpers.ts");
-class Image {
-    constructor(id, params, parent, projector) {
-        this.id = id;
-        this.src = helpers_1.isString(params) ? params : params.src;
-        if (!this.src)
-            this.src = '';
-        this.styles = params || {};
-        this._parent = parent;
-        this._projector = projector;
-        this.resetClickable();
-        this.resetTransform();
-        this.resetStyle();
-    }
-    render() {
-        return maquette_1.h('img', {
-            id: this.id,
-            key: this.id,
-            src: this.src,
-            styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle(),
-            onclick: this.click.bind(this)
-        });
-    }
-}
-__decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, clickable_1.Clickable, transformTween_1.TransformTween)
-], Image.prototype, "this", void 0);
-exports.Image = Image;
-
-
-/***/ }),
-
-/***/ "./src/library/components/layer.ts":
-/*!*****************************************!*\
-  !*** ./src/library/components/layer.ts ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
-const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const factory_1 = __webpack_require__(/*! ../behaviours/factory */ "./src/library/behaviours/factory.ts");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
-const config_1 = __webpack_require__(/*! ../config */ "./src/library/config.ts");
-class Layer {
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+class JilLayer {
     constructor(id, params, parent, projector) {
         this.createPanel = (id) => this.create('panel', id);
         this.createButton = (id, params) => this.create('button', id, params);
@@ -3291,17 +3207,17 @@ class Layer {
     }
 }
 __decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, factory_1.Factory, transformTween_1.TransformTween)
-], Layer.prototype, "this", void 0);
-exports.Layer = Layer;
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween)
+], JilLayer.prototype, "this", void 0);
+exports.JilLayer = JilLayer;
 
 
 /***/ }),
 
-/***/ "./src/library/components/panel.ts":
-/*!*****************************************!*\
-  !*** ./src/library/components/panel.ts ***!
-  \*****************************************/
+/***/ "./src/library/components/container/panel.ts":
+/*!***************************************************!*\
+  !*** ./src/library/components/container/panel.ts ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3315,12 +3231,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const factory_1 = __webpack_require__(/*! ../behaviours/factory */ "./src/library/behaviours/factory.ts");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
-class Panel {
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilPanel {
     constructor(id, params, parent, projector) {
         this.createPanel = (id) => this.create('panel', id);
         this.createButton = (id, params) => this.create('button', id, params);
@@ -3343,17 +3256,17 @@ class Panel {
     }
 }
 __decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, factory_1.Factory, transformTween_1.TransformTween)
-], Panel.prototype, "this", void 0);
-exports.Panel = Panel;
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween)
+], JilPanel.prototype, "this", void 0);
+exports.JilPanel = JilPanel;
 
 
 /***/ }),
 
-/***/ "./src/library/components/scene.ts":
-/*!*****************************************!*\
-  !*** ./src/library/components/scene.ts ***!
-  \*****************************************/
+/***/ "./src/library/components/container/scene.ts":
+/*!***************************************************!*\
+  !*** ./src/library/components/container/scene.ts ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3367,14 +3280,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
-const factory_1 = __webpack_require__(/*! ../behaviours/factory */ "./src/library/behaviours/factory.ts");
-const vector2_1 = __webpack_require__(/*! ../helpers/vector2 */ "./src/library/helpers/vector2.ts");
-const config_1 = __webpack_require__(/*! ../config */ "./src/library/config.ts");
-class Scene {
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+class JilScene {
     constructor(id, projector) {
         /**
          * Create a new Layer in this scene
@@ -3384,7 +3295,7 @@ class Scene {
          */
         this.createLayer = (id, classname) => this.create('layer', id, classname);
         this.id = id;
-        this.resolution = new vector2_1.Vector2(config_1.resolution.x, config_1.resolution.y);
+        this.resolution = new helpers_1.Vector2(config_1.resolution.x, config_1.resolution.y);
         this.enterEvent = new ts_events_1.SyncEvent();
         this.leaveEvent = new ts_events_1.SyncEvent();
         this._projector = projector;
@@ -3470,17 +3381,17 @@ class Scene {
     }
 }
 __decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, factory_1.Factory)
-], Scene.prototype, "this", void 0);
-exports.Scene = Scene;
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory)
+], JilScene.prototype, "this", void 0);
+exports.JilScene = JilScene;
 
 
 /***/ }),
 
-/***/ "./src/library/components/text.ts":
-/*!****************************************!*\
-  !*** ./src/library/components/text.ts ***!
-  \****************************************/
+/***/ "./src/library/components/element/button.ts":
+/*!**************************************************!*\
+  !*** ./src/library/components/element/button.ts ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3494,12 +3405,109 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
-const node_1 = __webpack_require__(/*! ../behaviours/node */ "./src/library/behaviours/node.ts");
-const transform_1 = __webpack_require__(/*! ../behaviours/transform */ "./src/library/behaviours/transform.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const transformTween_1 = __webpack_require__(/*! ../behaviours/transformTween */ "./src/library/behaviours/transformTween.ts");
-const helpers_1 = __webpack_require__(/*! ../helpers/helpers */ "./src/library/helpers/helpers.ts");
-class Text {
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilButton {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.text = params;
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetTransform();
+        this.resetStyle();
+    }
+    render() {
+        return maquette_1.h('button', {
+            id: this.id,
+            key: this.id,
+            type: 'button',
+            class: 'nes-btn',
+            styles: this.getStyle(),
+            onclick: this.click.bind(this)
+        }, [this.text]);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+], JilButton.prototype, "this", void 0);
+exports.JilButton = JilButton;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/image.ts":
+/*!*************************************************!*\
+  !*** ./src/library/components/element/image.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+class JilImage {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.src = helpers_1.isString(params) ? params : params.src;
+        if (!this.src)
+            this.src = '';
+        this.styles = params || {};
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetTransform();
+        this.resetStyle();
+    }
+    render() {
+        return maquette_1.h('img', {
+            id: this.id,
+            key: this.id,
+            src: this.src,
+            styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle(),
+            onclick: this.click.bind(this)
+        });
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+], JilImage.prototype, "this", void 0);
+exports.JilImage = JilImage;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/text.ts":
+/*!************************************************!*\
+  !*** ./src/library/components/element/text.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+class JilText {
     constructor(id, params, parent, projector) {
         this.id = id;
         this.text = helpers_1.isString(params) ? params : params.text;
@@ -3521,9 +3529,39 @@ class Text {
     }
 }
 __decorate([
-    typescript_mix_1.use(node_1.Node, transform_1.Transform, transformTween_1.TransformTween)
-], Text.prototype, "this", void 0);
-exports.Text = Text;
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.TransformTween)
+], JilText.prototype, "this", void 0);
+exports.JilText = JilText;
+
+
+/***/ }),
+
+/***/ "./src/library/components/index.ts":
+/*!*****************************************!*\
+  !*** ./src/library/components/index.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// Container
+var canvas_1 = __webpack_require__(/*! ./container/canvas */ "./src/library/components/container/canvas.ts");
+exports.JilCanvas = canvas_1.JilCanvas;
+var layer_1 = __webpack_require__(/*! ./container/layer */ "./src/library/components/container/layer.ts");
+exports.JilLayer = layer_1.JilLayer;
+var panel_1 = __webpack_require__(/*! ./container/panel */ "./src/library/components/container/panel.ts");
+exports.JilPanel = panel_1.JilPanel;
+var scene_1 = __webpack_require__(/*! ./container/scene */ "./src/library/components/container/scene.ts");
+exports.JilScene = scene_1.JilScene;
+// Element
+var button_1 = __webpack_require__(/*! ./element/button */ "./src/library/components/element/button.ts");
+exports.JilButton = button_1.JilButton;
+var image_1 = __webpack_require__(/*! ./element/image */ "./src/library/components/element/image.ts");
+exports.JilImage = image_1.JilImage;
+var text_1 = __webpack_require__(/*! ./element/text */ "./src/library/components/element/text.ts");
+exports.JilText = text_1.JilText;
 
 
 /***/ }),
@@ -3561,6 +3599,24 @@ function isString(obj) {
     return (Object.prototype.toString.call(obj) === '[object String]');
 }
 exports.isString = isString;
+
+
+/***/ }),
+
+/***/ "./src/library/helpers/index.ts":
+/*!**************************************!*\
+  !*** ./src/library/helpers/index.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var vector2_1 = __webpack_require__(/*! ./vector2 */ "./src/library/helpers/vector2.ts");
+exports.Vector2 = vector2_1.Vector2;
+var helpers_1 = __webpack_require__(/*! ./helpers */ "./src/library/helpers/helpers.ts");
+exports.isString = helpers_1.isString;
 
 
 /***/ }),
@@ -3604,23 +3660,33 @@ exports.Vector2 = Vector2;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const layer_1 = __webpack_require__(/*! ./components/layer */ "./src/library/components/layer.ts");
-const button_1 = __webpack_require__(/*! ./components/button */ "./src/library/components/button.ts");
-const panel_1 = __webpack_require__(/*! ./components/panel */ "./src/library/components/panel.ts");
-const image_1 = __webpack_require__(/*! ./components/image */ "./src/library/components/image.ts");
-const text_1 = __webpack_require__(/*! ./components/text */ "./src/library/components/text.ts");
-const canvas_1 = __webpack_require__(/*! ./components/canvas */ "./src/library/components/canvas.ts");
-const factory_1 = __webpack_require__(/*! ./behaviours/factory */ "./src/library/behaviours/factory.ts");
+const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
+const factory_1 = __webpack_require__(/*! ./behaviours/core/factory */ "./src/library/behaviours/core/factory.ts");
 // export class
-var sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
+const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
 exports.SceneManager = sceneManager_1.SceneManager;
 // register to factory
-factory_1.register('button', button_1.Button);
-factory_1.register('panel', panel_1.Panel);
-factory_1.register('layer', layer_1.Layer);
-factory_1.register('image', image_1.Image);
-factory_1.register('text', text_1.Text);
-factory_1.register('canvas', canvas_1.Canvas);
+factory_1.register('button', components_1.JilButton);
+factory_1.register('panel', components_1.JilPanel);
+factory_1.register('layer', components_1.JilLayer);
+factory_1.register('image', components_1.JilImage);
+factory_1.register('text', components_1.JilText);
+factory_1.register('canvas', components_1.JilCanvas);
+/**
+ * Init Helper
+ * @function
+ */
+exports.init = sceneManager_1.SceneManager.init;
+/**
+ * Create a new scene
+ * @function
+ */
+exports.create = sceneManager_1.SceneManager.create;
+/**
+ * Switch to a scene
+ * @function
+ */
+exports.use = sceneManager_1.SceneManager.use;
 
 
 /***/ }),
@@ -3635,7 +3701,7 @@ factory_1.register('canvas', canvas_1.Canvas);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const scene_1 = __webpack_require__(/*! ./components/scene */ "./src/library/components/scene.ts");
+const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const sceneTransition_1 = __webpack_require__(/*! ./transitions/sceneTransition */ "./src/library/transitions/sceneTransition.ts");
 const config_1 = __webpack_require__(/*! ./config */ "./src/library/config.ts");
@@ -3658,11 +3724,6 @@ let projector;
 let current;
 /**
  * Scene Manager Object (use UMD: Universal Module Definition)
- *
- * @remarks
- * - Import: `import { SceneManager } from 'jil';`
- * - Require: `const SceneManager = require('jil').SceneManager;`
- * - Web: `<script src="jil.js"></script> ... jil.SceneManager`
  */
 class SceneManager {
     /**
@@ -3689,7 +3750,7 @@ class SceneManager {
         if (!projector) {
             throw new Error('JIL is not initialized, please call .init() before using it');
         }
-        scenes[id] = new scene_1.Scene(id, projector);
+        scenes[id] = new components_1.JilScene(id, projector);
         sceneList.push(scenes[id]);
         projector.scheduleRender();
         return scenes[id];

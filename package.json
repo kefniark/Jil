@@ -1,6 +1,6 @@
 {
   "name": "jil",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "UI Framework for HTML5 Games",
   "author": "kefniark@gmail.com",
   "repository": "github:kefniark/jil",
@@ -13,19 +13,18 @@
     "framework"
   ],
   "main": "dist/jil.min.js",
-  "types": "dist/jil.d.ts",
+  "types": "dist/declarations/index.d.ts",
   "scripts": {
     "build": "run-s build:*",
     "build:production": "webpack --mode=production",
     "build:development": "webpack --config webpack.config.dev.js",
-    "build:definition": "tsc --p ./tsconfig.json --declaration true --emitDeclarationOnly true --outFile dist/jil.d.ts && node tools/fix-dts.js",
+    "build:definition": "tsc --p ./tsconfig.json --declaration true --emitDeclarationOnly true --outDir ./dist/declarations",
     "dev": "webpack-dev-server",
     "docs-expose": "http-server ./dist/docs -p 8080 -c-1",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts'",
     "update": "npm-check --update"
   },
   "dependencies": {
-    "dts-generator": "^3.0.0",
     "fatina": "^2.1.2",
     "maquette": "^3.3.3"
   },
@@ -37,7 +36,6 @@
     "npm-run-all": "^4.1.5",
     "ts-events": "^3.2.1",
     "ts-loader": "^5.3.3",
-    "ts-merge": "^0.5.0",
     "tslint": "^5.13.0",
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.14.2",

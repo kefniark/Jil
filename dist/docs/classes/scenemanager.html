@@ -908,22 +908,25 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class">
-			<a href="button.html" class="tsd-kind-icon">Button</a>
+			<a href="jilbutton.html" class="tsd-kind-icon">Jil<wbr>Button</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="canvas.html" class="tsd-kind-icon">Canvas</a>
+			<a href="jilcanvas.html" class="tsd-kind-icon">Jil<wbr>Canvas</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="image.html" class="tsd-kind-icon">Image</a>
+			<a href="jilimage.html" class="tsd-kind-icon">Jil<wbr>Image</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="layer.html" class="tsd-kind-icon">Layer</a>
+			<a href="jillayer.html" class="tsd-kind-icon">Jil<wbr>Layer</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="panel.html" class="tsd-kind-icon">Panel</a>
+			<a href="jilpanel.html" class="tsd-kind-icon">Jil<wbr>Panel</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="scene.html" class="tsd-kind-icon">Scene</a>
+			<a href="jilscene.html" class="tsd-kind-icon">Jil<wbr>Scene</a>
+		</li>
+		<li class=" tsd-kind-class">
+			<a href="jiltext.html" class="tsd-kind-icon">Jil<wbr>Text</a>
 		</li>
 		<li class="current tsd-kind-class">
 			<a href="scenemanager.html" class="tsd-kind-icon">Scene<wbr>Manager</a>
@@ -939,8 +942,14 @@ img { max-width: 100%; }
 				</li>
 			</ul>
 		</li>
-		<li class=" tsd-kind-class">
-			<a href="text.html" class="tsd-kind-icon">Text</a>
+		<li class=" tsd-kind-variable">
+			<a href="../globals.html#create" class="tsd-kind-icon">create</a>
+		</li>
+		<li class=" tsd-kind-variable">
+			<a href="../globals.html#init" class="tsd-kind-icon">init</a>
+		</li>
+		<li class=" tsd-kind-variable">
+			<a href="../globals.html#use" class="tsd-kind-icon">use</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="../globals.html#fadeinout" class="tsd-kind-icon">Fade<wbr>InOut</a>
@@ -954,15 +963,6 @@ img { max-width: 100%; }
 				<div class="lead">
 					<p>Scene Manager Object (use UMD: Universal Module Definition)</p>
 				</div>
-				<dl class="tsd-comment-tags">
-					<dt>remarks</dt>
-					<dd><ul>
-							<li>Import: <code>import { SceneManager } from &#39;jil&#39;;</code></li>
-							<li>Require: <code>const SceneManager = require(&#39;jil&#39;).SceneManager;</code></li>
-							<li>Web: <code>&lt;script src=&quot;jil.js&quot;&gt;&lt;/script&gt; ... jil.SceneManager</code></li>
-						</ul>
-					</dd>
-				</dl>
 			</div>
 		</section>
 		<section class="tsd-panel tsd-hierarchy">
@@ -994,13 +994,13 @@ img { max-width: 100%; }
 				<a name="create" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="scene.html" class="tsd-signature-type">Scene</a></li>
+					<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="jilscene.html" class="tsd-signature-type">JilScene</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/acc476b/src/library/sceneManager.ts#L55">sceneManager.ts:55</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/e78ac57/src/library/sceneManager.ts#L50">sceneManager.ts:50</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1017,7 +1017,7 @@ img { max-width: 100%; }
 								</div>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="scene.html" class="tsd-signature-type">Scene</a></h4>
+						<h4 class="tsd-returns-title">Returns <a href="jilscene.html" class="tsd-signature-type">JilScene</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -1031,7 +1031,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/acc476b/src/library/sceneManager.ts#L40">sceneManager.ts:40</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/e78ac57/src/library/sceneManager.ts#L35">sceneManager.ts:35</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1068,7 +1068,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/acc476b/src/library/sceneManager.ts#L70">sceneManager.ts:70</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/e78ac57/src/library/sceneManager.ts#L65">sceneManager.ts:65</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
