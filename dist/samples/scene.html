@@ -3,7 +3,7 @@
 
 <head>
 	<title>Scene Manager</title>
-	<script src="../jil.js"></script>
+	<script src="../jil.min.js"></script>
 	<link rel="stylesheet" href="./index.css">
 	<style>
 		html,
@@ -29,8 +29,8 @@
 
 <body>
 	<script>
-		window.scene.init();
-		var introScene = window.scene.create("intro");
+		jil.SceneManager.init();
+		var introScene = jil.SceneManager.create("intro");
 		var introLayer = introScene.createLayer("introLayer");
 
 		introLayer.createImage("background", "https://hdqwalls.com/download/gradient-geometry-background-abstract-lu-1280x720.jpg");
@@ -62,7 +62,7 @@
 		introBtn.anchor.set(0.5, 0.5);
 		introBtn.size.set(0.35, 0.25);
 		introBtn.position.set(0, 0.35);
-		introBtn.onClick(() => window.scene.use('menu'));
+		introBtn.onClick(() => jil.SceneManager.use('menu'));
 
 		var introText = introLayer.createText("sceneText", {
 			text: "Scene Intro",
@@ -76,7 +76,7 @@
 		introText.position.set(0.06, -0.1);
 		introText.rotation = 90;
 
-		var menuScene = window.scene.create("menu");
+		var menuScene = jil.SceneManager.create("menu");
 		var menuLayer = menuScene.createLayer("menuLayer");
 
 		menuLayer.createImage("backgroundMenu", "https://wallpapersite.com/images/pages/pic_w/901.jpg");
@@ -86,7 +86,7 @@
 		menuBtn.anchor.set(0, 0);
 		menuBtn.size.set(0.15, 0.10);
 		menuBtn.position.set(0.01, 0.01);
-		menuBtn.onClick(() => window.scene.use('intro'));
+		menuBtn.onClick(() => jil.SceneManager.use('intro'));
 
 		var menuText = menuLayer.createText("sceneText", {
 			text: "Scene Menu",
@@ -101,7 +101,7 @@
 		menuText.position.set(-0.06, 0.35);
 		menuText.rotation = -90;
 
-		window.scene.use("intro");
+		jil.SceneManager.use("intro");
 	</script>
 </body>
 

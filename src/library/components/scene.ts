@@ -5,6 +5,7 @@ import { h, VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
 import { Factory } from '../behaviours/factory';
 import { Vector2 } from '../helpers/vector2';
+import { resolution } from '../config';
 
 // tslint:disable-next-line:interface-name
 export interface Scene extends Node, Transform, Factory { }
@@ -29,7 +30,7 @@ export class Scene {
 
 	constructor (id: string, projector: Projector) {
 		this.id = id;
-		this.resolution = new Vector2(1280, 720);
+		this.resolution = new Vector2(resolution.x, resolution.y);
 		this.enterEvent = new SyncEvent<void>();
 		this.leaveEvent = new SyncEvent<void>();
 		this._projector = projector;

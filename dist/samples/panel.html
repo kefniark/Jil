@@ -36,8 +36,8 @@
 
 <body>
 	<script>
-		window.scene.init();
-		var sceneIntro = window.scene.create("intro");
+		jil.SceneManager.init();
+		var sceneIntro = jil.SceneManager.create("intro");
 		var layer = sceneIntro.createLayer("layer");
 
 		var scaleBtn = layer.createImage("scaleLogo", "https://cdn3.iconfinder.com/data/icons/interface/100/fullscreen-128.png");
@@ -139,7 +139,7 @@
 			imgBunny.scale.set(Math.random() + 0.5, Math.random() + 0.5);
 		});
 
-		window.scene.use("intro");
+		jil.SceneManager.use("intro");
 	</script>
 </body>
 

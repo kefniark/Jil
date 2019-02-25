@@ -1,6 +1,6 @@
 import { Scene } from '../components/scene';
+import { Layer } from '../components/layer';
 import * as Fatina from 'fatina';
-import { Layer } from '..';
 
 export function FadeInOut (sceneSrc: Scene | undefined, SceneDst: Scene) {
 	const sequence = Fatina.sequence();

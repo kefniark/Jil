@@ -4,7 +4,7 @@ import { Transform } from '../behaviours/transform';
 import { h, VNode, Projector } from 'maquette';
 import { Factory } from '../behaviours/factory';
 import { TransformTween } from '../behaviours/transformTween';
-import { Vector2 } from '../helpers/vector2';
+import { resolution } from '../config';
 
 // tslint:disable-next-line:interface-name
 export interface Layer extends Node, Transform, Factory, TransformTween { }
@@ -12,7 +12,6 @@ export interface Layer extends Node, Transform, Factory, TransformTween { }
 export class Layer {
 	@use(Node, Transform, Factory, TransformTween) public this: any;
 
-	public resolution: Vector2;
 	public classname: string;
 
 	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
@@ -20,7 +19,6 @@ export class Layer {
 		this.classname = params ? params : '';
 		this._parent = parent;
 		this._projector = projector;
-		this.resolution = new Vector2(1280, 720);
 		this.resetTransform();
 		this.resetStyle();
 
@@ -44,13 +42,13 @@ export class Layer {
 
 		if (window.innerWidth > 0 && window.innerWidth > 0) {
 			const screenRatio = window.innerWidth / window.innerHeight;
-			const gameRatio = this.resolution.x / this.resolution.y;
-			const scaleX = window.innerWidth / this.resolution.x;
-			const scaleY = window.innerHeight / this.resolution.y;
+			const gameRatio = resolution.x / resolution.y;
+			const scaleX = window.innerWidth / resolution.x;
+			const scaleY = window.innerHeight / resolution.y;
 			const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
 
-			styles.width = `${this.resolution.x}px`;
-			styles.height = `${this.resolution.y}px`;
+			styles.width = `${resolution.x}px`;
+			styles.height = `${resolution.y}px`;
 			styles.transformOrigin = 'top left';
 			styles.transform = `scale(${scale})`;
 		}

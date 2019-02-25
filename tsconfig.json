@@ -18,8 +18,7 @@
 		"noResolve": false,
 		"noImplicitAny": false,
 		"experimentalDecorators": true,
-		"isolatedModules": false,
-		"outDir": "./lib"
+		"isolatedModules": false
 	},
 	"include":[
 		"./src/**/*"

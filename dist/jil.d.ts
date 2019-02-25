@@ -1,3 +1,20 @@
+declare module 'helpers/vector2' {
+	export class Vector2 {
+	    x: number;
+	    y: number;
+	    constructor(x?: number, y?: number);
+	    set(x: number, y: number): void;
+	}
+
+}
+declare module 'config' {
+	import { Vector2 } from 'helpers/vector2';
+	/**
+	 * @ignore
+	 */
+	export const resolution: Vector2;
+
+}
 declare module 'behaviours/node' {
 	import { VNode, Projector } from 'maquette';
 	export class Node {
@@ -36,15 +53,6 @@ declare module 'behaviours/node' {
 	}
 
 }
-declare module 'helpers/vector2' {
-	export class Vector2 {
-	    x: number;
-	    y: number;
-	    constructor(x?: number, y?: number);
-	    set(x: number, y: number): void;
-	}
-
-}
 declare module 'behaviours/transform' {
 	import { Vector2 } from 'helpers/vector2';
 	export class Transform {
@@ -52,7 +60,9 @@ declare module 'behaviours/transform' {
 	    anchor: Vector2;
 	    pivot: Vector2;
 	    position: Vector2;
+	    positionPx: Vector2;
 	    size: Vector2;
+	    sizePx: Vector2;
 	    scale: Vector2;
 	    opacity: number;
 	    rotation: number;
@@ -86,70 +96,6 @@ declare module 'behaviours/factory' {
 	}
 
 }
-declare module 'components/scene' {
-	import { Node } from 'behaviours/node';
-	import { Transform } from 'behaviours/transform';
-	import { VNode, Projector } from 'maquette';
-	import { Factory } from 'behaviours/factory';
-	import { Vector2 } from 'helpers/vector2';
-	export interface Scene extends Node, Transform, Factory {
-	}
-	export class Scene {
-	    /**
-	     * @ignore
-	     */
-	    this: any;
-	    /**
-	     * Game Resolution (need to be remove)
-	     * @deprecated
-	     *
-	     * @type {Vector2}
-	     * @memberof Scene
-	     */
-	    resolution: Vector2;
-	    private enterEvent;
-	    private leaveEvent;
-	    constructor(id: string, projector: Projector);
-	    /**
-	     * Enter the scene
-	     *  - Make it visible
-	     *  - Trigger events
-	     *  - Refresh UI
-	     *
-	     * @returns
-	     * @memberof Scene
-	     */
-	    enter(): void;
-	    /**
-	     * Leave the scene
-	     *  - Hide it
-	     *  - Trigger events
-	     *  - Refresh UI
-	     *
-	     * @returns
-	     * @memberof Scene
-	     */
-	    leave(): void;
-	    /**
-	     * Create a new Layer in this scene
-	     *
-	     * @param id ID of the new layer (need to be unique)
-	     * @memberof Scene
-	     */
-	    createLayer: (id: string, classname?: string | undefined) => Node;
-	    /**
-	     * Render the HTML
-	     * @ignore
-	     *
-	     * @returns {VNode}
-	     * @memberof Scene
-	     */
-	    render(): VNode;
-	    onEnter(cb: () => void): void;
-	    onLeave(cb: () => void): void;
-	}
-
-}
 declare module 'behaviours/transformTween' {
 	import * as Fatina from 'fatina';
 	export class TransformTween {
@@ -174,12 +120,10 @@ declare module 'components/layer' {
 	import { VNode, Projector } from 'maquette';
 	import { Factory } from 'behaviours/factory';
 	import { TransformTween } from 'behaviours/transformTween';
-	import { Vector2 } from 'helpers/vector2';
 	export interface Layer extends Node, Transform, Factory, TransformTween {
 	}
 	export class Layer {
 	    this: any;
-	    resolution: Vector2;
 	    classname: string;
 	    constructor(id: string, params: any, parent: Node, projector: Projector | undefined);
 	    createPanel: (id: string) => Node;
@@ -295,18 +239,109 @@ declare module 'components/canvas' {
 	}
 
 }
+declare module 'components/scene' {
+	import { Node } from 'behaviours/node';
+	import { Transform } from 'behaviours/transform';
+	import { VNode, Projector } from 'maquette';
+	import { Factory } from 'behaviours/factory';
+	import { Vector2 } from 'helpers/vector2';
+	export interface Scene extends Node, Transform, Factory {
+	}
+	export class Scene {
+	    /**
+	     * @ignore
+	     */
+	    this: any;
+	    /**
+	     * Game Resolution (need to be remove)
+	     * @deprecated
+	     *
+	     * @type {Vector2}
+	     * @memberof Scene
+	     */
+	    resolution: Vector2;
+	    private enterEvent;
+	    private leaveEvent;
+	    constructor(id: string, projector: Projector);
+	    /**
+	     * Enter the scene
+	     *  - Make it visible
+	     *  - Trigger events
+	     *  - Refresh UI
+	     *
+	     * @returns
+	     * @memberof Scene
+	     */
+	    enter(): void;
+	    /**
+	     * Leave the scene
+	     *  - Hide it
+	     *  - Trigger events
+	     *  - Refresh UI
+	     *
+	     * @returns
+	     * @memberof Scene
+	     */
+	    leave(): void;
+	    /**
+	     * Create a new Layer in this scene
+	     *
+	     * @param id ID of the new layer (need to be unique)
+	     * @memberof Scene
+	     */
+	    createLayer: (id: string, classname?: string | undefined) => Node;
+	    /**
+	     * Render the HTML
+	     * @ignore
+	     *
+	     * @returns {VNode}
+	     * @memberof Scene
+	     */
+	    render(): VNode;
+	    onEnter(cb: () => void): void;
+	    onLeave(cb: () => void): void;
+	}
+
+}
 declare module 'transitions/sceneTransition' {
 	import { Scene } from 'components/scene';
 	export function FadeInOut(sceneSrc: Scene | undefined, SceneDst: Scene): void;
 
 }
-declare module 'index' {
+declare module 'sceneManager' {
 	import { Scene } from 'components/scene';
-	import { Layer } from 'components/layer';
-	import { Button } from 'components/button';
-	import { Panel } from 'components/panel';
-	import { Text } from 'components/text';
-	import { Canvas } from 'components/canvas';
-	export { Scene, Button, Panel, Layer, Text, Canvas };
+	/**
+	 * Scene Manager Object (use UMD: Universal Module Definition)
+	 *
+	 * @remarks
+	 * - Import: `import { SceneManager } from 'jil';`
+	 * - Require: `const SceneManager = require('jil').SceneManager;`
+	 * - Web: `<script src="jil.js"></script> ... jil.SceneManager`
+	 */
+	export class SceneManager {
+	    /**
+	     * Create the JIL root and append it to the document.body
+	     *
+	     * @param width Native width of the game
+	     * @param height Native height of the game
+	     */
+	    static init(width?: number, height?: number): void;
+	    /**
+	     * Create a new scene
+	     *
+	     * @param id SceneId (need to be unique)
+	     */
+	    static create(id: string): Scene;
+	    /**
+	     * Switch to a different scene
+	     *
+	     * @param id SceneId
+	     */
+	    static use(id: string): void;
+	}
 
 }
+
+	import { SceneManager } from 'sceneManager';
+	export { SceneManager };
+

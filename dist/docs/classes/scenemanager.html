@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Jil | Jil</title>
+	<title>SceneManager | Jil</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -879,7 +879,7 @@ img { max-width: 100%; }
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="index.html">Jil</a></strong>
+					<strong><a href="../index.html">Jil</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -908,149 +908,181 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class">
-			<a href="classes/button.html" class="tsd-kind-icon">Button</a>
+			<a href="button.html" class="tsd-kind-icon">Button</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/canvas.html" class="tsd-kind-icon">Canvas</a>
+			<a href="canvas.html" class="tsd-kind-icon">Canvas</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/image.html" class="tsd-kind-icon">Image</a>
+			<a href="image.html" class="tsd-kind-icon">Image</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/layer.html" class="tsd-kind-icon">Layer</a>
+			<a href="layer.html" class="tsd-kind-icon">Layer</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/panel.html" class="tsd-kind-icon">Panel</a>
+			<a href="panel.html" class="tsd-kind-icon">Panel</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/scene.html" class="tsd-kind-icon">Scene</a>
+			<a href="scene.html" class="tsd-kind-icon">Scene</a>
+		</li>
+		<li class="current tsd-kind-class">
+			<a href="scenemanager.html" class="tsd-kind-icon">Scene<wbr>Manager</a>
+			<ul>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="scenemanager.html#create" class="tsd-kind-icon">create</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="scenemanager.html#init" class="tsd-kind-icon">init</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="scenemanager.html#use" class="tsd-kind-icon">use</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/scenemanager.html" class="tsd-kind-icon">Scene<wbr>Manager</a>
-		</li>
-		<li class=" tsd-kind-class">
-			<a href="classes/text.html" class="tsd-kind-icon">Text</a>
+			<a href="text.html" class="tsd-kind-icon">Text</a>
 		</li>
 		<li class=" tsd-kind-function">
-			<a href="globals.html#fadeinout" class="tsd-kind-icon">Fade<wbr>InOut</a>
+			<a href="../globals.html#fadeinout" class="tsd-kind-icon">Fade<wbr>InOut</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<div class="tsd-panel tsd-typography">
-			<h1 id="jil-html5-game-ui">JIL - HTML5 Game UI</h1>
-			<p><img src="./logo.png" alt="Logo"></p>
-			<p><strong>UI Framework for HTML5 Games</strong>:</p>
-			<ul>
-				<li>Autoscale and centering</li>
-				<li>Vector positioning (<code>pivot</code>, <code>anchor</code>, <code>position</code>, <code>scale</code>, <code>rotation</code>)</li>
-				<li>Fast HTML5/CSS3 (Use CSS3 transform &amp; Virtual dom)</li>
-				<li>Tween integration (Provide an easy way to write animation)</li>
-				<li>Layer system make it easy to organize UI</li>
-				<li>Engine agnostic (Work with HTML canvas and dont interfer with 2D/3D Engine):<ul>
-						<li>Babylon.js</li>
-						<li>Pixi</li>
-						<li>Phaser</li>
-						<li>Three.js</li>
-						<li>...</li>
-					</ul>
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>Scene Manager Object (use UMD: Universal Module Definition)</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>remarks</dt>
+					<dd><ul>
+							<li>Import: <code>import { SceneManager } from &#39;jil&#39;;</code></li>
+							<li>Require: <code>const SceneManager = require(&#39;jil&#39;).SceneManager;</code></li>
+							<li>Web: <code>&lt;script src=&quot;jil.js&quot;&gt;&lt;/script&gt; ... jil.SceneManager</code></li>
+						</ul>
+					</dd>
+				</dl>
+			</div>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">SceneManager</span>
 				</li>
 			</ul>
-			<blockquote>
-				<p>This is still a project in <strong>early development</strong></p>
-				<p>I plan later, to make a small editor to design scene UI and export them in <code>*.json</code></p>
-			</blockquote>
-			<hr>
-			<h2 id="links">Links</h2>
-			<ul>
-				<li><a href="https://kefniark.github.io/jil/dist/samples/"><strong>Demo</strong></a></li>
-				<li><a href="https://kefniark.github.io/jil/dist/docs/"><strong>API Doc</strong></a></li>
-			</ul>
-			<hr>
-			<h2 id="usage">Usage</h2>
-			<p>This library is exported with <code>UMD (Universal Module Definition)</code>:</p>
-			<h3 id="cdn">CDN</h3>
-			<p>You can use directly in your webpage <code>https://cdn.jsdelivr.net/npm/jil@latest/dist/jil.min.js</code></p>
-			<p>and call <code>jil.SceneManager.init()</code></p>
-			<h3 id="npm">NPM</h3>
-			<p>Or install it through <code>npm</code> / <code>yarn</code></p>
-			<pre><code class="language-sh">npm install jil</code></pre>
-			<p>and</p>
-			<pre><code class="language-ts"><span class="hljs-keyword">import</span> { SceneManager } <span class="hljs-keyword">from</span> <span class="hljs-string">'jil'</span>;
-
-SceneManager.init();</code></pre>
-			<hr>
-			<h2 id="dev-usage">Dev Usage</h2>
-			<h4 id="install">Install</h4>
-			<pre><code class="language-sh">npm install</code></pre>
-			<ul>
-				<li>clone this repository and run this command</li>
-			</ul>
-			<h4 id="dev">Dev</h4>
-			<pre><code class="language-sh">npm run dev</code></pre>
-			<ul>
-				<li>this will start a dev server on <a href="http://localhost:8080">http://localhost:8080</a></li>
-			</ul>
-			<h4 id="build">Build</h4>
-			<pre><code class="language-sh">npm run build</code></pre>
-			<ul>
-				<li>this will update the <code>dist</code> folder<ul>
-						<li>code</li>
-						<li>documentation</li>
-						<li>typescript definition file <code>jil.d.ts</code></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Methods</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/button.html" class="tsd-kind-icon">Button</a></li>
-							<li class="tsd-kind-class"><a href="classes/canvas.html" class="tsd-kind-icon">Canvas</a></li>
-							<li class="tsd-kind-class"><a href="classes/image.html" class="tsd-kind-icon">Image</a></li>
-							<li class="tsd-kind-class"><a href="classes/layer.html" class="tsd-kind-icon">Layer</a></li>
-							<li class="tsd-kind-class"><a href="classes/panel.html" class="tsd-kind-icon">Panel</a></li>
-							<li class="tsd-kind-class"><a href="classes/scene.html" class="tsd-kind-icon">Scene</a></li>
-							<li class="tsd-kind-class"><a href="classes/scenemanager.html" class="tsd-kind-icon">Scene<wbr>Manager</a></li>
-							<li class="tsd-kind-class"><a href="classes/text.html" class="tsd-kind-icon">Text</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Functions</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-function"><a href="globals.html#fadeinout" class="tsd-kind-icon">Fade<wbr>InOut</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="scenemanager.html#create" class="tsd-kind-icon">create</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="scenemanager.html#init" class="tsd-kind-icon">init</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="scenemanager.html#use" class="tsd-kind-icon">use</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
-			<h2>Functions</h2>
-			<section class="tsd-panel tsd-member tsd-kind-function">
-				<a name="fadeinout" class="tsd-anchor"></a>
-				<h3>Fade<wbr>InOut</h3>
-				<ul class="tsd-signatures tsd-kind-function">
-					<li class="tsd-signature tsd-kind-icon">Fade<wbr>InOut<span class="tsd-signature-symbol">(</span>sceneSrc<span class="tsd-signature-symbol">: </span><a href="classes/scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, SceneDst<span class="tsd-signature-symbol">: </span><a href="classes/scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="create" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="scene.html" class="tsd-signature-type">Scene</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/019dbd5/src/library/transitions/sceneTransition.ts#L5">transitions/sceneTransition.ts:5</a></li>
+								<li>Defined in sceneManager.ts:55</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create a new scene</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>sceneSrc: <a href="classes/scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+								<h5>id: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>SceneId (need to be unique)</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="scene.html" class="tsd-signature-type">Scene</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="init" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> init</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in sceneManager.ts:40</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create the JIL root and append it to the document.body</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> width: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Native width of the game</p>
+								</div>
 							</li>
 							<li>
-								<h5>SceneDst: <a href="classes/scene.html" class="tsd-signature-type">Scene</a></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> height: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Native height of the game</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="use" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> use</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">use<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in sceneManager.ts:70</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Switch to a different scene</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>id: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>SceneId</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

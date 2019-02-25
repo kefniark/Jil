@@ -4,6 +4,7 @@ import { Transform } from '../behaviours/transform';
 import { Clickable } from '../behaviours/clickable';
 import { TransformTween } from '../behaviours/transformTween';
 import { h, VNode, Projector } from 'maquette';
+import { resolution } from '../config';
 
 // tslint:disable-next-line:interface-name
 export interface Canvas extends Node, Transform, Clickable, TransformTween { }
@@ -24,8 +25,8 @@ export class Canvas {
 		return h('canvas', {
 			id: this.id,
 			key: this.id,
-			width: 1280,
-			height: 720,
+			width: resolution.x,
+			height: resolution.y,
 			class: 'canvas',
 			// styles: this.getStyle(),
 			onclick: this.click.bind(this),

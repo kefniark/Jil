@@ -6,8 +6,12 @@ const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 module.exports = {
 	entry: './src/library/index.ts',
 	output: {
-		filename: 'jil.js',
-		path: path.resolve(__dirname, 'dist')
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'jil.min.js',
+		library: 'jil',
+		//libraryExport: 'default',
+		libraryTarget: 'umd',
+		umdNamedDefine: true
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"]
@@ -24,7 +28,7 @@ module.exports = {
 		// 	{ from: 'src/samples/scene.html', to: 'samples' }
 		// ]),
 		new TypedocWebpackPlugin({
-			name: 'JIL',
+			name: 'Jil',
 			theme: 'minimal',
 			out: './docs',
 			mode: 'file',

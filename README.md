@@ -29,12 +29,24 @@
 
 ## Usage
 
-#### Manual
-You can download and use `dist/jil.js`
+This library is exported with `UMD (Universal Module Definition)`:
 
-#### NPM
-```
+### CDN
+You can use directly in your webpage `https://cdn.jsdelivr.net/npm/jil@latest/dist/jil.min.js`
+
+and call ```jil.SceneManager.init()```
+
+### NPM
+Or install it through `npm` / `yarn`
+```sh
 npm install jil
+```
+
+and
+```ts
+import { SceneManager } from 'jil';
+
+SceneManager.init();
 ```
 
 ---
@@ -42,19 +54,19 @@ npm install jil
 ## Dev Usage
 
 #### Install
-```
+```sh
 npm install
 ```
  - clone this repository and run this command
 
 #### Dev
-```
+```sh
 npm run dev
 ```
  - this will start a dev server on http://localhost:8080
 
 #### Build
-```
+```sh
 npm run build
 ```
  - this will update the `dist` folder

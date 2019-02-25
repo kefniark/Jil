@@ -3604,24 +3604,15 @@ exports.Vector2 = Vector2;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const scene_1 = __webpack_require__(/*! ./components/scene */ "./src/library/components/scene.ts");
-exports.Scene = scene_1.Scene;
 const layer_1 = __webpack_require__(/*! ./components/layer */ "./src/library/components/layer.ts");
-exports.Layer = layer_1.Layer;
 const button_1 = __webpack_require__(/*! ./components/button */ "./src/library/components/button.ts");
-exports.Button = button_1.Button;
 const panel_1 = __webpack_require__(/*! ./components/panel */ "./src/library/components/panel.ts");
-exports.Panel = panel_1.Panel;
 const image_1 = __webpack_require__(/*! ./components/image */ "./src/library/components/image.ts");
 const text_1 = __webpack_require__(/*! ./components/text */ "./src/library/components/text.ts");
-exports.Text = text_1.Text;
 const canvas_1 = __webpack_require__(/*! ./components/canvas */ "./src/library/components/canvas.ts");
-exports.Canvas = canvas_1.Canvas;
 const factory_1 = __webpack_require__(/*! ./behaviours/factory */ "./src/library/behaviours/factory.ts");
-const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
-const sceneTransition_1 = __webpack_require__(/*! ./transitions/sceneTransition */ "./src/library/transitions/sceneTransition.ts");
-const config_1 = __webpack_require__(/*! ./config */ "./src/library/config.ts");
-const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
+const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
+exports.SceneManager = sceneManager_1.SceneManager;
 // register to factory
 factory_1.register('button', button_1.Button);
 factory_1.register('panel', panel_1.Panel);
@@ -3629,6 +3620,25 @@ factory_1.register('layer', layer_1.Layer);
 factory_1.register('image', image_1.Image);
 factory_1.register('text', text_1.Text);
 factory_1.register('canvas', canvas_1.Canvas);
+
+
+/***/ }),
+
+/***/ "./src/library/sceneManager.ts":
+/*!*************************************!*\
+  !*** ./src/library/sceneManager.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const scene_1 = __webpack_require__(/*! ./components/scene */ "./src/library/components/scene.ts");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const sceneTransition_1 = __webpack_require__(/*! ./transitions/sceneTransition */ "./src/library/transitions/sceneTransition.ts");
+const config_1 = __webpack_require__(/*! ./config */ "./src/library/config.ts");
+const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
 /**
  * @ignore
  */
@@ -3646,14 +3656,14 @@ let projector;
  */
 let current;
 /**
- * Root Object (use UMD: Universal Module Definition)
+ * Scene Manager Object (use UMD: Universal Module Definition)
  *
  * @remarks
- * - Import: `import Jil from 'jil';`
- * - Require: `const Jil = require('jil');`
- * - Web: `<script src="jil.js"></script>`
+ * - Import: `import { SceneManager } from 'jil';`
+ * - Require: `const SceneManager = require('jil').SceneManager;`
+ * - Web: `<script src="jil.js"></script> ... jil.SceneManager`
  */
-class Jil {
+class SceneManager {
     /**
      * Create the JIL root and append it to the document.body
      *
@@ -3698,7 +3708,7 @@ class Jil {
         current = scenes[id];
     }
 }
-exports.default = Jil;
+exports.SceneManager = SceneManager;
 
 
 /***/ }),
@@ -3745,4 +3755,4 @@ exports.FadeInOut = FadeInOut;
 
 /******/ })["default"];
 });
-//# sourceMappingURL=jil.js.map
+//# sourceMappingURL=main.js.map

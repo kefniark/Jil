@@ -1,5 +1,6 @@
 
 import { Vector2 } from '../helpers/vector2';
+import { resolution } from '../config';
 
 // tslint:disable-next-line:max-classes-per-file
 export class Transform {
@@ -27,7 +28,7 @@ export class Transform {
 				return true;
 			}
 		};
-		const resolution = { x: 1280, y: 720 };
+
 		const handlerPos = {
 			get: (obj, prop) => {
 				if (prop !== 'x' && prop !== 'y') return obj[prop];
