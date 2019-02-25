@@ -6,10 +6,9 @@ import { Text } from './components/text';
 import { Canvas } from './components/canvas';
 
 import { register } from './behaviours/factory';
-import { SceneManager } from './sceneManager';
 
 // export class
-export { SceneManager };
+export { SceneManager } from './sceneManager';
 
 // register to factory
 register('button', Button);

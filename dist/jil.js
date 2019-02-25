@@ -3611,7 +3611,8 @@ const image_1 = __webpack_require__(/*! ./components/image */ "./src/library/com
 const text_1 = __webpack_require__(/*! ./components/text */ "./src/library/components/text.ts");
 const canvas_1 = __webpack_require__(/*! ./components/canvas */ "./src/library/components/canvas.ts");
 const factory_1 = __webpack_require__(/*! ./behaviours/factory */ "./src/library/behaviours/factory.ts");
-const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
+// export class
+var sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
 exports.SceneManager = sceneManager_1.SceneManager;
 // register to factory
 factory_1.register('button', button_1.Button);
