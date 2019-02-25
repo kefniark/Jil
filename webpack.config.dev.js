@@ -4,10 +4,11 @@ module.exports = {
 	entry: './src/library/index.ts',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: '[name].js',
+		filename: 'jil.js',
 		library: 'jil',
-		libraryExport: 'default',
-		libraryTarget: 'umd'
+		//libraryExport: 'default',
+		libraryTarget: 'umd',
+		umdNamedDefine: true
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"]
