@@ -34,9 +34,20 @@ export class SceneManager {
 	 */
 	public static init (width?: number, height?: number) {
 		Fatina.init();
-		projector = createProjector();
+
 		const vdom = () => h('div', { id: 'root' }, sceneList.map((x) => x.render()));
-		projector.append(document.body, vdom);
+
+		// tslint:disable-next-line
+		if (typeof(document) !== 'undefined') {
+			projector = createProjector();
+			projector.append(document.body, vdom);
+		} else {
+			projector = {
+				// tslint:disable-next-line:no-empty
+				scheduleRender: () => {}
+			} as Projector;
+		}
+
 		if (width && height) {
 			resolution.set(width, height);
 		}

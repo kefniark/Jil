@@ -1,6 +1,7 @@
 # JIL - HTML5 Game UI
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1aa993a6b3f1434d9d7be61a58e1adbe)](https://app.codacy.com/app/kefniark/jil?utm_source=github.com&utm_medium=referral&utm_content=kefniark/jil&utm_campaign=Badge_Grade_Dashboard)
+[![Coverage Status](https://coveralls.io/repos/github/kefniark/jil/badge.svg?branch=master)](https://coveralls.io/github/kefniark/jil?branch=master)
 [![Build Status](https://img.shields.io/travis/kefniark/jil/master.svg)](https://travis-ci.org/kefniark/jil)
 [![NPM Version](https://img.shields.io/npm/v/jil.svg)](https://npmjs.org/package/jil)
 [![NPM Downloads](https://img.shields.io/npm/dm/jil.svg)](https://npmjs.org/package/jil)
