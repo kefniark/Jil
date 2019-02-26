@@ -6,7 +6,7 @@ export function FadeInOut (sceneSrc: JilScene | undefined, SceneDst: JilScene) {
 	// tslint:disable:no-console
 	sequence.appendCallback(() => console.log('Scene Transition Start', sceneSrc, SceneDst));
 	if (sceneSrc) {
-		const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader') as JilLayer;
+		const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader');
 		faderSrc.opacity = 0;
 		sequence.append(faderSrc.show(250, false));
 		sequence.appendCallback(() => sceneSrc.leave());
@@ -14,7 +14,7 @@ export function FadeInOut (sceneSrc: JilScene | undefined, SceneDst: JilScene) {
 	} else {
 		sequence.appendInterval(500);
 	}
-	const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader') as JilLayer;
+	const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader');
 	faderDst.opacity = 1;
 	sequence.appendCallback(() => SceneDst.enter());
 

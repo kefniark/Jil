@@ -15,21 +15,11 @@ export class JilScene {
 	 */
 	@use(Node, Transform, Factory) public this: any;
 
-	/**
-	 * Game Resolution (need to be remove)
-	 * @deprecated
-	 *
-	 * @type {Vector2}
-	 * @memberof Scene
-	 */
-	public resolution: Vector2;
-
 	private enterEvent: SyncEvent<void>;
 	private leaveEvent: SyncEvent<void>;
 
 	constructor (id: string, projector: Projector) {
 		this.id = id;
-		this.resolution = new Vector2(resolution.x, resolution.y);
 		this.enterEvent = new SyncEvent<void>();
 		this.leaveEvent = new SyncEvent<void>();
 		this._projector = projector;
@@ -90,7 +80,7 @@ export class JilScene {
 		styles.display = this.enable ? 'block' : 'none';
 
 		const screenRatio = window.innerWidth / window.innerHeight;
-		const gameRatio = this.resolution.x / this.resolution.y;
+		const gameRatio = resolution.x / resolution.y;
 
 		if (screenRatio <= gameRatio) {
 			styles.width = '100vw';
