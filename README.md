@@ -13,11 +13,17 @@
 ![Logo](./logo.png)
 
 ## **UI Framework for HTML5 Games**:
- * Autoscale and centering
+To build a **HTML5 Game UI**, there are usually two choices:
+* Use the **GUI system** provided by your engine (each one is different with their limitations).
+* Use **HTML/CSS** (but usual CSS framework like bootstrap are not designed for games)
+Which in both case can be annoying and time consuming.
+
+The idea behind **JIL** is to provide the best of both world, in a user friendly way.
+ * Auto-scaling and Centering
  * Vector positioning (`pivot`, `anchor`, `position`, `scale`, `rotation`)
  * Fast HTML5/CSS3 (Use CSS3 transform & Virtual dom)
- * Tween integration (Provide an easy way to write animation)
- * Layer system make it easy to organize UI
+ * Tween integration (Provide an easy way to animate your UI)
+ * Layer & Layout system (Easier to organize UI than table or flexbox)
  * Engine agnostic (Work with HTML canvas and dont interfer with 2D/3D Engine):
    - Babylon.js
    - Pixi
