@@ -1,6 +1,5 @@
 import { VNode, Projector } from 'maquette';
 import { Node, Transform, Factory } from '../../behaviours';
-import { Vector2 } from '../../helpers';
 import { JilLayer } from './layer';
 export interface JilScene extends Node, Transform, Factory {
 }
@@ -9,14 +8,6 @@ export declare class JilScene {
      * @ignore
      */
     this: any;
-    /**
-     * Game Resolution (need to be remove)
-     * @deprecated
-     *
-     * @type {Vector2}
-     * @memberof Scene
-     */
-    resolution: Vector2;
     private enterEvent;
     private leaveEvent;
     constructor(id: string, projector: Projector);

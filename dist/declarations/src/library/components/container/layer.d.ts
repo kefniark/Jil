@@ -12,10 +12,10 @@ export declare class JilLayer {
     classname: string;
     constructor(id: string, params: any, parent: Node, projector: Projector | undefined);
     createPanel: (id: string) => JilPanel;
-    createButton: (id: string, params: any) => JilButton;
-    createImage: (id: string, params: any) => JilImage;
-    createText: (id: string, params: any) => JilText;
-    createCanvas: (id: string, params: any) => JilCanvas;
+    createButton: (id: string, params?: any) => JilButton;
+    createImage: (id: string, params?: any) => JilImage;
+    createText: (id: string, params?: any) => JilText;
+    createCanvas: (id: string, params?: any) => JilCanvas;
     private resizeHandler;
     render(): VNode;
 }

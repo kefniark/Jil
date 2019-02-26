@@ -30,8 +30,8 @@ export class JilPanel {
 	}
 
 	public createPanel = (id: string) => this.create('panel', id) as JilPanel;
-	public createButton = (id: string, params: string | any) => this.create('button', id, params) as JilButton;
-	public createImage = (id: string, params: string | any) => this.create('image', id, params) as JilImage;
-	public createText = (id: string, params: string | any) => this.create('text', id, params) as JilText;
-	public createCanvas = (id: string, params: string | any) => this.create('canvas', id, params) as JilCanvas;
+	public createButton = (id: string, params?: string | any) => this.create('button', id, params) as JilButton;
+	public createImage = (id: string, params?: string | any) => this.create('image', id, params) as JilImage;
+	public createText = (id: string, params?: string | any) => this.create('text', id, params) as JilText;
+	public createCanvas = (id: string, params?: string | any) => this.create('canvas', id, params) as JilCanvas;
 }

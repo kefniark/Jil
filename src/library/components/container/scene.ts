@@ -79,7 +79,8 @@ export class JilScene {
 		const styles = {} as any;
 		styles.display = this.enable ? 'block' : 'none';
 
-		const screenRatio = window.innerWidth / window.innerHeight;
+		// tslint:disable-next-line
+		const screenRatio = (typeof(window) !== 'undefined') ? window.innerWidth / window.innerHeight : 1;
 		const gameRatio = resolution.x / resolution.y;
 
 		if (screenRatio <= gameRatio) {

@@ -14,8 +14,10 @@ export class JilImage {
 
 	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
 		this.id = id;
-		this.src = isString(params) ? params : params.src;
-		if (!this.src) this.src = '';
+		this.src = '';
+		if (params) {
+			this.src = isString(params) ? params : params.src;
+		}
 		this.styles = params || {};
 		this._parent = parent;
 		this._projector = projector;

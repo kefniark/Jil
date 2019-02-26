@@ -14,8 +14,10 @@ export class JilText {
 
 	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
 		this.id = id;
-		this.text = isString(params) ? params : params.text;
-		if (!this.text) this.text = 'Default Text';
+		this.text = 'Default Text';
+		if (params) {
+			this.text = isString(params) ? params : params.text;
+		}
 		this.styles = params || {};
 		this._parent = parent;
 		this._projector = projector;

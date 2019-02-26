@@ -24,14 +24,17 @@ export class JilLayer {
 		this.resetTransform();
 		this.resetStyle();
 
-		window.addEventListener('resize', this.resizeHandler.bind(this), false);
+		// tslint:disable-next-line
+		if (typeof(window) !== 'undefined') {
+			window.addEventListener('resize', this.resizeHandler.bind(this), false);
+		}
 	}
 
 	public createPanel = (id: string) => this.create('panel', id) as JilPanel;
-	public createButton = (id: string, params: string | any) => this.create('button', id, params) as JilButton;
-	public createImage = (id: string, params: string | any) => this.create('image', id, params) as JilImage;
-	public createText = (id: string, params: string | any) => this.create('text', id, params) as JilText;
-	public createCanvas = (id: string, params: string | any) => this.create('canvas', id, params) as JilCanvas;
+	public createButton = (id: string, params?: string | any) => this.create('button', id, params) as JilButton;
+	public createImage = (id: string, params?: string | any) => this.create('image', id, params) as JilImage;
+	public createText = (id: string, params?: string | any) => this.create('text', id, params) as JilText;
+	public createCanvas = (id: string, params?: string | any) => this.create('canvas', id, params) as JilCanvas;
 
 	private resizeHandler () {
 		this.refresh();
@@ -42,7 +45,8 @@ export class JilLayer {
 		styles.display = this.enable ? 'block' : 'none';
 		styles.opacity = this.opacity.toString();
 
-		if (window.innerWidth > 0 && window.innerWidth > 0) {
+		// tslint:disable-next-line
+		if ((typeof(window) !== 'undefined') && window.innerWidth > 0 && window.innerWidth > 0) {
 			const screenRatio = window.innerWidth / window.innerHeight;
 			const gameRatio = resolution.x / resolution.y;
 			const scaleX = window.innerWidth / resolution.x;

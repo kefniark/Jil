@@ -3178,7 +3178,10 @@ class JilLayer {
         this._projector = projector;
         this.resetTransform();
         this.resetStyle();
-        window.addEventListener('resize', this.resizeHandler.bind(this), false);
+        // tslint:disable-next-line
+        if (typeof (window) !== 'undefined') {
+            window.addEventListener('resize', this.resizeHandler.bind(this), false);
+        }
     }
     resizeHandler() {
         this.refresh();
@@ -3187,7 +3190,8 @@ class JilLayer {
         const styles = {};
         styles.display = this.enable ? 'block' : 'none';
         styles.opacity = this.opacity.toString();
-        if (window.innerWidth > 0 && window.innerWidth > 0) {
+        // tslint:disable-next-line
+        if ((typeof (window) !== 'undefined') && window.innerWidth > 0 && window.innerWidth > 0) {
             const screenRatio = window.innerWidth / window.innerHeight;
             const gameRatio = config_1.resolution.x / config_1.resolution.y;
             const scaleX = window.innerWidth / config_1.resolution.x;
@@ -3283,7 +3287,6 @@ const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modul
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
-const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
 class JilScene {
     constructor(id, projector) {
@@ -3295,7 +3298,6 @@ class JilScene {
          */
         this.createLayer = (id, classname) => this.create('layer', id, classname);
         this.id = id;
-        this.resolution = new helpers_1.Vector2(config_1.resolution.x, config_1.resolution.y);
         this.enterEvent = new ts_events_1.SyncEvent();
         this.leaveEvent = new ts_events_1.SyncEvent();
         this._projector = projector;
@@ -3345,8 +3347,9 @@ class JilScene {
     render() {
         const styles = {};
         styles.display = this.enable ? 'block' : 'none';
-        const screenRatio = window.innerWidth / window.innerHeight;
-        const gameRatio = this.resolution.x / this.resolution.y;
+        // tslint:disable-next-line
+        const screenRatio = (typeof (window) !== 'undefined') ? window.innerWidth / window.innerHeight : 1;
+        const gameRatio = config_1.resolution.x / config_1.resolution.y;
         if (screenRatio <= gameRatio) {
             styles.width = '100vw';
             styles.height = '56.25vw';
@@ -3459,9 +3462,10 @@ const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helper
 class JilImage {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.src = helpers_1.isString(params) ? params : params.src;
-        if (!this.src)
-            this.src = '';
+        this.src = '';
+        if (params) {
+            this.src = helpers_1.isString(params) ? params : params.src;
+        }
         this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
@@ -3510,9 +3514,10 @@ const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helper
 class JilText {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = helpers_1.isString(params) ? params : params.text;
-        if (!this.text)
-            this.text = 'Default Text';
+        this.text = 'Default Text';
+        if (params) {
+            this.text = helpers_1.isString(params) ? params : params.text;
+        }
         this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
@@ -3734,9 +3739,18 @@ class SceneManager {
      */
     static init(width, height) {
         Fatina.init();
-        projector = maquette_1.createProjector();
         const vdom = () => maquette_1.h('div', { id: 'root' }, sceneList.map((x) => x.render()));
-        projector.append(document.body, vdom);
+        // tslint:disable-next-line
+        if (typeof (document) !== 'undefined') {
+            projector = maquette_1.createProjector();
+            projector.append(document.body, vdom);
+        }
+        else {
+            projector = {
+                // tslint:disable-next-line:no-empty
+                scheduleRender: () => { }
+            };
+        }
         if (width && height) {
             config_1.resolution.set(width, height);
         }
