@@ -2873,6 +2873,8 @@ class Node {
             this.createEvent = new ts_events_1.SyncEvent();
         if (!this.destroyEvent)
             this.destroyEvent = new ts_events_1.SyncEvent();
+        if (!this.nodeEvent)
+            this.nodeEvent = new ts_events_1.SyncEvent();
     }
     handlerAfterCreate() {
         if (this.createEvent)
@@ -2892,20 +2894,28 @@ class Node {
     }
     addChild(element) {
         this._childrens.push(element);
+        if (this.nodeEvent)
+            this.nodeEvent.post('added');
         this.refresh();
     }
     removeChild(element) {
         const i = this._childrens.indexOf(element);
         if (i !== -1) {
             this._childrens.splice(i, 1);
+            if (this.nodeEvent)
+                this.nodeEvent.post('removed');
         }
         this.refresh();
     }
     destroy() {
+        if (this.nodeEvent)
+            this.nodeEvent.post('destroyed');
         if (this._parent)
             this._parent.removeChild(this);
     }
     refresh() {
+        if (this.nodeEvent)
+            this.nodeEvent.post('refresh');
         if (this._projector)
             this._projector.scheduleRender();
     }
@@ -2940,13 +2950,15 @@ const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.t
 class Transform {
     constructor() {
         this.enable = true;
-        this.anchor = undefined;
-        this.pivot = undefined;
-        this.position = undefined;
-        this.positionPx = undefined;
-        this.size = undefined;
-        this.sizePx = undefined;
-        this.scale = undefined;
+        // properties overwritable
+        this.anchor = new helpers_1.Vector2Extend();
+        this.pivot = new helpers_1.Vector2Extend();
+        this.position = new helpers_1.Vector2Extend();
+        this.size = new helpers_1.Vector2Extend();
+        // local properties
+        this.positionPx = new helpers_1.Vector2();
+        this.sizePx = new helpers_1.Vector2();
+        this.scale = new helpers_1.Vector2();
         this.opacity = 1;
         this.rotation = 0;
     }
@@ -2954,11 +2966,11 @@ class Transform {
      * @ignore
      */
     resetStyle() {
+        // tslint:disable:no-console
         const self = this;
         const handler = {
             set: (obj, prop, value) => {
                 obj[prop] = value;
-                // tslint:disable-next-line:no-console
                 if (self.refresh)
                     self.refresh();
                 return true;
@@ -2978,7 +2990,6 @@ class Transform {
                 return true;
             }
         };
-        // tslint:disable:no-console
         const handlerSize = {
             get: (obj, prop) => {
                 if (prop !== 'x' && prop !== 'y')
@@ -2994,11 +3005,11 @@ class Transform {
             }
         };
         this.enable = true;
-        this.anchor = new Proxy(new helpers_1.Vector2(), handler);
-        this.pivot = new Proxy(new helpers_1.Vector2(), handler);
-        this.position = new Proxy(new helpers_1.Vector2(), handler);
+        this.anchor = new Proxy(new helpers_1.Vector2Extend(), handler);
+        this.pivot = new Proxy(new helpers_1.Vector2Extend(), handler);
+        this.position = new Proxy(new helpers_1.Vector2Extend(), handler);
+        this.size = new Proxy(new helpers_1.Vector2Extend(1, 1), handler);
         this.positionPx = new Proxy(new helpers_1.Vector2(), handlerPos);
-        this.size = new Proxy(new helpers_1.Vector2(1, 1), handler);
         this.sizePx = new Proxy(new helpers_1.Vector2(), handlerSize);
         this.scale = new Proxy(new helpers_1.Vector2(1, 1), handler);
         this.opacity = 1;
@@ -3056,6 +3067,9 @@ exports.Clickable = clickable_1.Clickable;
 // Animation
 var transformTween_1 = __webpack_require__(/*! ./animation/transformTween */ "./src/library/behaviours/animation/transformTween.ts");
 exports.TransformTween = transformTween_1.TransformTween;
+// Layout
+var layout_1 = __webpack_require__(/*! ./layout/layout */ "./src/library/behaviours/layout/layout.ts");
+exports.Layout = layout_1.Layout;
 
 
 /***/ }),
@@ -3090,6 +3104,87 @@ class Clickable {
     }
 }
 exports.Clickable = Clickable;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/layout/layout.ts":
+/*!*************************************************!*\
+  !*** ./src/library/behaviours/layout/layout.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var LayoutType;
+(function (LayoutType) {
+    LayoutType["Default"] = "default";
+    LayoutType["Horizontal"] = "horizontal";
+    LayoutType["Vertical"] = "vertical";
+    LayoutType["Grid"] = "grid";
+})(LayoutType = exports.LayoutType || (exports.LayoutType = {}));
+class Layout {
+    constructor() {
+        this.layout = "default" /* Default */;
+        this.layoutProperties = {};
+    }
+    resetLayout() {
+        const node = this;
+        if (node.nodeEvent) {
+            node.nodeEvent.attach((evt) => {
+                if (evt !== 'added' && evt !== 'removed')
+                    return;
+                this.refreshLayout();
+            });
+        }
+    }
+    setLayout(layout, props) {
+        this.layout = layout ? layout : "default" /* Default */;
+        this.layoutProperties = props ? props : {};
+        this.refreshLayout();
+    }
+    refreshLayout() {
+        const node = this;
+        switch (this.layout) {
+            case "horizontal" /* Horizontal */:
+                let i = 0;
+                for (const child of node._childrens) {
+                    const childTr = child;
+                    childTr.size.enforce(1 / node._childrens.length, 1);
+                    childTr.position.enforce(i / node._childrens.length, 0);
+                    i++;
+                }
+                break;
+            case "vertical" /* Vertical */:
+                let j = 0;
+                for (const child of node._childrens) {
+                    const childTr = child;
+                    childTr.size.enforce(1, 1 / node._childrens.length);
+                    childTr.position.enforce(0, j / node._childrens.length);
+                    j++;
+                }
+                break;
+            case "grid" /* Grid */:
+                let row = 0;
+                let line = 0;
+                const rowSize = Math.ceil(node._childrens.length / 2);
+                for (const child of node._childrens) {
+                    const childTr = child;
+                    childTr.size.enforce(1 / rowSize, 1 / 2);
+                    childTr.position.enforce(row / rowSize, line / 2);
+                    row++;
+                    if (row >= rowSize) {
+                        row = 0;
+                        line++;
+                    }
+                }
+                break;
+        }
+    }
+}
+exports.Layout = Layout;
 
 
 /***/ }),
@@ -3249,6 +3344,7 @@ class JilPanel {
         this._projector = projector;
         this.resetTransform();
         this.resetStyle();
+        this.resetLayout();
     }
     render() {
         return maquette_1.h('div', {
@@ -3260,7 +3356,7 @@ class JilPanel {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween, behaviours_1.Layout)
 ], JilPanel.prototype, "this", void 0);
 exports.JilPanel = JilPanel;
 
@@ -3620,6 +3716,8 @@ exports.isString = isString;
 Object.defineProperty(exports, "__esModule", { value: true });
 var vector2_1 = __webpack_require__(/*! ./vector2 */ "./src/library/helpers/vector2.ts");
 exports.Vector2 = vector2_1.Vector2;
+var vector2extend_1 = __webpack_require__(/*! ./vector2extend */ "./src/library/helpers/vector2extend.ts");
+exports.Vector2Extend = vector2extend_1.Vector2Extend;
 var helpers_1 = __webpack_require__(/*! ./helpers */ "./src/library/helpers/helpers.ts");
 exports.isString = helpers_1.isString;
 
@@ -3651,6 +3749,60 @@ class Vector2 {
     }
 }
 exports.Vector2 = Vector2;
+
+
+/***/ }),
+
+/***/ "./src/library/helpers/vector2extend.ts":
+/*!**********************************************!*\
+  !*** ./src/library/helpers/vector2extend.ts ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const vector2_1 = __webpack_require__(/*! ./vector2 */ "./src/library/helpers/vector2.ts");
+/**
+ * Variant of Vector2
+ * This is used by the layout system to overwrite user settings (position, size)
+ *
+ * @export
+ * @class Vector2Extend
+ */
+class Vector2Extend {
+    get x() {
+        if (this.overwrite.x > 0)
+            return this.overwrite.x;
+        return this.origin.x;
+    }
+    set x(val) {
+        this.origin.x = val;
+    }
+    get y() {
+        if (this.overwrite.y > 0)
+            return this.overwrite.y;
+        return this.origin.y;
+    }
+    set y(val) {
+        this.origin.y = val;
+    }
+    constructor(x, y) {
+        this.origin = new vector2_1.Vector2(x, y);
+        this.overwrite = new vector2_1.Vector2();
+    }
+    set(x, y) {
+        this.origin.set(x, y);
+    }
+    enforce(x, y) {
+        this.overwrite.set(x, y);
+    }
+    clear() {
+        this.overwrite.set(0, 0);
+    }
+}
+exports.Vector2Extend = Vector2Extend;
 
 
 /***/ }),

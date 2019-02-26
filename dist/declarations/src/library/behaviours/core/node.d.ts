@@ -1,4 +1,5 @@
 import { VNode, Projector } from 'maquette';
+import { SyncEvent } from 'ts-events';
 export declare class Node {
     id?: string;
     /**
@@ -15,6 +16,10 @@ export declare class Node {
     _childrens: Node[];
     private createEvent;
     private destroyEvent;
+    /**
+     * @ignore
+     */
+    nodeEvent: SyncEvent<string> | undefined;
     /**
      * @ignore
      */

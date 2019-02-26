@@ -1,11 +1,11 @@
-import { Vector2 } from '../../helpers';
+import { Vector2, Vector2Extend } from '../../helpers';
 export declare class Transform {
     enable: boolean;
-    anchor: Vector2;
-    pivot: Vector2;
-    position: Vector2;
+    anchor: Vector2Extend;
+    pivot: Vector2Extend;
+    position: Vector2Extend;
+    size: Vector2Extend;
     positionPx: Vector2;
-    size: Vector2;
     sizePx: Vector2;
     scale: Vector2;
     opacity: number;

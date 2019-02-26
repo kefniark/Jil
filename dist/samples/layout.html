@@ -1,0 +1,108 @@
+<html>
+
+<head>
+	<title>Panel</title>
+	<script src="../jil.min.js"></script>
+	<link rel="stylesheet" href="./index.css">
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #000000;
+		}
+
+		#intro.scene {
+			background-color: #222222;
+		}
+
+		#panel {
+			border: 1px solid #4444CC;
+		}
+
+		#panel2 {
+			border: 1px solid #4444EE;
+		}
+
+		#panel3 {
+			border: 1px solid #2222FF;
+		}
+	</style>
+</head>
+
+<body>
+	<script>
+		jil.SceneManager.init();
+		var sceneIntro = jil.SceneManager.create("intro");
+		var layer = sceneIntro.createLayer("layer");
+
+		var panel = layer.createPanel("panel");
+		panel.pivot.set(0.5, 0.5);
+		panel.anchor.set(0.5, 0.5);
+		panel.size.set(0.6, 0.25);
+		panel.position.set(-0.1, -0.35);
+		panel.rotation = 10;
+
+		panel.setLayout('horizontal');
+
+		panel.createImage('image1', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel.createImage('image2', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel.createImage('image3', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel.createImage('image4', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+
+		var panel2 = layer.createPanel("panel2");
+		panel2.pivot.set(0.5, 0.5);
+		panel2.anchor.set(0.5, 0.5);
+		panel2.size.set(0.3, 0.8);
+		panel2.position.set(0.1, 0.15);
+		panel2.rotation = -20;
+
+		panel2.setLayout('vertical');
+
+		panel2.createImage('image5', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel2.createImage('image6', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel2.createImage('image7', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel2.createImage('image8', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+
+		var panel3 = layer.createPanel("panel3");
+		panel3.pivot.set(0.5, 0.5);
+		panel3.anchor.set(0.5, 0.5);
+		panel3.size.set(0.4, 0.4);
+		panel3.position.set(-0.15, -0.15);
+		panel3.rotation = 30;
+
+		panel3.setLayout('grid');
+
+		panel3.createImage('image9', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel3.createImage('image10', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel3.createImage('image11', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel3.createImage('image12', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+
+		var btnp = layer.createButton('btplus', '+');
+		btnp.size.set(0.1, 0.1);
+		btnp.anchor.set(0.5, 1);
+		btnp.pivot.set(0.5, 1);
+		btnp.position.set(0.05, 0);
+		btnp.onClick(() => {
+			panel.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+			panel2.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+			panel3.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		});
+
+		var btnm = layer.createButton('btnminus', '-');
+		btnm.size.set(0.1, 0.1);
+		btnm.anchor.set(0.5, 1);
+		btnm.pivot.set(0.5, 1);
+		btnm.position.set(-0.05, 0);
+		btnm.onClick(() => {
+			if (panel._childrens.length <= 0) return;
+			panel._childrens[Math.floor(Math.random() * panel._childrens.length)].destroy();
+			panel2._childrens[Math.floor(Math.random() * panel2._childrens.length)].destroy();
+			panel3._childrens[Math.floor(Math.random() * panel3._childrens.length)].destroy();
+		});
+
+		jil.SceneManager.use("intro");
+	</script>
+</body>
+
+</html>

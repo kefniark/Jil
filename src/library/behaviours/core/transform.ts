@@ -1,16 +1,20 @@
-import { Vector2 } from '../../helpers';
+import { Vector2, Vector2Extend } from '../../helpers';
 import { resolution } from '../../config';
 
 // tslint:disable-next-line:max-classes-per-file
 export class Transform {
 	public enable = true;
-	public anchor: Vector2 = undefined as any;
-	public pivot: Vector2 = undefined as any;
-	public position: Vector2 = undefined as any;
-	public positionPx: Vector2 = undefined as any;
-	public size: Vector2 = undefined as any;
-	public sizePx: Vector2 = undefined as any;
-	public scale: Vector2 = undefined as any;
+
+	// properties overwritable
+	public anchor = new Vector2Extend();
+	public pivot = new Vector2Extend();
+	public position = new Vector2Extend();
+	public size = new Vector2Extend();
+
+	// local properties
+	public positionPx = new Vector2();
+	public sizePx = new Vector2();
+	public scale = new Vector2();
 	public opacity = 1;
 	public rotation = 0;
 
@@ -18,11 +22,12 @@ export class Transform {
 	 * @ignore
 	 */
 	public resetStyle () {
+		// tslint:disable:no-console
+
 		const self = this as any;
 		const handler = {
 			set: (obj, prop, value) => {
 				obj[prop] = value;
-				// tslint:disable-next-line:no-console
 				if (self.refresh) self.refresh();
 				return true;
 			}
@@ -39,7 +44,7 @@ export class Transform {
 				return true;
 			}
 		};
-		// tslint:disable:no-console
+
 		const handlerSize = {
 			get: (obj, prop) => {
 				if (prop !== 'x' && prop !== 'y') return obj[prop];
@@ -51,12 +56,15 @@ export class Transform {
 				return true;
 			}
 		};
+
 		this.enable = true;
-		this.anchor = new Proxy(new Vector2(), handler);
-		this.pivot = new Proxy(new Vector2(), handler);
-		this.position = new Proxy(new Vector2(), handler);
+
+		this.anchor = new Proxy(new Vector2Extend(), handler);
+		this.pivot = new Proxy(new Vector2Extend(), handler);
+		this.position = new Proxy(new Vector2Extend(), handler);
+		this.size = new Proxy(new Vector2Extend(1, 1), handler);
+
 		this.positionPx = new Proxy(new Vector2(), handlerPos);
-		this.size = new Proxy(new Vector2(1, 1), handler);
 		this.sizePx = new Proxy(new Vector2(), handlerSize);
 		this.scale = new Proxy(new Vector2(1, 1), handler);
 

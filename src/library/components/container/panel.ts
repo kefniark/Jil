@@ -1,16 +1,16 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { Node, Transform, TransformTween, Factory } from '../../behaviours';
+import { Node, Transform, TransformTween, Factory, Layout } from '../../behaviours';
 import { JilCanvas } from './canvas';
 import { JilButton } from '../element/button';
 import { JilImage } from '../element/image';
 import { JilText } from '../element/text';
 
 // tslint:disable-next-line:interface-name
-export interface JilPanel extends Node, Transform, Factory, TransformTween { }
+export interface JilPanel extends Node, Transform, Factory, TransformTween, Layout { }
 
 export class JilPanel {
-	@use(Node, Transform, Factory, TransformTween) public this: any;
+	@use(Node, Transform, Factory, TransformTween, Layout) public this: any;
 
 	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
 		this.id = id;
@@ -18,6 +18,7 @@ export class JilPanel {
 		this._projector = projector;
 		this.resetTransform();
 		this.resetStyle();
+		this.resetLayout();
 	}
 
 	public render (): VNode {

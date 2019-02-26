@@ -1,10 +1,10 @@
 import { VNode, Projector } from 'maquette';
-import { Node, Transform, TransformTween, Factory } from '../../behaviours';
+import { Node, Transform, TransformTween, Factory, Layout } from '../../behaviours';
 import { JilCanvas } from './canvas';
 import { JilButton } from '../element/button';
 import { JilImage } from '../element/image';
 import { JilText } from '../element/text';
-export interface JilPanel extends Node, Transform, Factory, TransformTween {
+export interface JilPanel extends Node, Transform, Factory, TransformTween, Layout {
 }
 export declare class JilPanel {
     this: any;

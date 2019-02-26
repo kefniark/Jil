@@ -22,10 +22,16 @@ export class Node {
 	/**
 	 * @ignore
 	 */
+	public nodeEvent: SyncEvent<string> | undefined;
+
+	/**
+	 * @ignore
+	 */
 	public resetTransform () {
 		this._childrens = [];
 		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
 		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();
+		if (!this.nodeEvent) this.nodeEvent = new SyncEvent<string>();
 	}
 
 	protected handlerAfterCreate () {
@@ -46,6 +52,7 @@ export class Node {
 
 	public addChild (element: Node) {
 		this._childrens.push(element);
+		if (this.nodeEvent) this.nodeEvent.post('added');
 		this.refresh();
 	}
 
@@ -53,15 +60,18 @@ export class Node {
 		const i = this._childrens.indexOf(element);
 		if (i !== -1) {
 			this._childrens.splice(i, 1);
+			if (this.nodeEvent) this.nodeEvent.post('removed');
 		}
 		this.refresh();
 	}
 
 	public destroy () {
+		if (this.nodeEvent) this.nodeEvent.post('destroyed');
 		if (this._parent) this._parent.removeChild(this);
 	}
 
 	public refresh () {
+		if (this.nodeEvent) this.nodeEvent.post('refresh');
 		if (this._projector) this._projector.scheduleRender();
 	}
 

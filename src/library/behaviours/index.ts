@@ -8,3 +8,6 @@ export { Clickable } from './interaction/clickable';
 
 // Animation
 export { TransformTween } from './animation/transformTween';
+
+// Layout
+export { Layout } from './layout/layout';
