@@ -7,6 +7,8 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/jil.svg)](https://npmjs.org/package/jil)
 [![License](https://img.shields.io/npm/l/jil.svg)](https://npmjs.org/package/jil)
 
+[![NPM](https://nodei.co/npm/jil.png)](https://nodei.co/npm/jil/)
+
 * [**Demo**](https://kefniark.github.io/jil/dist/samples/)
 * [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
 
