@@ -955,18 +955,26 @@ img { max-width: 100%; }
 				<a href="https://npmjs.org/package/jil"><img src="https://img.shields.io/npm/v/jil.svg" alt="NPM Version"></a>
 				<a href="https://npmjs.org/package/jil"><img src="https://img.shields.io/npm/dm/jil.svg" alt="NPM Downloads"></a>
 			<a href="https://npmjs.org/package/jil"><img src="https://img.shields.io/npm/l/jil.svg" alt="License"></a></p>
+			<p><a href="https://nodei.co/npm/jil/"><img src="https://nodei.co/npm/jil.png" alt="NPM"></a></p>
 			<ul>
 				<li><a href="https://kefniark.github.io/jil/dist/samples/"><strong>Demo</strong></a></li>
 				<li><a href="https://kefniark.github.io/jil/dist/docs/"><strong>API Doc</strong></a></li>
 			</ul>
 			<p><img src="./logo.png" alt="Logo"></p>
 			<h2 id="ui-framework-for-html5-games-"><strong>UI Framework for HTML5 Games</strong>:</h2>
+			<p>To build a <strong>HTML5 Game UI</strong>, there are usually two choices:</p>
 			<ul>
-				<li>Autoscale and centering</li>
+				<li>Use the <strong>GUI system</strong> provided by your engine (each one is different with their limitations).</li>
+				<li>Use <strong>HTML/CSS</strong> (but usual CSS framework like bootstrap are not designed for games)
+				Which in both case can be annoying and time consuming.</li>
+			</ul>
+			<p>The idea behind <strong>JIL</strong> is to provide the best of both world, in a user friendly way.</p>
+			<ul>
+				<li>Auto-scaling and Centering</li>
 				<li>Vector positioning (<code>pivot</code>, <code>anchor</code>, <code>position</code>, <code>scale</code>, <code>rotation</code>)</li>
 				<li>Fast HTML5/CSS3 (Use CSS3 transform &amp; Virtual dom)</li>
-				<li>Tween integration (Provide an easy way to write animation)</li>
-				<li>Layer system make it easy to organize UI</li>
+				<li>Tween integration (Provide an easy way to animate your UI)</li>
+				<li>Layer &amp; Layout system (Easier to organize UI than table or flexbox)</li>
 				<li>Engine agnostic (Work with HTML canvas and dont interfer with 2D/3D Engine):<ul>
 						<li>Babylon.js</li>
 						<li>Pixi</li>
@@ -1058,7 +1066,7 @@ SceneManager.init();</code></pre>
 				<div class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">:</span> <a href="classes/scenemanager.html#create" class="tsd-signature-type">create</a><span class="tsd-signature-symbol"> =&nbsp;SceneManager.create</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/0c31e82/src/library/index.ts#L24">index.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/1fad13a/src/library/index.ts#L24">index.ts:24</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1077,7 +1085,7 @@ SceneManager.init();</code></pre>
 				<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <a href="classes/scenemanager.html#init" class="tsd-signature-type">init</a><span class="tsd-signature-symbol"> =&nbsp;SceneManager.init</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/0c31e82/src/library/index.ts#L19">index.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/1fad13a/src/library/index.ts#L19">index.ts:19</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1096,7 +1104,7 @@ SceneManager.init();</code></pre>
 				<div class="tsd-signature tsd-kind-icon">use<span class="tsd-signature-symbol">:</span> <a href="classes/scenemanager.html#use" class="tsd-signature-type">use</a><span class="tsd-signature-symbol"> =&nbsp;SceneManager.use</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/0c31e82/src/library/index.ts#L29">index.ts:29</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/1fad13a/src/library/index.ts#L29">index.ts:29</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1122,7 +1130,7 @@ SceneManager.init();</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/0c31e82/src/library/transitions/sceneTransition.ts#L4">transitions/sceneTransition.ts:4</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/1fad13a/src/library/transitions/sceneTransition.ts#L4">transitions/sceneTransition.ts:4</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
