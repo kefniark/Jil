@@ -1,6 +1,6 @@
 // Core
 export { Factory } from './core/factory';
-export { Node } from './core/node';
+export { JilNode } from './core/node';
 export { Transform } from './core/transform';
 
 // Interaction

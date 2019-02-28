@@ -1,8 +1,15 @@
 import { h, VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
+import { getComponent } from '../../helpers';
+import { Transform } from './transform';
 
-export class Node {
+export class JilNode {
 	public id?: string;
+
+	public get transform (): Transform {
+		return getComponent<Transform>(this);
+	}
+
 	/**
 	 * @ignore
 	 */
@@ -10,24 +17,24 @@ export class Node {
 	/**
 	 * @ignore
 	 */
-	public _parent?: Node;
+	public _parent?: JilNode;
 	/**
 	 * @ignore
 	 */
-	public _childrens: Node[] = [];
+	public _childrens: JilNode[] = [];
 
-	private createEvent: SyncEvent<void> | undefined;
-	private destroyEvent: SyncEvent<void> | undefined;
-
-	/**
-	 * @ignore
-	 */
-	public nodeEvent: SyncEvent<string> | undefined;
+	private createEvent = new SyncEvent<void>();
+	private destroyEvent = new SyncEvent<void>();
 
 	/**
 	 * @ignore
 	 */
-	public resetTransform () {
+	public nodeEvent = new SyncEvent<string>();
+
+	/**
+	 * @ignore
+	 */
+	public resetNode () {
 		this._childrens = [];
 		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
 		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();
@@ -50,13 +57,13 @@ export class Node {
 		if (this.destroyEvent) this.destroyEvent.attach(cb);
 	}
 
-	public addChild (element: Node) {
+	public addChild (element: JilNode) {
 		this._childrens.push(element);
 		if (this.nodeEvent) this.nodeEvent.post('added');
 		this.refresh();
 	}
 
-	public removeChild (element: Node) {
+	public removeChild (element: JilNode) {
 		const i = this._childrens.indexOf(element);
 		if (i !== -1) {
 			this._childrens.splice(i, 1);

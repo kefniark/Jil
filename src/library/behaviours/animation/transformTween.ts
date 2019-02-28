@@ -1,4 +1,6 @@
 import * as Fatina from 'fatina';
+import { getComponent } from '../../helpers';
+import { JilNode, Transform } from '..';
 
 // tslint:disable:no-console
 export class TransformTween {
@@ -7,12 +9,13 @@ export class TransformTween {
 	private fadeTween: Fatina.ITween | undefined;
 
 	private _moveTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		const self = this as any;
-		const tween = Fatina.tween(self.position)
+		const transform = getComponent<Transform>(this);
+		const node = getComponent<JilNode>(this);
+		const tween = Fatina.tween(transform.position)
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 
-		if (self.refresh) tween.onUpdate(() => self.refresh());
+		tween.onUpdate(() => node.refresh());
 
 		if (autostart) {
 			if (autokill && this.moveTween) this.moveTween.kill();
@@ -37,12 +40,12 @@ export class TransformTween {
 	}
 
 	private _fadeTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		const self = this as any;
+		const node = getComponent<JilNode>(this);
 		const tween = Fatina.tween(this)
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 
-		if (self.refresh) tween.onUpdate(() => self.refresh());
+		tween.onUpdate(() => node.refresh());
 
 		if (autostart) {
 			if (autokill && this.fadeTween) this.fadeTween.kill();
@@ -62,12 +65,12 @@ export class TransformTween {
 	}
 
 	private _rotateTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
-		const self = this as any;
+		const node = getComponent<JilNode>(this);
 		const tween = Fatina.tween(this)
 			.to(data, duration)
 			.setEasing(Fatina.EasingType.InOutQuad);
 
-		if (self.refresh) tween.onUpdate(() => self.refresh());
+		tween.onUpdate(() => node.refresh());
 
 		if (autostart) {
 			if (autokill && this.rotateTween) this.rotateTween.kill();

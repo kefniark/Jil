@@ -1,5 +1,6 @@
 import { Transform } from '../core/transform';
-import { Node } from '../core/node';
+import { JilNode } from '../core/node';
+import { getComponent } from '../../helpers';
 
 export const enum LayoutType {
 	Default = 'default',
@@ -19,7 +20,7 @@ export class Layout {
 	private layoutProperties: ILayoutProps = {};
 
 	public resetLayout () {
-		const node = this as any as Node;
+		const node = getComponent<JilNode>(this);
 		if (node.nodeEvent) {
 			node.nodeEvent.attach((evt) => {
 				if (evt !== 'added' && evt !== 'removed') return;
@@ -35,12 +36,12 @@ export class Layout {
 	}
 
 	public refreshLayout () {
-		const node = this as any as Node;
+		const node = getComponent<JilNode>(this);
 		switch (this.layout) {
 		case LayoutType.Horizontal:
 			let i = 0;
 			for (const child of node._childrens) {
-				const childTr = child as any as Transform;
+				const childTr = child.transform;
 				childTr.size.enforce(1 / node._childrens.length, 1);
 				childTr.position.enforce(i / node._childrens.length, 0);
 				i++;
@@ -49,7 +50,7 @@ export class Layout {
 		case LayoutType.Vertical:
 			let j = 0;
 			for (const child of node._childrens) {
-				const childTr = child as any as Transform;
+				const childTr = child.transform;
 				childTr.size.enforce(1, 1 / node._childrens.length);
 				childTr.position.enforce(0, j / node._childrens.length);
 				j++;
@@ -60,7 +61,7 @@ export class Layout {
 			let line = 0;
 			const rowSize = Math.ceil(node._childrens.length / 2);
 			for (const child of node._childrens) {
-				const childTr = child as any as Transform;
+				const childTr = child.transform;
 				childTr.size.enforce(1 / rowSize, 1 / 2);
 				childTr.position.enforce(row / rowSize, line / 2);
 				row++;

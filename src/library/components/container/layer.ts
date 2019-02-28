@@ -1,6 +1,6 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { Node, Transform, TransformTween, Factory } from '../../behaviours';
+import { JilNode, Transform, TransformTween, Factory } from '../../behaviours';
 import { resolution } from '../../config';
 import { JilPanel } from './panel';
 import { JilCanvas } from './canvas';
@@ -9,20 +9,20 @@ import { JilImage } from '../element/image';
 import { JilText } from '../element/text';
 
 // tslint:disable-next-line:interface-name
-export interface JilLayer extends Node, Transform, Factory, TransformTween { }
+export interface JilLayer extends JilNode, Transform, Factory, TransformTween { }
 
 export class JilLayer {
-	@use(Node, Transform, Factory, TransformTween) public this: any;
+	@use(JilNode, Transform, Factory, TransformTween) public this: any;
 
 	public classname: string;
 
-	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
+	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
 		this.classname = params ? params : '';
 		this._parent = parent;
 		this._projector = projector;
+		this.resetNode();
 		this.resetTransform();
-		this.resetStyle();
 
 		// tslint:disable-next-line
 		if (typeof(window) !== 'undefined') {

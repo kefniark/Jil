@@ -7,11 +7,11 @@ import * as Fatina from 'fatina';
 /**
  * @ignore
  */
-const scenes: {[id: string]: JilScene} = {};
+let scenes: {[id: string]: JilScene} = {};
 /**
  * @ignore
  */
-const sceneList: JilScene[] = [];
+let sceneList: JilScene[] = [];
 /**
  * @ignore
  */
@@ -34,6 +34,8 @@ export class SceneManager {
 	 */
 	public static init (width?: number, height?: number) {
 		Fatina.init();
+		sceneList = [];
+		scenes = {};
 
 		const vdom = () => h('div', { id: 'root' }, sceneList.map((x) => x.render()));
 

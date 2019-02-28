@@ -1,9 +1,14 @@
-import { Vector2, Vector2Extend } from '../../helpers';
+import { Vector2, Vector2Extend, getComponent } from '../../helpers';
 import { resolution } from '../../config';
+import { JilNode } from './node';
 
 // tslint:disable-next-line:max-classes-per-file
 export class Transform {
 	public enable = true;
+
+	public get node (): JilNode {
+		return getComponent<JilNode>(this);
+	}
 
 	// properties overwritable
 	public anchor = new Vector2Extend();
@@ -21,14 +26,15 @@ export class Transform {
 	/**
 	 * @ignore
 	 */
-	public resetStyle () {
+	public resetTransform () {
 		// tslint:disable:no-console
+		const self = this;
+		const node = getComponent<JilNode>(this);
 
-		const self = this as any;
 		const handler = {
 			set: (obj, prop, value) => {
 				obj[prop] = value;
-				if (self.refresh) self.refresh();
+				node.refresh();
 				return true;
 			}
 		};
