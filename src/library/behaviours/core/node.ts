@@ -91,6 +91,18 @@ export class JilNode {
 		return h('div', this._childrens.map((x) => x.render()));
 	}
 
+	public find (id: string): JilNode | undefined {
+		return this._childrens.find((x) => x.id === id);
+	}
+
+	public findByType (type: string): JilNode | undefined {
+		return this._childrens.find((x) => x.type === type);
+	}
+
+	public findAllByType (type: string) {
+		return this._childrens.filter((x) => x.type === type);
+	}
+
 	public toString (): string {
 		return `[UI ${this.id}]`;
 	}

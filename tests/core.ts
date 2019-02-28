@@ -26,6 +26,10 @@ test('Node Child/Parent', (t: Test) => {
 	t.ok(data.scene._childrens.indexOf(data.layer) !== -1, 'check node.childrens');
 	t.equal(data.scene._childrens.length, 3, 'check all the childrens are added');
 
+	t.strictEqual(data.scene.find('layer1'), data.layer, 'node.find');
+	t.strictEqual(data.scene.findByType('layer'), data.layer, 'node.findByType');
+	t.equal(data.scene.findAllByType('layer').length, 3, 'node.findAllByType');
+
 	t.end();
 });
 

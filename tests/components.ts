@@ -55,10 +55,22 @@ test('Test Layout', (t: Test) => {
 	const panel = data.layer.createPanel('panel');
 	const img1 = panel.createImage('image1');
 	panel.createImage('image2');
+	panel.createImage('image3');
+	panel.createImage('image4');
+
+	panel.setLayout(LayoutType.Vertical);
+
+	t.equal(img1.size.x, 1);
+	t.equal(img1.size.y, 0.25);
+
+	panel.setLayout(LayoutType.Grid);
+
+	t.equal(img1.size.x, 0.5);
+	t.equal(img1.size.y, 0.5);
 
 	panel.setLayout(LayoutType.Horizontal);
 
-	t.equal(img1.size.x, 0.5);
+	t.equal(img1.size.x, 0.25);
 	t.equal(img1.size.y, 1);
 	t.end();
 });

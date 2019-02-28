@@ -39,5 +39,8 @@ export declare class JilNode {
      * @ignore
      */
     render(): VNode;
+    find(id: string): JilNode | undefined;
+    findByType(type: string): JilNode | undefined;
+    findAllByType(type: string): JilNode[];
     toString(): string;
 }

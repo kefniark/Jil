@@ -2936,6 +2936,15 @@ class JilNode {
     render() {
         return maquette_1.h('div', this._childrens.map((x) => x.render()));
     }
+    find(id) {
+        return this._childrens.find((x) => x.id === id);
+    }
+    findByType(type) {
+        return this._childrens.find((x) => x.type === type);
+    }
+    findAllByType(type) {
+        return this._childrens.filter((x) => x.type === type);
+    }
     toString() {
         return `[UI ${this.id}]`;
     }
