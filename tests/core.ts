@@ -113,6 +113,9 @@ test('Factory', (t: Test) => {
 	const dom = data.scene.render();
 	t.notEqual(dom, '', 'check dom size');
 
+	data.layer.hide(0);
+	data.layer.render();
+
 	t.end();
 });
 

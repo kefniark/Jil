@@ -26,7 +26,7 @@ export class JilLayer {
 
 		// tslint:disable-next-line
 		if (typeof(window) !== 'undefined') {
-			window.addEventListener('resize', this.resizeHandler.bind(this), false);
+			window.addEventListener('resize', () => this.refresh(), false);
 		}
 	}
 
@@ -36,28 +36,23 @@ export class JilLayer {
 	public createText = (id: string, params?: string | any) => this.create('text', id, params) as JilText;
 	public createCanvas = (id: string, params?: string | any) => this.create('canvas', id, params) as JilCanvas;
 
-	private resizeHandler () {
-		this.refresh();
-	}
-
 	public render (): VNode {
 		const styles = {} as any;
 		styles.display = this.enable ? 'block' : 'none';
 		styles.opacity = this.opacity.toString();
 
 		// tslint:disable-next-line
-		if ((typeof(window) !== 'undefined') && window.innerWidth > 0 && window.innerWidth > 0) {
-			const screenRatio = window.innerWidth / window.innerHeight;
-			const gameRatio = resolution.x / resolution.y;
-			const scaleX = window.innerWidth / resolution.x;
-			const scaleY = window.innerHeight / resolution.y;
-			const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
+		const size = (typeof(window) !== 'undefined') ? { x: window.innerWidth, y: window.innerHeight }: { x: 1, y: 1};
+		const screenRatio = size.x / size.y;
+		const gameRatio = resolution.x / resolution.y;
+		const scaleX = size.x / resolution.x;
+		const scaleY = size.y / resolution.y;
+		const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
 
-			styles.width = `${resolution.x}px`;
-			styles.height = `${resolution.y}px`;
-			styles.transformOrigin = 'top left';
-			styles.transform = `scale(${scale})`;
-		}
+		styles.width = `${resolution.x}px`;
+		styles.height = `${resolution.y}px`;
+		styles.transformOrigin = 'top left';
+		styles.transform = `scale(${scale})`;
 
 		return h('div', {
 			id: this.id,
