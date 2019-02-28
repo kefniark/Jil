@@ -5,6 +5,7 @@ import { Transform } from './transform';
 
 export class JilNode {
 	public id?: string;
+	public type?: string;
 
 	public get transform (): Transform {
 		return getComponent<Transform>(this);
@@ -34,7 +35,8 @@ export class JilNode {
 	/**
 	 * @ignore
 	 */
-	public resetNode () {
+	public resetNode (type: string) {
+		this.type = type;
 		this._childrens = [];
 		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
 		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();

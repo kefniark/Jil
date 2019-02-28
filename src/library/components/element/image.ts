@@ -22,7 +22,7 @@ export class JilImage {
 		this._parent = parent;
 		this._projector = projector;
 		this.resetClickable();
-		this.resetNode();
+		this.resetNode('image');
 		this.resetTransform();
 	}
 

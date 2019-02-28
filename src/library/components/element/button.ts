@@ -15,7 +15,7 @@ export class JilButton {
 		this._parent = parent;
 		this._projector = projector;
 		this.resetClickable();
-		this.resetNode();
+		this.resetNode('button');
 		this.resetTransform();
 	}
 

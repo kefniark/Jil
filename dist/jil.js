@@ -2740,15 +2740,16 @@ module.exports = g;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 // tslint:disable:no-console
 class TransformTween {
     _moveTween(data, duration, autostart, autokill) {
-        const self = this;
-        const tween = Fatina.tween(self.position)
+        const transform = helpers_1.getComponent(this);
+        const node = helpers_1.getComponent(this);
+        const tween = Fatina.tween(transform.position)
             .to(data, duration)
             .setEasing("inOutQuad" /* InOutQuad */);
-        if (self.refresh)
-            tween.onUpdate(() => self.refresh());
+        tween.onUpdate(() => node.refresh());
         if (autostart) {
             if (autokill && this.moveTween)
                 this.moveTween.kill();
@@ -2767,12 +2768,11 @@ class TransformTween {
         return this._moveTween({ x, y }, duration, autostart, autokill);
     }
     _fadeTween(data, duration, autostart, autokill) {
-        const self = this;
+        const node = helpers_1.getComponent(this);
         const tween = Fatina.tween(this)
             .to(data, duration)
             .setEasing("inOutQuad" /* InOutQuad */);
-        if (self.refresh)
-            tween.onUpdate(() => self.refresh());
+        tween.onUpdate(() => node.refresh());
         if (autostart) {
             if (autokill && this.fadeTween)
                 this.fadeTween.kill();
@@ -2788,12 +2788,11 @@ class TransformTween {
         return this._fadeTween({ opacity: 0 }, duration, autostart, autokill);
     }
     _rotateTween(data, duration, autostart, autokill) {
-        const self = this;
+        const node = helpers_1.getComponent(this);
         const tween = Fatina.tween(this)
             .to(data, duration)
             .setEasing("inOutQuad" /* InOutQuad */);
-        if (self.refresh)
-            tween.onUpdate(() => self.refresh());
+        tween.onUpdate(() => node.refresh());
         if (autostart) {
             if (autokill && this.rotateTween)
                 this.rotateTween.kill();
@@ -2802,8 +2801,8 @@ class TransformTween {
         this.rotateTween = tween;
         return tween;
     }
-    rotate(duration = 150, autostart = true, autokill = true) {
-        return this._fadeTween({ opacity: 1 }, duration, autostart, autokill);
+    rotate(rotate, duration = 150, autostart = true, autokill = true) {
+        return this._rotateTween({ rotation: rotate }, duration, autostart, autokill);
     }
 }
 exports.TransformTween = TransformTween;
@@ -2821,6 +2820,7 @@ exports.TransformTween = TransformTween;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 exports.types = {};
 function register(type, className) {
     exports.types[type] = className;
@@ -2834,9 +2834,9 @@ class Factory {
         if (!exports.types[type]) {
             throw new Error(`Cannot create type ${type}`);
         }
-        const self = this;
-        const child = new exports.types[type](id, params, self, self._projector);
-        self.addChild(child);
+        const node = helpers_1.getComponent(this);
+        const child = new exports.types[type](id, params, node, node._projector);
+        node.addChild(child);
         return child;
     }
 }
@@ -2857,17 +2857,28 @@ exports.Factory = Factory;
 Object.defineProperty(exports, "__esModule", { value: true });
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
-class Node {
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+class JilNode {
     constructor() {
         /**
          * @ignore
          */
         this._childrens = [];
+        this.createEvent = new ts_events_1.SyncEvent();
+        this.destroyEvent = new ts_events_1.SyncEvent();
+        /**
+         * @ignore
+         */
+        this.nodeEvent = new ts_events_1.SyncEvent();
+    }
+    get transform() {
+        return helpers_1.getComponent(this);
     }
     /**
      * @ignore
      */
-    resetTransform() {
+    resetNode(type) {
+        this.type = type;
         this._childrens = [];
         if (!this.createEvent)
             this.createEvent = new ts_events_1.SyncEvent();
@@ -2929,7 +2940,7 @@ class Node {
         return `[UI ${this.id}]`;
     }
 }
-exports.Node = Node;
+exports.JilNode = JilNode;
 
 
 /***/ }),
@@ -2962,17 +2973,20 @@ class Transform {
         this.opacity = 1;
         this.rotation = 0;
     }
+    get node() {
+        return helpers_1.getComponent(this);
+    }
     /**
      * @ignore
      */
-    resetStyle() {
+    resetTransform() {
         // tslint:disable:no-console
         const self = this;
+        const node = helpers_1.getComponent(this);
         const handler = {
             set: (obj, prop, value) => {
                 obj[prop] = value;
-                if (self.refresh)
-                    self.refresh();
+                node.refresh();
                 return true;
             }
         };
@@ -3058,7 +3072,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var factory_1 = __webpack_require__(/*! ./core/factory */ "./src/library/behaviours/core/factory.ts");
 exports.Factory = factory_1.Factory;
 var node_1 = __webpack_require__(/*! ./core/node */ "./src/library/behaviours/core/node.ts");
-exports.Node = node_1.Node;
+exports.JilNode = node_1.JilNode;
 var transform_1 = __webpack_require__(/*! ./core/transform */ "./src/library/behaviours/core/transform.ts");
 exports.Transform = transform_1.Transform;
 // Interaction
@@ -3118,6 +3132,7 @@ exports.Clickable = Clickable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 var LayoutType;
 (function (LayoutType) {
     LayoutType["Default"] = "default";
@@ -3131,7 +3146,7 @@ class Layout {
         this.layoutProperties = {};
     }
     resetLayout() {
-        const node = this;
+        const node = helpers_1.getComponent(this);
         if (node.nodeEvent) {
             node.nodeEvent.attach((evt) => {
                 if (evt !== 'added' && evt !== 'removed')
@@ -3146,12 +3161,12 @@ class Layout {
         this.refreshLayout();
     }
     refreshLayout() {
-        const node = this;
+        const node = helpers_1.getComponent(this);
         switch (this.layout) {
             case "horizontal" /* Horizontal */:
                 let i = 0;
                 for (const child of node._childrens) {
-                    const childTr = child;
+                    const childTr = child.transform;
                     childTr.size.enforce(1 / node._childrens.length, 1);
                     childTr.position.enforce(i / node._childrens.length, 0);
                     i++;
@@ -3160,7 +3175,7 @@ class Layout {
             case "vertical" /* Vertical */:
                 let j = 0;
                 for (const child of node._childrens) {
-                    const childTr = child;
+                    const childTr = child.transform;
                     childTr.size.enforce(1, 1 / node._childrens.length);
                     childTr.position.enforce(0, j / node._childrens.length);
                     j++;
@@ -3171,7 +3186,7 @@ class Layout {
                 let line = 0;
                 const rowSize = Math.ceil(node._childrens.length / 2);
                 for (const child of node._childrens) {
-                    const childTr = child;
+                    const childTr = child.transform;
                     childTr.size.enforce(1 / rowSize, 1 / 2);
                     childTr.position.enforce(row / rowSize, line / 2);
                     row++;
@@ -3215,8 +3230,8 @@ class JilCanvas {
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetNode('canvas');
         this.resetTransform();
-        this.resetStyle();
     }
     render() {
         return maquette_1.h('canvas', {
@@ -3233,7 +3248,7 @@ class JilCanvas {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
 ], JilCanvas.prototype, "this", void 0);
 exports.JilCanvas = JilCanvas;
 
@@ -3271,8 +3286,8 @@ class JilLayer {
         this.classname = params ? params : '';
         this._parent = parent;
         this._projector = projector;
+        this.resetNode('layer');
         this.resetTransform();
-        this.resetStyle();
         // tslint:disable-next-line
         if (typeof (window) !== 'undefined') {
             window.addEventListener('resize', this.resizeHandler.bind(this), false);
@@ -3306,7 +3321,7 @@ class JilLayer {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween)
 ], JilLayer.prototype, "this", void 0);
 exports.JilLayer = JilLayer;
 
@@ -3342,8 +3357,8 @@ class JilPanel {
         this.id = id;
         this._parent = parent;
         this._projector = projector;
+        this.resetNode('panel');
         this.resetTransform();
-        this.resetStyle();
         this.resetLayout();
     }
     render() {
@@ -3356,7 +3371,7 @@ class JilPanel {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween, behaviours_1.Layout)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory, behaviours_1.TransformTween, behaviours_1.Layout)
 ], JilPanel.prototype, "this", void 0);
 exports.JilPanel = JilPanel;
 
@@ -3397,8 +3412,8 @@ class JilScene {
         this.enterEvent = new ts_events_1.SyncEvent();
         this.leaveEvent = new ts_events_1.SyncEvent();
         this._projector = projector;
+        this.resetNode('scene');
         this.resetTransform();
-        this.resetStyle();
         this.enable = false;
     }
     /**
@@ -3480,7 +3495,7 @@ class JilScene {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Factory)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory)
 ], JilScene.prototype, "this", void 0);
 exports.JilScene = JilScene;
 
@@ -3513,8 +3528,8 @@ class JilButton {
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetNode('button');
         this.resetTransform();
-        this.resetStyle();
     }
     render() {
         return maquette_1.h('button', {
@@ -3528,7 +3543,7 @@ class JilButton {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
 ], JilButton.prototype, "this", void 0);
 exports.JilButton = JilButton;
 
@@ -3566,8 +3581,8 @@ class JilImage {
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetNode('image');
         this.resetTransform();
-        this.resetStyle();
     }
     render() {
         return maquette_1.h('img', {
@@ -3580,7 +3595,7 @@ class JilImage {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
 ], JilImage.prototype, "this", void 0);
 exports.JilImage = JilImage;
 
@@ -3617,8 +3632,8 @@ class JilText {
         this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
+        this.resetNode('text');
         this.resetTransform();
-        this.resetStyle();
     }
     render() {
         return maquette_1.h('div', {
@@ -3630,7 +3645,7 @@ class JilText {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.Node, behaviours_1.Transform, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.TransformTween)
 ], JilText.prototype, "this", void 0);
 exports.JilText = JilText;
 
@@ -3700,6 +3715,10 @@ function isString(obj) {
     return (Object.prototype.toString.call(obj) === '[object String]');
 }
 exports.isString = isString;
+function getComponent(element) {
+    return element;
+}
+exports.getComponent = getComponent;
 
 
 /***/ }),
@@ -3720,6 +3739,7 @@ var vector2extend_1 = __webpack_require__(/*! ./vector2extend */ "./src/library/
 exports.Vector2Extend = vector2extend_1.Vector2Extend;
 var helpers_1 = __webpack_require__(/*! ./helpers */ "./src/library/helpers/helpers.ts");
 exports.isString = helpers_1.isString;
+exports.getComponent = helpers_1.getComponent;
 
 
 /***/ }),
@@ -3866,11 +3886,11 @@ const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fa
 /**
  * @ignore
  */
-const scenes = {};
+let scenes = {};
 /**
  * @ignore
  */
-const sceneList = [];
+let sceneList = [];
 /**
  * @ignore
  */
@@ -3883,6 +3903,9 @@ let current;
  * Scene Manager Object (use UMD: Universal Module Definition)
  */
 class SceneManager {
+    static get Current() {
+        return current;
+    }
     /**
      * Create the JIL root and append it to the document.body
      *
@@ -3891,6 +3914,8 @@ class SceneManager {
      */
     static init(width, height) {
         Fatina.init();
+        sceneList = [];
+        scenes = {};
         const vdom = () => maquette_1.h('div', { id: 'root' }, sceneList.map((x) => x.render()));
         // tslint:disable-next-line
         if (typeof (document) !== 'undefined') {
@@ -3952,9 +3977,9 @@ exports.SceneManager = SceneManager;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
+// tslint:disable:no-console
 function FadeInOut(sceneSrc, SceneDst) {
     const sequence = Fatina.sequence();
-    // tslint:disable:no-console
     sequence.appendCallback(() => console.log('Scene Transition Start', sceneSrc, SceneDst));
     if (sceneSrc) {
         const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader');

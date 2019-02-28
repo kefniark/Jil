@@ -25,6 +25,9 @@ let current: JilScene | undefined;
  * Scene Manager Object (use UMD: Universal Module Definition)
  */
 export class SceneManager {
+	public static get Current () {
+		return current;
+	}
 
 	/**
 	 * Create the JIL root and append it to the document.body

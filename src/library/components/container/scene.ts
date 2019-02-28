@@ -22,7 +22,7 @@ export class JilScene {
 		this.enterEvent = new SyncEvent<void>();
 		this.leaveEvent = new SyncEvent<void>();
 		this._projector = projector;
-		this.resetNode();
+		this.resetNode('scene');
 		this.resetTransform();
 		this.enable = false;
 	}

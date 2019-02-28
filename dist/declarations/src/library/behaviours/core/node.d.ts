@@ -1,7 +1,10 @@
 import { VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
-export declare class Node {
+import { Transform } from './transform';
+export declare class JilNode {
     id?: string;
+    type?: string;
+    readonly transform: Transform;
     /**
      * @ignore
      */
@@ -9,27 +12,27 @@ export declare class Node {
     /**
      * @ignore
      */
-    _parent?: Node;
+    _parent?: JilNode;
     /**
      * @ignore
      */
-    _childrens: Node[];
+    _childrens: JilNode[];
     private createEvent;
     private destroyEvent;
     /**
      * @ignore
      */
-    nodeEvent: SyncEvent<string> | undefined;
+    nodeEvent: SyncEvent<string>;
     /**
      * @ignore
      */
-    resetTransform(): void;
+    resetNode(type: string): void;
     protected handlerAfterCreate(): void;
     protected handleAfterRemoved(): void;
     onLoad(cb: () => void): void;
     onDestroy(cb: () => void): void;
-    addChild(element: Node): void;
-    removeChild(element: Node): void;
+    addChild(element: JilNode): void;
+    removeChild(element: JilNode): void;
     destroy(): void;
     refresh(): void;
     /**

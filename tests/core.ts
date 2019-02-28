@@ -105,5 +105,8 @@ test('Factory', (t: Test) => {
 	data.layer.createPanel('panelId');
 	data.layer.createText('textId');
 
+	const dom = data.scene.render();
+	t.notEqual(dom, '', 'check dom size');
+
 	t.end();
 });

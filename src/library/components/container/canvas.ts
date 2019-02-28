@@ -14,7 +14,7 @@ export class JilCanvas {
 		this._parent = parent;
 		this._projector = projector;
 		this.resetClickable();
-		this.resetNode();
+		this.resetNode('canvas');
 		this.resetTransform();
 	}
 

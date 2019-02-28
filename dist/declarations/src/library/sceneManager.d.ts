@@ -3,6 +3,7 @@ import { JilScene } from './components';
  * Scene Manager Object (use UMD: Universal Module Definition)
  */
 export declare class SceneManager {
+    static readonly Current: JilScene | undefined;
     /**
      * Create the JIL root and append it to the document.body
      *

@@ -21,7 +21,7 @@ export class JilText {
 		this.styles = params || {};
 		this._parent = parent;
 		this._projector = projector;
-		this.resetNode();
+		this.resetNode('text');
 		this.resetTransform();
 	}
 

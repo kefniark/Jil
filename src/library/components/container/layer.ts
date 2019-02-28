@@ -21,7 +21,7 @@ export class JilLayer {
 		this.classname = params ? params : '';
 		this._parent = parent;
 		this._projector = projector;
-		this.resetNode();
+		this.resetNode('layer');
 		this.resetTransform();
 
 		// tslint:disable-next-line

@@ -1,7 +1,7 @@
 import { VNode, Projector } from 'maquette';
-import { Node, Transform, Factory } from '../../behaviours';
+import { JilNode, Transform, Factory } from '../../behaviours';
 import { JilLayer } from './layer';
-export interface JilScene extends Node, Transform, Factory {
+export interface JilScene extends JilNode, Transform, Factory {
 }
 export declare class JilScene {
     /**

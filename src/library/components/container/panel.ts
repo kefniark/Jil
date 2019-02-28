@@ -16,7 +16,7 @@ export class JilPanel {
 		this.id = id;
 		this._parent = parent;
 		this._projector = projector;
-		this.resetNode();
+		this.resetNode('panel');
 		this.resetTransform();
 		this.resetLayout();
 	}
