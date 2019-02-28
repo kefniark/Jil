@@ -7,11 +7,11 @@ import * as Fatina from 'fatina';
 /**
  * @ignore
  */
-const scenes: {[id: string]: JilScene} = {};
+let scenes: {[id: string]: JilScene} = {};
 /**
  * @ignore
  */
-const sceneList: JilScene[] = [];
+let sceneList: JilScene[] = [];
 /**
  * @ignore
  */
@@ -25,6 +25,9 @@ let current: JilScene | undefined;
  * Scene Manager Object (use UMD: Universal Module Definition)
  */
 export class SceneManager {
+	public static get Current () {
+		return current;
+	}
 
 	/**
 	 * Create the JIL root and append it to the document.body
@@ -34,6 +37,8 @@ export class SceneManager {
 	 */
 	public static init (width?: number, height?: number) {
 		Fatina.init();
+		sceneList = [];
+		scenes = {};
 
 		const vdom = () => h('div', { id: 'root' }, sceneList.map((x) => x.render()));
 

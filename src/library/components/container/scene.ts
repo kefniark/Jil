@@ -1,19 +1,18 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
-import { Node, Transform, Factory } from '../../behaviours';
-import { Vector2 } from '../../helpers';
+import { JilNode, Transform, Factory } from '../../behaviours';
 import { resolution } from '../../config';
 import { JilLayer } from './layer';
 
 // tslint:disable-next-line:interface-name
-export interface JilScene extends Node, Transform, Factory { }
+export interface JilScene extends JilNode, Transform, Factory { }
 
 export class JilScene {
 	/**
 	 * @ignore
 	 */
-	@use(Node, Transform, Factory) public this: any;
+	@use(JilNode, Transform, Factory) public this: any;
 
 	private enterEvent: SyncEvent<void>;
 	private leaveEvent: SyncEvent<void>;
@@ -23,8 +22,8 @@ export class JilScene {
 		this.enterEvent = new SyncEvent<void>();
 		this.leaveEvent = new SyncEvent<void>();
 		this._projector = projector;
+		this.resetNode('scene');
 		this.resetTransform();
-		this.resetStyle();
 		this.enable = false;
 	}
 

@@ -1,14 +1,14 @@
 import { VNode, Projector } from 'maquette';
-import { Node, Transform, TransformTween, Factory, Layout } from '../../behaviours';
+import { JilNode, Transform, TransformTween, Factory, Layout } from '../../behaviours';
 import { JilCanvas } from './canvas';
 import { JilButton } from '../element/button';
 import { JilImage } from '../element/image';
 import { JilText } from '../element/text';
-export interface JilPanel extends Node, Transform, Factory, TransformTween, Layout {
+export interface JilPanel extends JilNode, Transform, Factory, TransformTween, Layout {
 }
 export declare class JilPanel {
     this: any;
-    constructor(id: string, params: any, parent: Node, projector: Projector | undefined);
+    constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
     render(): VNode;
     createPanel: (id: string) => JilPanel;
     createButton: (id: string, params?: any) => JilButton;

@@ -1,3 +1,6 @@
+import { getComponent } from '../../helpers';
+import { JilNode } from './node';
+
 export const types = {};
 export function register (type: string, className: any) {
 	types[type] = className;
@@ -11,9 +14,9 @@ export class Factory {
 		if (!types[type]) {
 			throw new Error(`Cannot create type ${type}`);
 		}
-		const self = this as any;
-		const child = new types[type](id, params, self, self._projector);
-		self.addChild(child);
+		const node = getComponent<JilNode>(this);
+		const child = new types[type](id, params, node, node._projector);
+		node.addChild(child);
 		return child;
 	}
 }

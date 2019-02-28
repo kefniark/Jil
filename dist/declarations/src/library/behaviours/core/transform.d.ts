@@ -1,6 +1,8 @@
 import { Vector2, Vector2Extend } from '../../helpers';
+import { JilNode } from './node';
 export declare class Transform {
     enable: boolean;
+    readonly node: JilNode;
     anchor: Vector2Extend;
     pivot: Vector2Extend;
     position: Vector2Extend;
@@ -13,7 +15,7 @@ export declare class Transform {
     /**
      * @ignore
      */
-    resetStyle(): void;
+    resetTransform(): void;
     /**
      * @ignore
      */

@@ -1,18 +1,18 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { Node, Transform, Clickable, TransformTween } from '../../behaviours';
+import { JilNode, Transform, Clickable, TransformTween } from '../../behaviours';
 import { isString } from '../../helpers';
 
 // tslint:disable-next-line:interface-name
-export interface JilImage extends Node, Transform, Clickable, TransformTween { }
+export interface JilImage extends JilNode, Transform, Clickable, TransformTween { }
 
 export class JilImage {
-	@use(Node, Transform, Clickable, TransformTween) public this: any;
+	@use(JilNode, Transform, Clickable, TransformTween) public this: any;
 
 	public src;
 	public styles;
 
-	constructor (id: string, params: any, parent: Node, projector: Projector | undefined) {
+	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
 		this.src = '';
 		if (params) {
@@ -22,8 +22,8 @@ export class JilImage {
 		this._parent = parent;
 		this._projector = projector;
 		this.resetClickable();
+		this.resetNode('image');
 		this.resetTransform();
-		this.resetStyle();
 	}
 
 	public render (): VNode {
