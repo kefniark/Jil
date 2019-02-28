@@ -3977,10 +3977,8 @@ exports.SceneManager = SceneManager;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
-// tslint:disable:no-console
 function FadeInOut(sceneSrc, SceneDst) {
     const sequence = Fatina.sequence();
-    sequence.appendCallback(() => console.log('Scene Transition Start', sceneSrc, SceneDst));
     if (sceneSrc) {
         const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader');
         faderSrc.opacity = 0;
@@ -3997,7 +3995,6 @@ function FadeInOut(sceneSrc, SceneDst) {
     const tween = faderDst.hide(350, false);
     tween.onUpdate(() => faderDst.refresh());
     sequence.append(tween);
-    sequence.appendCallback(() => console.log('Scene Transition Finish', sceneSrc, SceneDst));
     sequence.appendCallback(() => faderDst.destroy());
     sequence.start();
 }

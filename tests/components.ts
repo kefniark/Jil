@@ -62,3 +62,15 @@ test('Test Layout', (t: Test) => {
 	t.equal(img1.size.y, 1);
 	t.end();
 });
+
+test('Test Clickable', (t: Test) => {
+	const data = getData();
+
+	let clicked = false;
+	const btn = data.layer.createButton('button');
+	btn.onClick(() => clicked = true);
+	btn.click();
+
+	t.ok(clicked, 'check click event works');
+	t.end();
+});

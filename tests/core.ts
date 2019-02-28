@@ -2,6 +2,7 @@
 import * as test from 'tape';
 import { Test } from 'tape';
 import { SceneManager } from '../src/library';
+import { isString } from '../src/library/helpers';
 
 /**
  * Prepare a basic scene
@@ -107,6 +108,15 @@ test('Factory', (t: Test) => {
 
 	const dom = data.scene.render();
 	t.notEqual(dom, '', 'check dom size');
+
+	t.end();
+});
+
+test('Helpers.isString', (t: Test) => {
+	t.ok(isString('url'));
+	t.notOk(isString({}));
+	t.notOk(isString([]));
+	t.notOk(isString(undefined));
 
 	t.end();
 });
