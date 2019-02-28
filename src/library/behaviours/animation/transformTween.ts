@@ -81,7 +81,7 @@ export class TransformTween {
 		return tween;
 	}
 
-	public rotate (duration = 150, autostart = true, autokill = true) {
-		return this._fadeTween({ opacity: 1 }, duration, autostart, autokill);
+	public rotate (rotate: number, duration = 150, autostart = true, autokill = true) {
+		return this._rotateTween({ rotation: rotate }, duration, autostart, autokill);
 	}
 }
