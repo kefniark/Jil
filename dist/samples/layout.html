@@ -28,6 +28,14 @@
 		#panel3 {
 			border: 1px solid #2222FF;
 		}
+
+		#panel4 {
+			border: 1px solid #2266FF;
+		}
+
+		#panel5 {
+			border: 1px solid #22AAFF;
+		}
 	</style>
 </head>
 
@@ -87,12 +95,40 @@
 		panel3.position.set(-0.15, -0.15);
 		panel3.rotation = 30;
 
-		panel3.setLayout('grid');
+		panel3.setLayout('grid', { colNumber: 4 });
 
 		panel3.createImage('image9', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 		panel3.createImage('image10', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 		panel3.createImage('image11', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 		panel3.createImage('image12', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+
+		var panel4 = layer.createPanel("panel4");
+		panel4.pivot.set(0.5, 0.5);
+		panel4.anchor.set(0.5, 0.5);
+		panel4.size.set(0.4, 0.4);
+		panel4.position.set(0.35, -0.2);
+		panel4.rotation = -5;
+
+		panel4.setLayout('grid', { rowNumber: 4 });
+
+		panel4.createImage('image9', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel4.createImage('image10', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel4.createImage('image11', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel4.createImage('image12', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+
+		var panel5 = layer.createPanel("panel5");
+		panel5.pivot.set(0.5, 0.5);
+		panel5.anchor.set(0.5, 0.5);
+		panel5.size.set(0.4, 0.4);
+		panel5.position.set(-0.35, 0.3);
+		panel5.rotation = -5;
+
+		panel5.setLayout('grid', { rowNumber: 4, colNumber: 4 });
+
+		panel5.createImage('image9', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel5.createImage('image10', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel5.createImage('image11', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+		panel5.createImage('image12', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 
 		var btnp = layer.createButton('btplus', '+');
 		btnp.size.set(0.1, 0.1);
@@ -103,6 +139,8 @@
 			panel.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 			panel2.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 			panel3.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+			panel4.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
+			panel5.createImage('image_' + Math.round(Math.random() * 10000), 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png');
 		});
 
 		var btnm = layer.createButton('btnminus', '-');
@@ -115,6 +153,8 @@
 			panel._childrens[Math.floor(Math.random() * panel._childrens.length)].destroy();
 			panel2._childrens[Math.floor(Math.random() * panel2._childrens.length)].destroy();
 			panel3._childrens[Math.floor(Math.random() * panel3._childrens.length)].destroy();
+			panel4._childrens[Math.floor(Math.random() * panel4._childrens.length)].destroy();
+			panel5._childrens[Math.floor(Math.random() * panel5._childrens.length)].destroy();
 		});
 
 		jil.SceneManager.use("intro");

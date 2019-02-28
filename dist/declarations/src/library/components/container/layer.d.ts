@@ -16,6 +16,5 @@ export declare class JilLayer {
     createImage: (id: string, params?: any) => JilImage;
     createText: (id: string, params?: any) => JilText;
     createCanvas: (id: string, params?: any) => JilCanvas;
-    private resizeHandler;
     render(): VNode;
 }

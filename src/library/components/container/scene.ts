@@ -65,7 +65,7 @@ export class JilScene {
 	 * @param id ID of the new layer (need to be unique)
 	 * @memberof Scene
 	 */
-	public createLayer = (id: string, classname?: string) => this.create('layer', id, classname) as JilLayer;
+	public createLayer = (id: string, classname?: string) => this.createComponent('layer', id, classname) as JilLayer;
 
 	/**
 	 * Render the HTML

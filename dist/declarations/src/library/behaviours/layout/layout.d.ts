@@ -1,17 +1,16 @@
-export declare const enum LayoutType {
-    Default = "default",
-    Horizontal = "horizontal",
-    Vertical = "vertical",
-    Grid = "grid"
-}
-export interface ILayoutProps {
-    width?: number;
-    height?: number;
+export interface ILayoutOption {
+    preferedWidth?: number;
+    preferedHeight?: number;
+    paddingWidth?: number;
+    paddingHeight?: number;
+    scrollable?: boolean;
+    rowNumber?: number;
+    colNumber?: number;
 }
 export declare class Layout {
-    private layout;
-    private layoutProperties;
+    layout: string;
+    layoutParams: ILayoutOption;
     resetLayout(): void;
-    setLayout(layout: LayoutType, props?: ILayoutProps): void;
+    setLayout(layout: string, params?: ILayoutOption): void;
     refreshLayout(): void;
 }

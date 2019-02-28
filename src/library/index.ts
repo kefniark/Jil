@@ -1,16 +1,23 @@
-import { JilButton, JilPanel, JilLayer, JilCanvas, JilImage, JilText, JilScene } from './components';
-import { register } from './behaviours/core/factory';
-
-// export class
 import { SceneManager } from './sceneManager';
+import { JilButton, JilPanel, JilLayer, JilCanvas, JilImage, JilText } from './components';
+import {
+	registerComponent, registerLayout,
+	verticalLayout, gridLayout, horizontalLayout, defaultLayout
+} from './behaviours';
 
-// register to factory
-register('button', JilButton);
-register('panel', JilPanel);
-register('layer', JilLayer);
-register('image', JilImage);
-register('text', JilText);
-register('canvas', JilCanvas);
+// register component
+registerComponent('button', JilButton);
+registerComponent('panel', JilPanel);
+registerComponent('layer', JilLayer);
+registerComponent('image', JilImage);
+registerComponent('text', JilText);
+registerComponent('canvas', JilCanvas);
+
+// register layout
+registerLayout('default', defaultLayout);
+registerLayout('vertical', verticalLayout);
+registerLayout('horizontal', horizontalLayout);
+registerLayout('grid', gridLayout);
 
 /**
  * Init Helper

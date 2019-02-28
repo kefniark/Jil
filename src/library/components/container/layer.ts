@@ -30,11 +30,11 @@ export class JilLayer {
 		}
 	}
 
-	public createPanel = (id: string) => this.create('panel', id) as JilPanel;
-	public createButton = (id: string, params?: string | any) => this.create('button', id, params) as JilButton;
-	public createImage = (id: string, params?: string | any) => this.create('image', id, params) as JilImage;
-	public createText = (id: string, params?: string | any) => this.create('text', id, params) as JilText;
-	public createCanvas = (id: string, params?: string | any) => this.create('canvas', id, params) as JilCanvas;
+	public createPanel = (id: string) => this.createComponent('panel', id) as JilPanel;
+	public createButton = (id: string, params?: string | any) => this.createComponent('button', id, params) as JilButton;
+	public createImage = (id: string, params?: string | any) => this.createComponent('image', id, params) as JilImage;
+	public createText = (id: string, params?: string | any) => this.createComponent('text', id, params) as JilText;
+	public createCanvas = (id: string, params?: string | any) => this.createComponent('canvas', id, params) as JilCanvas;
 
 	public render (): VNode {
 		const styles = {} as any;

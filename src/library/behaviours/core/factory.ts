@@ -1,16 +1,22 @@
 import { getComponent } from '../../helpers';
 import { JilNode } from './node';
+import { Layout } from '../layout/layout';
 
-export const types = {};
-export function register (type: string, className: any) {
+const types = {};
+export function registerComponent (type: string, className: any) {
 	types[type] = className;
+}
+
+const layout = {};
+export function registerLayout (id: string, className: (container: Layout, elements: JilNode[]) => void) {
+	layout[id] = className;
 }
 
 export class Factory {
 	/**
 	 * @ignore
 	 */
-	public create (type: string, id: string, params?: any) {
+	public createComponent (type: string, id: string, params?: any) {
 		if (!types[type]) {
 			throw new Error(`Cannot create type ${type}`);
 		}
@@ -18,5 +24,9 @@ export class Factory {
 		const child = new types[type](id, params, node, node._projector);
 		node.addChild(child);
 		return child;
+	}
+
+	public getLayout (id: string): (container: Layout, elements: JilNode[]) => void {
+		return layout[id];
 	}
 }

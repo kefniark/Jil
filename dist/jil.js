@@ -2821,23 +2821,31 @@ exports.TransformTween = TransformTween;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
-exports.types = {};
-function register(type, className) {
-    exports.types[type] = className;
+const types = {};
+function registerComponent(type, className) {
+    types[type] = className;
 }
-exports.register = register;
+exports.registerComponent = registerComponent;
+const layout = {};
+function registerLayout(id, className) {
+    layout[id] = className;
+}
+exports.registerLayout = registerLayout;
 class Factory {
     /**
      * @ignore
      */
-    create(type, id, params) {
-        if (!exports.types[type]) {
+    createComponent(type, id, params) {
+        if (!types[type]) {
             throw new Error(`Cannot create type ${type}`);
         }
         const node = helpers_1.getComponent(this);
-        const child = new exports.types[type](id, params, node, node._projector);
+        const child = new types[type](id, params, node, node._projector);
         node.addChild(child);
         return child;
+    }
+    getLayout(id) {
+        return layout[id];
     }
 }
 exports.Factory = Factory;
@@ -3079,6 +3087,8 @@ exports.Transform = Transform;
 Object.defineProperty(exports, "__esModule", { value: true });
 // Core
 var factory_1 = __webpack_require__(/*! ./core/factory */ "./src/library/behaviours/core/factory.ts");
+exports.registerComponent = factory_1.registerComponent;
+exports.registerLayout = factory_1.registerLayout;
 exports.Factory = factory_1.Factory;
 var node_1 = __webpack_require__(/*! ./core/node */ "./src/library/behaviours/core/node.ts");
 exports.JilNode = node_1.JilNode;
@@ -3093,6 +3103,14 @@ exports.TransformTween = transformTween_1.TransformTween;
 // Layout
 var layout_1 = __webpack_require__(/*! ./layout/layout */ "./src/library/behaviours/layout/layout.ts");
 exports.Layout = layout_1.Layout;
+var defaultLayout_1 = __webpack_require__(/*! ./layout/defaultLayout */ "./src/library/behaviours/layout/defaultLayout.ts");
+exports.defaultLayout = defaultLayout_1.defaultLayout;
+var verticalLayout_1 = __webpack_require__(/*! ./layout/verticalLayout */ "./src/library/behaviours/layout/verticalLayout.ts");
+exports.verticalLayout = verticalLayout_1.verticalLayout;
+var horizontalLayout_1 = __webpack_require__(/*! ./layout/horizontalLayout */ "./src/library/behaviours/layout/horizontalLayout.ts");
+exports.horizontalLayout = horizontalLayout_1.horizontalLayout;
+var gridLayout_1 = __webpack_require__(/*! ./layout/gridLayout */ "./src/library/behaviours/layout/gridLayout.ts");
+exports.gridLayout = gridLayout_1.gridLayout;
 
 
 /***/ }),
@@ -3131,6 +3149,91 @@ exports.Clickable = Clickable;
 
 /***/ }),
 
+/***/ "./src/library/behaviours/layout/defaultLayout.ts":
+/*!********************************************************!*\
+  !*** ./src/library/behaviours/layout/defaultLayout.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultLayout = (container, childrens) => {
+    childrens.forEach((x) => {
+        x.transform.size.clear();
+        x.transform.position.clear();
+    });
+};
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/layout/gridLayout.ts":
+/*!*****************************************************!*\
+  !*** ./src/library/behaviours/layout/gridLayout.ts ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.gridLayout = (container, childrens) => {
+    let col = 0;
+    let row = 0;
+    let rowSize = 1;
+    let colSize = 1;
+    if (container.layoutParams.rowNumber && container.layoutParams.colNumber) {
+        colSize = container.layoutParams.colNumber;
+        rowSize = container.layoutParams.rowNumber;
+    }
+    else if (container.layoutParams.colNumber) {
+        colSize = container.layoutParams.colNumber;
+        rowSize = Math.ceil(childrens.length / colSize);
+    }
+    else {
+        rowSize = container.layoutParams.rowNumber ? container.layoutParams.rowNumber : 5;
+        colSize = Math.ceil(childrens.length / rowSize);
+    }
+    for (const child of childrens) {
+        const childTr = child.transform;
+        childTr.size.enforce(1 / colSize, 1 / rowSize);
+        childTr.position.enforce(col / colSize, row / rowSize);
+        col++;
+        if (col >= colSize) {
+            col = 0;
+            row++;
+        }
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/layout/horizontalLayout.ts":
+/*!***********************************************************!*\
+  !*** ./src/library/behaviours/layout/horizontalLayout.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.horizontalLayout = (container, childrens) => {
+    let i = 0;
+    for (const child of childrens) {
+        const childTr = child.transform;
+        childTr.size.enforce(1 / childrens.length, 1);
+        childTr.position.enforce(i / childrens.length, 0);
+        i++;
+    }
+};
+
+
+/***/ }),
+
 /***/ "./src/library/behaviours/layout/layout.ts":
 /*!*************************************************!*\
   !*** ./src/library/behaviours/layout/layout.ts ***!
@@ -3142,20 +3245,15 @@ exports.Clickable = Clickable;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
-var LayoutType;
-(function (LayoutType) {
-    LayoutType["Default"] = "default";
-    LayoutType["Horizontal"] = "horizontal";
-    LayoutType["Vertical"] = "vertical";
-    LayoutType["Grid"] = "grid";
-})(LayoutType = exports.LayoutType || (exports.LayoutType = {}));
 class Layout {
     constructor() {
-        this.layout = "default" /* Default */;
-        this.layoutProperties = {};
+        this.layout = 'default';
+        this.layoutParams = {};
     }
     resetLayout() {
         const node = helpers_1.getComponent(this);
+        this.layout = 'default';
+        this.layoutParams = {};
         if (node.nodeEvent) {
             node.nodeEvent.attach((evt) => {
                 if (evt !== 'added' && evt !== 'removed')
@@ -3164,51 +3262,39 @@ class Layout {
             });
         }
     }
-    setLayout(layout, props) {
-        this.layout = layout ? layout : "default" /* Default */;
-        this.layoutProperties = props ? props : {};
+    setLayout(layout, params) {
+        this.layout = layout ? layout : this.layout;
+        this.layoutParams = params ? params : this.layoutParams;
         this.refreshLayout();
     }
     refreshLayout() {
-        const node = helpers_1.getComponent(this);
-        switch (this.layout) {
-            case "horizontal" /* Horizontal */:
-                let i = 0;
-                for (const child of node._childrens) {
-                    const childTr = child.transform;
-                    childTr.size.enforce(1 / node._childrens.length, 1);
-                    childTr.position.enforce(i / node._childrens.length, 0);
-                    i++;
-                }
-                break;
-            case "vertical" /* Vertical */:
-                let j = 0;
-                for (const child of node._childrens) {
-                    const childTr = child.transform;
-                    childTr.size.enforce(1, 1 / node._childrens.length);
-                    childTr.position.enforce(0, j / node._childrens.length);
-                    j++;
-                }
-                break;
-            case "grid" /* Grid */:
-                let row = 0;
-                let line = 0;
-                const rowSize = Math.ceil(node._childrens.length / 2);
-                for (const child of node._childrens) {
-                    const childTr = child.transform;
-                    childTr.size.enforce(1 / rowSize, 1 / 2);
-                    childTr.position.enforce(row / rowSize, line / 2);
-                    row++;
-                    if (row >= rowSize) {
-                        row = 0;
-                        line++;
-                    }
-                }
-                break;
-        }
+        helpers_1.getComponent(this);
     }
 }
 exports.Layout = Layout;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/layout/verticalLayout.ts":
+/*!*********************************************************!*\
+  !*** ./src/library/behaviours/layout/verticalLayout.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verticalLayout = (container, childrens) => {
+    let j = 0;
+    for (const child of childrens) {
+        const childTr = child.transform;
+        childTr.size.enforce(1, 1 / childrens.length);
+        childTr.position.enforce(0, j / childrens.length);
+        j++;
+    }
+};
 
 
 /***/ }),
@@ -3286,11 +3372,11 @@ const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/
 const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
 class JilLayer {
     constructor(id, params, parent, projector) {
-        this.createPanel = (id) => this.create('panel', id);
-        this.createButton = (id, params) => this.create('button', id, params);
-        this.createImage = (id, params) => this.create('image', id, params);
-        this.createText = (id, params) => this.create('text', id, params);
-        this.createCanvas = (id, params) => this.create('canvas', id, params);
+        this.createPanel = (id) => this.createComponent('panel', id);
+        this.createButton = (id, params) => this.createComponent('button', id, params);
+        this.createImage = (id, params) => this.createComponent('image', id, params);
+        this.createText = (id, params) => this.createComponent('text', id, params);
+        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
         this.id = id;
         this.classname = params ? params : '';
         this._parent = parent;
@@ -3299,28 +3385,24 @@ class JilLayer {
         this.resetTransform();
         // tslint:disable-next-line
         if (typeof (window) !== 'undefined') {
-            window.addEventListener('resize', this.resizeHandler.bind(this), false);
+            window.addEventListener('resize', () => this.refresh(), false);
         }
-    }
-    resizeHandler() {
-        this.refresh();
     }
     render() {
         const styles = {};
         styles.display = this.enable ? 'block' : 'none';
         styles.opacity = this.opacity.toString();
         // tslint:disable-next-line
-        if ((typeof (window) !== 'undefined') && window.innerWidth > 0 && window.innerWidth > 0) {
-            const screenRatio = window.innerWidth / window.innerHeight;
-            const gameRatio = config_1.resolution.x / config_1.resolution.y;
-            const scaleX = window.innerWidth / config_1.resolution.x;
-            const scaleY = window.innerHeight / config_1.resolution.y;
-            const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
-            styles.width = `${config_1.resolution.x}px`;
-            styles.height = `${config_1.resolution.y}px`;
-            styles.transformOrigin = 'top left';
-            styles.transform = `scale(${scale})`;
-        }
+        const size = (typeof (window) !== 'undefined') ? { x: window.innerWidth, y: window.innerHeight } : { x: 1, y: 1 };
+        const screenRatio = size.x / size.y;
+        const gameRatio = config_1.resolution.x / config_1.resolution.y;
+        const scaleX = size.x / config_1.resolution.x;
+        const scaleY = size.y / config_1.resolution.y;
+        const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
+        styles.width = `${config_1.resolution.x}px`;
+        styles.height = `${config_1.resolution.y}px`;
+        styles.transformOrigin = 'top left';
+        styles.transform = `scale(${scale})`;
         return maquette_1.h('div', {
             id: this.id,
             key: this.id,
@@ -3358,11 +3440,11 @@ const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 class JilPanel {
     constructor(id, params, parent, projector) {
-        this.createPanel = (id) => this.create('panel', id);
-        this.createButton = (id, params) => this.create('button', id, params);
-        this.createImage = (id, params) => this.create('image', id, params);
-        this.createText = (id, params) => this.create('text', id, params);
-        this.createCanvas = (id, params) => this.create('canvas', id, params);
+        this.createPanel = (id) => this.createComponent('panel', id);
+        this.createButton = (id, params) => this.createComponent('button', id, params);
+        this.createImage = (id, params) => this.createComponent('image', id, params);
+        this.createText = (id, params) => this.createComponent('text', id, params);
+        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
         this.id = id;
         this._parent = parent;
         this._projector = projector;
@@ -3377,6 +3459,12 @@ class JilPanel {
             class: 'panel',
             styles: this.getStyle()
         }, this._childrens.map((x) => x.render()));
+    }
+    refreshLayout() {
+        const layoutMethod = this.getLayout(this.layout);
+        if (layoutMethod) {
+            layoutMethod(this, this._childrens);
+        }
     }
 }
 __decorate([
@@ -3416,7 +3504,7 @@ class JilScene {
          * @param id ID of the new layer (need to be unique)
          * @memberof Scene
          */
-        this.createLayer = (id, classname) => this.create('layer', id, classname);
+        this.createLayer = (id, classname) => this.createComponent('layer', id, classname);
         this.id = id;
         this.enterEvent = new ts_events_1.SyncEvent();
         this.leaveEvent = new ts_events_1.SyncEvent();
@@ -3830,6 +3918,9 @@ class Vector2Extend {
     clear() {
         this.overwrite.set(0, 0);
     }
+    toString() {
+        return `[${this.x}:${this.y}]`;
+    }
 }
 exports.Vector2Extend = Vector2Extend;
 
@@ -3846,18 +3937,22 @@ exports.Vector2Extend = Vector2Extend;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
-const factory_1 = __webpack_require__(/*! ./behaviours/core/factory */ "./src/library/behaviours/core/factory.ts");
-// export class
 const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/sceneManager.ts");
 exports.SceneManager = sceneManager_1.SceneManager;
-// register to factory
-factory_1.register('button', components_1.JilButton);
-factory_1.register('panel', components_1.JilPanel);
-factory_1.register('layer', components_1.JilLayer);
-factory_1.register('image', components_1.JilImage);
-factory_1.register('text', components_1.JilText);
-factory_1.register('canvas', components_1.JilCanvas);
+const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
+const behaviours_1 = __webpack_require__(/*! ./behaviours */ "./src/library/behaviours/index.ts");
+// register component
+behaviours_1.registerComponent('button', components_1.JilButton);
+behaviours_1.registerComponent('panel', components_1.JilPanel);
+behaviours_1.registerComponent('layer', components_1.JilLayer);
+behaviours_1.registerComponent('image', components_1.JilImage);
+behaviours_1.registerComponent('text', components_1.JilText);
+behaviours_1.registerComponent('canvas', components_1.JilCanvas);
+// register layout
+behaviours_1.registerLayout('default', behaviours_1.defaultLayout);
+behaviours_1.registerLayout('vertical', behaviours_1.verticalLayout);
+behaviours_1.registerLayout('horizontal', behaviours_1.horizontalLayout);
+behaviours_1.registerLayout('grid', behaviours_1.gridLayout);
 /**
  * Init Helper
  * @function

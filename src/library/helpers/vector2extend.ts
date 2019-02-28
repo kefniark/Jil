@@ -43,4 +43,8 @@ export class Vector2Extend {
 	public clear () {
 		this.overwrite.set(0, 0);
 	}
+
+	public toString () {
+		return `[${this.x}:${this.y}]`;
+	}
 }

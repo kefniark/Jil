@@ -1,26 +1,24 @@
-import { Transform } from '../core/transform';
 import { JilNode } from '../core/node';
 import { getComponent } from '../../helpers';
 
-export const enum LayoutType {
-	Default = 'default',
-	Horizontal = 'horizontal',
-	Vertical = 'vertical',
-	Grid = 'grid'
-}
-
-export interface ILayoutProps {
-	width?: number;
-	height?: number;
+export interface ILayoutOption {
+	preferedWidth?: number;
+	preferedHeight?: number;
+	paddingWidth?: number;
+	paddingHeight?: number;
+	scrollable?: boolean;
+	rowNumber?: number;
+	colNumber?: number;
 }
 
 export class Layout {
-
-	private layout: LayoutType = LayoutType.Default;
-	private layoutProperties: ILayoutProps = {};
+	public layout: string = 'default';
+	public layoutParams: ILayoutOption = {};
 
 	public resetLayout () {
 		const node = getComponent<JilNode>(this);
+		this.layout = 'default';
+		this.layoutParams = {};
 		if (node.nodeEvent) {
 			node.nodeEvent.attach((evt) => {
 				if (evt !== 'added' && evt !== 'removed') return;
@@ -29,48 +27,13 @@ export class Layout {
 		}
 	}
 
-	public setLayout (layout: LayoutType, props?: ILayoutProps) {
-		this.layout = layout ? layout : LayoutType.Default;
-		this.layoutProperties = props ? props : {};
+	public setLayout (layout: string, params?: ILayoutOption) {
+		this.layout = layout ? layout : this.layout;
+		this.layoutParams = params ? params : this.layoutParams;
 		this.refreshLayout();
 	}
 
 	public refreshLayout () {
-		const node = getComponent<JilNode>(this);
-		switch (this.layout) {
-		case LayoutType.Horizontal:
-			let i = 0;
-			for (const child of node._childrens) {
-				const childTr = child.transform;
-				childTr.size.enforce(1 / node._childrens.length, 1);
-				childTr.position.enforce(i / node._childrens.length, 0);
-				i++;
-			}
-			break;
-		case LayoutType.Vertical:
-			let j = 0;
-			for (const child of node._childrens) {
-				const childTr = child.transform;
-				childTr.size.enforce(1, 1 / node._childrens.length);
-				childTr.position.enforce(0, j / node._childrens.length);
-				j++;
-			}
-			break;
-		case LayoutType.Grid:
-			let row = 0;
-			let line = 0;
-			const rowSize = Math.ceil(node._childrens.length / 2);
-			for (const child of node._childrens) {
-				const childTr = child.transform;
-				childTr.size.enforce(1 / rowSize, 1 / 2);
-				childTr.position.enforce(row / rowSize, line / 2);
-				row++;
-				if (row >= rowSize) {
-					row = 0;
-					line++;
-				}
-			}
-			break;
-		}
+		getComponent<JilNode>(this);
 	}
 }

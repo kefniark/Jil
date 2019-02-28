@@ -14,4 +14,5 @@ export declare class Vector2Extend {
     set(x: number, y: number): void;
     enforce(x: number, y: number): void;
     clear(): void;
+    toString(): string;
 }

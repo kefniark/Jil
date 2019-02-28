@@ -91,6 +91,10 @@ test('Transform Properties', (t: Test) => {
 
 	const style1 = data.layer.getStyle();
 
+	data.layer.position.set(0.5, 0.5);
+	data.layer.positionPx.set(0.5, 0.5);
+	data.layer.size.set(0.5, 0.5);
+	data.layer.sizePx.set(0.5, 0.5);
 	data.layer.scale.x = 0.3;
 	data.layer.rotation = 1;
 	data.layer.opacity = 0;

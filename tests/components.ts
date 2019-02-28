@@ -3,7 +3,6 @@ import * as test from 'tape';
 import { Test } from 'tape';
 import { SceneManager } from '../src/library';
 import * as Fatina from 'fatina';
-import { LayoutType } from '../src/library/behaviours/layout/layout';
 
 const getData = () => {
 	SceneManager.init();
@@ -58,17 +57,17 @@ test('Test Layout', (t: Test) => {
 	panel.createImage('image3');
 	panel.createImage('image4');
 
-	panel.setLayout(LayoutType.Vertical);
+	panel.setLayout('vertical');
 
 	t.equal(img1.size.x, 1);
 	t.equal(img1.size.y, 0.25);
 
-	panel.setLayout(LayoutType.Grid);
+	panel.setLayout('grid', { rowNumber: 2, colNumber: 2 });
 
 	t.equal(img1.size.x, 0.5);
 	t.equal(img1.size.y, 0.5);
 
-	panel.setLayout(LayoutType.Horizontal);
+	panel.setLayout('horizontal');
 
 	t.equal(img1.size.x, 0.25);
 	t.equal(img1.size.y, 1);

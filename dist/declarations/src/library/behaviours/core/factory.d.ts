@@ -1,8 +1,11 @@
-export declare const types: {};
-export declare function register(type: string, className: any): void;
+import { JilNode } from './node';
+import { Layout } from '../layout/layout';
+export declare function registerComponent(type: string, className: any): void;
+export declare function registerLayout(id: string, className: (container: Layout, elements: JilNode[]) => void): void;
 export declare class Factory {
     /**
      * @ignore
      */
-    create(type: string, id: string, params?: any): any;
+    createComponent(type: string, id: string, params?: any): any;
+    getLayout(id: string): (container: Layout, elements: JilNode[]) => void;
 }

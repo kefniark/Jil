@@ -15,4 +15,5 @@ export declare class JilPanel {
     createImage: (id: string, params?: any) => JilImage;
     createText: (id: string, params?: any) => JilText;
     createCanvas: (id: string, params?: any) => JilCanvas;
+    refreshLayout(): void;
 }
