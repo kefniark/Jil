@@ -1,4 +1,4 @@
-import { JilLayer, JilScene } from '../components';
+import { JilScene } from '../components';
 import * as Fatina from 'fatina';
 
 export function FadeInOut (sceneSrc: JilScene | undefined, SceneDst: JilScene) {
