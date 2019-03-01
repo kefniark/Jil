@@ -5,3 +5,7 @@ export function isString (obj) {
 export function getComponent<T> (element) {
 	return element as T;
 }
+
+export function shuffleArray (arr) {
+	return arr.sort(() => Math.random() - 0.5);
+}

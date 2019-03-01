@@ -64,6 +64,15 @@ export class TransformTween {
 		return this._fadeTween({ opacity: 0 }, duration, autostart, autokill);
 	}
 
+	public toggle (duration = 150, autostart = true, autokill = true) {
+		const transform = getComponent<Transform>(this);
+		if (transform.opacity === 1) {
+			this.hide(duration, autostart, autokill);
+		} else {
+			this.show(duration, autostart, autokill);
+		}
+	}
+
 	private _rotateTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
 		const node = getComponent<JilNode>(this);
 		const tween = Fatina.tween(this)

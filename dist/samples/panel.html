@@ -32,11 +32,29 @@
 		#scaleLogo {
 			cursor: pointer;
 		}
+
+		#message {
+			color: #333333;
+			background: rgb(230, 230, 230, 0.75);
+			padding: 25px;
+			border: 2px solid black;
+			border-radius: 16px;
+			font-size: 25px;
+			font-weight: bold;
+		}
+
+		.text-span {
+			display: inline-block;
+		}
 	</style>
 </head>
 
 <body>
 	<script>
+		Array.prototype.sample = function(){
+			return this[Math.floor(Math.random()*this.length)];
+		}
+
 		jil.SceneManager.init();
 		var sceneIntro = jil.SceneManager.create("intro");
 		var layer = sceneIntro.createLayer("layer");
@@ -138,6 +156,39 @@
 		imgBunny.pivot.set(0.5, 0.5);
 		imgBunny.onClick(() => {
 			imgBunny.scale.set(Math.random() + 0.5, Math.random() + 0.5);
+		});
+
+		var text = panelCenter.createText("message", "message");
+		text.size.set(0.8, 0.4);
+		text.anchor.set(0.5, 1);
+		text.pivot.set(0.5, 1);
+		text.position.set(0, -0.3);
+
+		var btnShowText = panelCenter.createButton("showMessage", "Show/Hide");
+		btnShowText.size.set(0.2, 0.08);
+		btnShowText.anchor.set(0.5, 1);
+		btnShowText.pivot.set(0.5, 1);
+		btnShowText.position.set(-0.25, 0);
+		btnShowText.onClick(() => text.toggle());
+
+		var btnText = panelCenter.createButton("animateMessage", "Show Text");
+		btnText.size.set(0.2, 0.08);
+		btnText.anchor.set(0.5, 1);
+		btnText.pivot.set(0.5, 1);
+		btnText.onClick(() => {
+			var txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+			var splits = ["character", "word", "all"];
+			var orders = ["order", "reverse", "shuffle"];
+			var anims = ["fade", "zoom"];
+			var param = {
+				split: splits.sample(),
+				order: orders.sample(),
+				anim: anims.sample(),
+				delay: Math.random() * 100,
+				duration: Math.random() * 450 + 50
+			};
+			console.log('text', param);
+			text.animate(txt, param);
 		});
 
 		jil.SceneManager.use("intro");

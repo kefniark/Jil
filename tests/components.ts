@@ -3,6 +3,8 @@ import * as test from 'tape';
 import { Test } from 'tape';
 import { SceneManager } from '../src/library';
 import * as Fatina from 'fatina';
+import { TextAnimationOrder, TextAnimationSplit } from '../src/library/components/element/text';
+import { TextAnimationAnim } from '../src/library/components/element/textCharacter';
 
 const getData = () => {
 	SceneManager.init();
@@ -38,6 +40,14 @@ test('Test Tweens', (t: Test) => {
 	t.equal(data.layer.opacity, 0);
 
 	data.layer.show(1);
+	Fatina.update(2);
+	t.equal(data.layer.opacity, 1);
+
+	data.layer.toggle(1);
+	Fatina.update(2);
+	t.equal(data.layer.opacity, 0);
+
+	data.layer.toggle(1);
 	Fatina.update(2);
 	t.equal(data.layer.opacity, 1);
 
@@ -83,5 +93,23 @@ test('Test Clickable', (t: Test) => {
 	btn.click();
 
 	t.ok(clicked, 'check click event works');
+	t.end();
+});
+
+test('Test Text', (t: Test) => {
+	const data = getData();
+
+	const txt = data.layer.createText('text', 'message');
+	txt.animate('new Text', {});
+
+	txt.animate('new Text 2', {
+		order: TextAnimationOrder.Reverse,
+		split: TextAnimationSplit.Character,
+		anim: TextAnimationAnim.Zoom,
+		duration: 100,
+		delay: 1
+	});
+
+	t.equal(txt.text, 'new Text 2');
 	t.end();
 });

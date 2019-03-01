@@ -46,6 +46,10 @@ body {
 	font-size: 32px;
 }
 
+.scene .text-span {
+	will-change: transform, opacity;
+}
+
 .scene .panel {
 	position: absolute;
 	overflow: hidden;

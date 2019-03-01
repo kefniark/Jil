@@ -2787,6 +2787,15 @@ class TransformTween {
     hide(duration = 150, autostart = true, autokill = true) {
         return this._fadeTween({ opacity: 0 }, duration, autostart, autokill);
     }
+    toggle(duration = 150, autostart = true, autokill = true) {
+        const transform = helpers_1.getComponent(this);
+        if (transform.opacity === 1) {
+            this.hide(duration, autostart, autokill);
+        }
+        else {
+            this.show(duration, autostart, autokill);
+        }
+    }
     _rotateTween(data, duration, autostart, autokill) {
         const node = helpers_1.getComponent(this);
         const tween = Fatina.tween(this)
@@ -2924,6 +2933,13 @@ class JilNode {
             if (this.nodeEvent)
                 this.nodeEvent.post('removed');
         }
+        this.refresh();
+    }
+    removeAllChilds() {
+        if (this.nodeEvent) {
+            this.nodeEvent.post('removedAll');
+        }
+        this._childrens = [];
         this.refresh();
     }
     destroy() {
@@ -3719,8 +3735,25 @@ const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modul
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+const helpers_2 = __webpack_require__(/*! ../../helpers/helpers */ "./src/library/helpers/helpers.ts");
+var TextAnimationOrder;
+(function (TextAnimationOrder) {
+    TextAnimationOrder["Order"] = "order";
+    TextAnimationOrder["Reverse"] = "reverse";
+    TextAnimationOrder["Shuffle"] = "shuffle";
+})(TextAnimationOrder = exports.TextAnimationOrder || (exports.TextAnimationOrder = {}));
+var TextAnimationSplit;
+(function (TextAnimationSplit) {
+    TextAnimationSplit["Character"] = "character";
+    TextAnimationSplit["Word"] = "word";
+    TextAnimationSplit["All"] = "all";
+})(TextAnimationSplit = exports.TextAnimationSplit || (exports.TextAnimationSplit = {}));
 class JilText {
     constructor(id, params, parent, projector) {
+        // tslint:disable-next-line:max-line-length
+        this.createCharacter = (id, params) => {
+            return this.createComponent('character', id, params);
+        };
         this.id = id;
         this.text = 'Default Text';
         if (params) {
@@ -3732,19 +3765,157 @@ class JilText {
         this.resetNode('text');
         this.resetTransform();
     }
+    animate(text, params) {
+        if (!params)
+            params = {};
+        this.removeAllChilds();
+        this.text = text;
+        const splitParam = params.split || "word" /* Word */;
+        const split = splitParam === "all" /* All */ ? [text] : text.split(' ');
+        let characters = [];
+        for (let i = 0; i < split.length; i++) {
+            if (splitParam === "character" /* Character */) {
+                let j = 0;
+                split[i].split('').forEach((x) => {
+                    characters.push(this.createCharacter(`${this.id}_${i}_${j}`, {
+                        text: x,
+                        class: 'text-span'
+                    }));
+                    j++;
+                });
+            }
+            else {
+                characters.push(this.createCharacter(`${this.id}_${i}`, {
+                    text: split[i],
+                    class: 'text-span'
+                }));
+            }
+            if (i < split.length) {
+                this.createCharacter(`${this.id}_${i}`, {
+                    text: ' ',
+                    class: 'text-span-space'
+                });
+            }
+        }
+        const order = params.order || "order" /* Order */;
+        switch (order) {
+            case "reverse" /* Reverse */:
+                characters = characters.reverse();
+                break;
+            case "shuffle" /* Shuffle */:
+                characters = helpers_2.shuffleArray(characters);
+                break;
+        }
+        const anim = params.anim || "fade" /* Fade */;
+        const delay = params.delay || 30;
+        const duration = params.duration || 350;
+        for (let i = 0; i < characters.length; i++) {
+            characters[i].animation(anim, delay * i, duration);
+        }
+    }
     render() {
+        const vnodes = this._childrens.length > 0 ? this._childrens.map((x) => x.render()) : [this.text];
         return maquette_1.h('div', {
             id: this.id,
             key: this.id,
             class: 'text',
             styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle()
+        }, vnodes);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.TransformTween)
+], JilText.prototype, "this", void 0);
+exports.JilText = JilText;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/textCharacter.ts":
+/*!*********************************************************!*\
+  !*** ./src/library/components/element/textCharacter.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fatina.min.js");
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+var TextAnimationAnim;
+(function (TextAnimationAnim) {
+    TextAnimationAnim["Fade"] = "fade";
+    TextAnimationAnim["Zoom"] = "zoom";
+})(TextAnimationAnim = exports.TextAnimationAnim || (exports.TextAnimationAnim = {}));
+class JilTextCharacter {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.text = params.text;
+        this.classname = params.class;
+        this._parent = parent;
+        this._projector = projector;
+        this.resetNode('character');
+        this.resetTransform();
+    }
+    tween(obj, data, duration, delay) {
+        const node = helpers_1.getComponent(this);
+        const tween = Fatina.tween(obj)
+            .to(data, duration)
+            .setEasing("inOutQuad" /* InOutQuad */)
+            .toSequence().prependInterval(delay);
+        tween.onUpdate(() => node.refresh());
+        tween.start();
+    }
+    animation(anim, delay, duration) {
+        switch (anim) {
+            case "fade" /* Fade */:
+                this.opacity = 0;
+                this.tween(this, { opacity: 1 }, duration, delay);
+                break;
+            case "zoom" /* Zoom */:
+                this.scale.set(0, 0);
+                this.tween(this.scale, { x: 1, y: 1 }, duration, delay);
+                break;
+        }
+    }
+    render() {
+        const x = ((this.anchor.x / this.size.x) - this.pivot.x + (this.position.x / this.size.x)) * 100;
+        const y = ((this.anchor.y / this.size.y) - this.pivot.y + (this.position.y / this.size.y)) * 100;
+        let transform = '';
+        if (x !== 0 || y !== 0) {
+            transform += `translate(${x}%, ${y}%) `;
+        }
+        if (this.scale.x !== 1 || this.scale.y !== 1) {
+            transform += `scale(${this.scale.x}, ${this.scale.y}) `;
+        }
+        if (this.rotation !== 0) {
+            transform += `rotate(${this.rotation}deg)`;
+        }
+        return maquette_1.h('span', {
+            id: this.id,
+            key: this.id,
+            class: this.classname,
+            styles: {
+                opacity: this.opacity.toString(),
+                transform
+            }
         }, [this.text]);
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.TransformTween)
-], JilText.prototype, "this", void 0);
-exports.JilText = JilText;
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform)
+], JilTextCharacter.prototype, "this", void 0);
+exports.JilTextCharacter = JilTextCharacter;
 
 
 /***/ }),
@@ -3816,6 +3987,10 @@ function getComponent(element) {
     return element;
 }
 exports.getComponent = getComponent;
+function shuffleArray(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+}
+exports.shuffleArray = shuffleArray;
 
 
 /***/ }),
@@ -3941,12 +4116,14 @@ const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/
 exports.SceneManager = sceneManager_1.SceneManager;
 const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
 const behaviours_1 = __webpack_require__(/*! ./behaviours */ "./src/library/behaviours/index.ts");
+const textCharacter_1 = __webpack_require__(/*! ./components/element/textCharacter */ "./src/library/components/element/textCharacter.ts");
 // register component
 behaviours_1.registerComponent('button', components_1.JilButton);
 behaviours_1.registerComponent('panel', components_1.JilPanel);
 behaviours_1.registerComponent('layer', components_1.JilLayer);
 behaviours_1.registerComponent('image', components_1.JilImage);
 behaviours_1.registerComponent('text', components_1.JilText);
+behaviours_1.registerComponent('character', textCharacter_1.JilTextCharacter);
 behaviours_1.registerComponent('canvas', components_1.JilCanvas);
 // register layout
 behaviours_1.registerLayout('default', behaviours_1.defaultLayout);

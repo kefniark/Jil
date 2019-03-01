@@ -74,6 +74,14 @@ export class JilNode {
 		this.refresh();
 	}
 
+	public removeAllChilds () {
+		if (this.nodeEvent) {
+			this.nodeEvent.post('removedAll');
+		}
+		this._childrens = [];
+		this.refresh();
+	}
+
 	public destroy () {
 		if (this.nodeEvent) this.nodeEvent.post('destroyed');
 		if (this._parent) this._parent.removeChild(this);

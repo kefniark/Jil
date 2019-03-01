@@ -4,6 +4,7 @@ import {
 	registerComponent, registerLayout,
 	verticalLayout, gridLayout, horizontalLayout, defaultLayout
 } from './behaviours';
+import { JilTextCharacter } from './components/element/textCharacter';
 
 // register component
 registerComponent('button', JilButton);
@@ -11,6 +12,7 @@ registerComponent('panel', JilPanel);
 registerComponent('layer', JilLayer);
 registerComponent('image', JilImage);
 registerComponent('text', JilText);
+registerComponent('character', JilTextCharacter);
 registerComponent('canvas', JilCanvas);
 
 // register layout

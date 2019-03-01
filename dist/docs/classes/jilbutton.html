@@ -907,6 +907,15 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class=" tsd-kind-enum">
+			<a href="../enums/textanimationanim.html" class="tsd-kind-icon">Text<wbr>Animation<wbr>Anim</a>
+		</li>
+		<li class=" tsd-kind-enum">
+			<a href="../enums/textanimationorder.html" class="tsd-kind-icon">Text<wbr>Animation<wbr>Order</a>
+		</li>
+		<li class=" tsd-kind-enum">
+			<a href="../enums/textanimationsplit.html" class="tsd-kind-icon">Text<wbr>Animation<wbr>Split</a>
+		</li>
 		<li class="current tsd-kind-class">
 			<a href="jilbutton.html" class="tsd-kind-icon">Jil<wbr>Button</a>
 			<ul>
@@ -1004,6 +1013,9 @@ img { max-width: 100%; }
 					<a href="jilbutton.html#refresh" class="tsd-kind-icon">refresh</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="jilbutton.html#removeallchilds" class="tsd-kind-icon">remove<wbr>All<wbr>Childs</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="jilbutton.html#removechild" class="tsd-kind-icon">remove<wbr>Child</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -1014,6 +1026,9 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="jilbutton.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="jilbutton.html#toggle" class="tsd-kind-icon">toggle</a>
 				</li>
 			</ul>
 		</li>
@@ -1036,7 +1051,13 @@ img { max-width: 100%; }
 			<a href="jiltext.html" class="tsd-kind-icon">Jil<wbr>Text</a>
 		</li>
 		<li class=" tsd-kind-class">
+			<a href="jiltextcharacter.html" class="tsd-kind-icon">Jil<wbr>Text<wbr>Character</a>
+		</li>
+		<li class=" tsd-kind-class">
 			<a href="scenemanager.html" class="tsd-kind-icon">Scene<wbr>Manager</a>
+		</li>
+		<li class=" tsd-kind-interface">
+			<a href="../interfaces/itextanimationparam.html" class="tsd-kind-icon">IText<wbr>Animation<wbr>Param</a>
 		</li>
 		<li class=" tsd-kind-variable">
 			<a href="../globals.html#create" class="tsd-kind-icon">create</a>
@@ -1129,10 +1150,12 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#ondestroy" class="tsd-kind-icon">on<wbr>Destroy</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#onload" class="tsd-kind-icon">on<wbr>Load</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#refresh" class="tsd-kind-icon">refresh</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#removeallchilds" class="tsd-kind-icon">remove<wbr>All<wbr>Childs</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#removechild" class="tsd-kind-icon">remove<wbr>Child</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#rotate" class="tsd-kind-icon">rotate</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#show" class="tsd-kind-icon">show</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="jilbutton.html#toggle" class="tsd-kind-icon">toggle</a></li>
 						</ul>
 					</section>
 				</div>
@@ -1150,7 +1173,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/components/element/button.ts#L10">components/element/button.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/components/element/button.ts#L10">components/element/button.ts:10</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1182,7 +1205,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.anchor</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L14">behaviours/core/transform.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L14">behaviours/core/transform.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1193,7 +1216,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.enable</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L7">behaviours/core/transform.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L7">behaviours/core/transform.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1204,7 +1227,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from JilNode.id</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L7">behaviours/core/node.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L7">behaviours/core/node.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1215,7 +1238,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.opacity</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L23">behaviours/core/transform.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L23">behaviours/core/transform.ts:23</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1226,7 +1249,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.pivot</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L15">behaviours/core/transform.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L15">behaviours/core/transform.ts:15</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1237,7 +1260,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.position</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L16">behaviours/core/transform.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L16">behaviours/core/transform.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1248,7 +1271,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.positionPx</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L20">behaviours/core/transform.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L20">behaviours/core/transform.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1259,7 +1282,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.rotation</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L24">behaviours/core/transform.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L24">behaviours/core/transform.ts:24</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1270,7 +1293,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.scale</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L22">behaviours/core/transform.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L22">behaviours/core/transform.ts:22</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1281,7 +1304,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.size</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L17">behaviours/core/transform.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L17">behaviours/core/transform.ts:17</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1292,7 +1315,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.sizePx</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L21">behaviours/core/transform.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L21">behaviours/core/transform.ts:21</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1302,7 +1325,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/components/element/button.ts#L10">components/element/button.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/components/element/button.ts#L10">components/element/button.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1312,7 +1335,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">this<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/components/element/button.ts#L9">components/element/button.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/components/element/button.ts#L9">components/element/button.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1323,7 +1346,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from JilNode.type</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L8">behaviours/core/node.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L8">behaviours/core/node.ts:8</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1337,7 +1360,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from Transform.node</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/transform.ts#L9">behaviours/core/transform.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/transform.ts#L9">behaviours/core/transform.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1348,7 +1371,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from JilNode.transform</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L10">behaviours/core/node.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L10">behaviours/core/node.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1366,7 +1389,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.addChild</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L62">behaviours/core/node.ts:62</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L62">behaviours/core/node.ts:62</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1390,7 +1413,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from Clickable.click</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/interaction/clickable.ts#L17">behaviours/interaction/clickable.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/interaction/clickable.ts#L17">behaviours/interaction/clickable.ts:17</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1408,7 +1431,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.destroy</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L77">behaviours/core/node.ts:77</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L85">behaviours/core/node.ts:85</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1426,7 +1449,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.find</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L94">behaviours/core/node.ts:94</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L102">behaviours/core/node.ts:102</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1453,7 +1476,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.findAllByType</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L102">behaviours/core/node.ts:102</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L110">behaviours/core/node.ts:110</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1477,7 +1500,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.findByType</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L98">behaviours/core/node.ts:98</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L106">behaviours/core/node.ts:106</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1504,7 +1527,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.hide</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L63">behaviours/animation/transformTween.ts:63</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L63">behaviours/animation/transformTween.ts:63</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1534,7 +1557,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.move</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L38">behaviours/animation/transformTween.ts:38</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L38">behaviours/animation/transformTween.ts:38</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1570,7 +1593,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.moveX</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L30">behaviours/animation/transformTween.ts:30</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L30">behaviours/animation/transformTween.ts:30</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1603,7 +1626,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.moveY</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L34">behaviours/animation/transformTween.ts:34</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L34">behaviours/animation/transformTween.ts:34</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1636,7 +1659,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from Clickable.onClick</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/interaction/clickable.ts#L23">behaviours/interaction/clickable.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/interaction/clickable.ts#L23">behaviours/interaction/clickable.ts:23</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1672,7 +1695,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.onDestroy</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L58">behaviours/core/node.ts:58</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L58">behaviours/core/node.ts:58</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1708,7 +1731,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.onLoad</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L54">behaviours/core/node.ts:54</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L54">behaviours/core/node.ts:54</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1744,7 +1767,25 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.refresh</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L82">behaviours/core/node.ts:82</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L90">behaviours/core/node.ts:90</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="removeallchilds" class="tsd-anchor"></a>
+				<h3>remove<wbr>All<wbr>Childs</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">remove<wbr>All<wbr>Childs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from JilNode.removeAllChilds</p>
+							<ul>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L77">behaviours/core/node.ts:77</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1762,7 +1803,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.removeChild</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L68">behaviours/core/node.ts:68</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L68">behaviours/core/node.ts:68</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1786,7 +1827,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.rotate</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L84">behaviours/animation/transformTween.ts:84</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L93">behaviours/animation/transformTween.ts:93</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1819,7 +1860,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from TransformTween.show</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/animation/transformTween.ts#L59">behaviours/animation/transformTween.ts:59</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L59">behaviours/animation/transformTween.ts:59</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1849,10 +1890,40 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from JilNode.toString</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/kefniark/jil/blob/6d0d2d9/src/library/behaviours/core/node.ts#L106">behaviours/core/node.ts:106</a></li>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/core/node.ts#L114">behaviours/core/node.ts:114</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="toggle" class="tsd-anchor"></a>
+				<h3>toggle</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">toggle<span class="tsd-signature-symbol">(</span>duration<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, autostart<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, autokill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from TransformTween.toggle</p>
+							<ul>
+								<li>Defined in <a href="https://github.com/kefniark/jil/blob/52f0e4a/src/library/behaviours/animation/transformTween.ts#L67">behaviours/animation/transformTween.ts:67</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> duration: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;150</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> autostart: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> autokill: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
 				</ul>
 			</section>

@@ -33,6 +33,7 @@ export declare class JilNode {
     onDestroy(cb: () => void): void;
     addChild(element: JilNode): void;
     removeChild(element: JilNode): void;
+    removeAllChilds(): void;
     destroy(): void;
     refresh(): void;
     /**

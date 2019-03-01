@@ -10,6 +10,7 @@ export declare class TransformTween {
     private _fadeTween;
     show(duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
     hide(duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
+    toggle(duration?: number, autostart?: boolean, autokill?: boolean): void;
     private _rotateTween;
     rotate(rotate: number, duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
 }
