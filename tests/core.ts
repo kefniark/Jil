@@ -113,6 +113,10 @@ test('Factory', (t: Test) => {
 	data.layer.createButton('buttonId');
 	data.layer.createPanel('panelId');
 	data.layer.createText('textId');
+	data.layer.createRadio('radioId');
+	data.layer.createCheckbox('checkboxId');
+	data.layer.createSelect('selectId');
+	data.layer.createInput('inputId');
 
 	const dom = data.scene.render();
 	t.notEqual(dom, '', 'check dom size');

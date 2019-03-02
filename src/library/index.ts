@@ -1,19 +1,27 @@
 import { SceneManager } from './sceneManager';
-import { JilButton, JilPanel, JilLayer, JilCanvas, JilImage, JilText } from './components';
 import {
-	registerComponent, registerLayout,
+	JilPanel, JilLayer, JilCanvas,
+	JilButton, JilImage, JilText, JilRadio, JilCheckbox, JilSelect, JilInput
+} from './components';
+import {
+	registerComponent, registerLayout, registerClassname,
 	verticalLayout, gridLayout, horizontalLayout, defaultLayout
 } from './behaviours';
 import { JilTextCharacter } from './components/element/textCharacter';
 
 // register component
-registerComponent('button', JilButton);
-registerComponent('panel', JilPanel);
-registerComponent('layer', JilLayer);
-registerComponent('image', JilImage);
-registerComponent('text', JilText);
-registerComponent('character', JilTextCharacter);
 registerComponent('canvas', JilCanvas);
+registerComponent('layer', JilLayer);
+
+registerComponent('button', JilButton);
+registerComponent('checkbox', JilCheckbox);
+registerComponent('character', JilTextCharacter);
+registerComponent('image', JilImage);
+registerComponent('panel', JilPanel);
+registerComponent('radio', JilRadio);
+registerComponent('text', JilText);
+registerComponent('select', JilSelect);
+registerComponent('input', JilInput);
 
 // register layout
 registerLayout('default', defaultLayout);
@@ -37,4 +45,4 @@ export const create = SceneManager.create;
  */
 export const use = SceneManager.use;
 
-export { SceneManager };
+export { SceneManager, registerClassname, registerComponent, registerLayout };

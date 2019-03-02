@@ -1,5 +1,5 @@
 // Core
-export { registerComponent, registerLayout, Factory } from './core/factory';
+export { registerComponent, registerLayout, registerClassname, Factory } from './core/factory';
 export { JilNode } from './core/node';
 export { Transform } from './core/transform';
 

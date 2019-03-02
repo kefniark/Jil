@@ -33,12 +33,19 @@ export class JilText {
 
 	public text: string;
 	public styles;
+	public classnames: string;
 
 	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
 		this.text = 'Default Text';
+		this.classnames = '';
 		if (params) {
-			this.text = isString(params) ? params : params.text;
+			if (isString(params)) {
+				this.text = params;
+			} else {
+				this.text = params.text;
+				this.classnames = params.class;
+			}
 		}
 		this.styles = params || {};
 		this._parent = parent;
@@ -106,10 +113,15 @@ export class JilText {
 
 	public render (): VNode {
 		const vnodes = this._childrens.length > 0 ? this._childrens.map((x) => x.render()) : [ this.text ];
+		const classes = ['text', this.classnames, this.getClassname('text')]
+			.filter((x) => x && x.length > 0)
+			.map((x) => x.toString().trim())
+			.join(' ').trim();
+
 		return h('div', {
 			id: this.id,
 			key: this.id,
-			class: 'text',
+			class: classes,
 			styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle()
 		}, vnodes);
 	}

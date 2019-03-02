@@ -1,6 +1,5 @@
 body {
 	margin: 0px;
-	background-color: black !important;
 	overflow: hidden;
 }
 
@@ -8,9 +7,8 @@ body {
 	position: absolute;
 	outline: none;
 	user-select: none;
-	pointer-events: all;
-	pointer-events: none;
 	overflow: hidden;
+	pointer-events: none;
 }
 
 .layer {
@@ -19,31 +17,36 @@ body {
 	height: 100%;
 }
 
-.fader.layer {
-	background-color: black;
-}
-
 .scene button {
 	position: absolute;
-	margin-bottom: 1vw;
-	height: 5vw;
-	font-size: 32px;
 	pointer-events: all;
-	backface-visibility: hidden;
-	cursor: pointer;
-	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.scene input {
+	position: absolute;
+	pointer-events: all;
+}
+
+.scene select {
+	position: absolute;
+	pointer-events: all;
+}
+
+input[type=checkbox], input[type=radio] {
+	pointer-events: all;
+}
+
+.scene label {
+	position: absolute;
+	pointer-events: all;
 }
 
 .scene img {
 	position: absolute;
-	pointer-events: all;
-	user-select: none;
-	-webkit-user-drag: none;
 }
 
 .scene .text {
 	position: absolute;
-	font-size: 32px;
 }
 
 .scene .text-span {
@@ -57,5 +60,4 @@ body {
 
 .scene .canvas {
 	position: absolute;
-	pointer-events: all;
 }

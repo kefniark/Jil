@@ -1,4 +1,5 @@
 import { SceneManager } from './sceneManager';
+import { registerComponent, registerLayout, registerClassname } from './behaviours';
 /**
  * Init Helper
  * @function
@@ -14,4 +15,4 @@ export declare const create: typeof SceneManager.create;
  * @function
  */
 export declare const use: typeof SceneManager.use;
-export { SceneManager };
+export { SceneManager, registerClassname, registerComponent, registerLayout };

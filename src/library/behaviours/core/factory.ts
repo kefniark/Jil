@@ -12,6 +12,11 @@ export function registerLayout (id: string, className: (container: Layout, eleme
 	layout[id] = className;
 }
 
+const classNames = {};
+export function registerClassname (id: string, className: string) {
+	classNames[id] = className;
+}
+
 export class Factory {
 	/**
 	 * @ignore
@@ -28,5 +33,9 @@ export class Factory {
 
 	public getLayout (id: string): (container: Layout, elements: JilNode[]) => void {
 		return layout[id];
+	}
+
+	public getClassname (id: string): string {
+		return classNames[id] ? classNames[id] : '';
 	}
 }

@@ -2840,6 +2840,11 @@ function registerLayout(id, className) {
     layout[id] = className;
 }
 exports.registerLayout = registerLayout;
+const classNames = {};
+function registerClassname(id, className) {
+    classNames[id] = className;
+}
+exports.registerClassname = registerClassname;
 class Factory {
     /**
      * @ignore
@@ -2855,6 +2860,9 @@ class Factory {
     }
     getLayout(id) {
         return layout[id];
+    }
+    getClassname(id) {
+        return classNames[id] ? classNames[id] : '';
     }
 }
 exports.Factory = Factory;
@@ -3105,6 +3113,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var factory_1 = __webpack_require__(/*! ./core/factory */ "./src/library/behaviours/core/factory.ts");
 exports.registerComponent = factory_1.registerComponent;
 exports.registerLayout = factory_1.registerLayout;
+exports.registerClassname = factory_1.registerClassname;
 exports.Factory = factory_1.Factory;
 var node_1 = __webpack_require__(/*! ./core/node */ "./src/library/behaviours/core/node.ts");
 exports.JilNode = node_1.JilNode;
@@ -3388,11 +3397,15 @@ const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/
 const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
 class JilLayer {
     constructor(id, params, parent, projector) {
-        this.createPanel = (id) => this.createComponent('panel', id);
+        this.createPanel = (id, params) => this.createComponent('panel', id, params);
         this.createButton = (id, params) => this.createComponent('button', id, params);
         this.createImage = (id, params) => this.createComponent('image', id, params);
         this.createText = (id, params) => this.createComponent('text', id, params);
         this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
+        this.createRadio = (id, params) => this.createComponent('radio', id, params);
+        this.createCheckbox = (id, params) => this.createComponent('checkbox', id, params);
+        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createInput = (id, params) => this.createComponent('input', id, params);
         this.id = id;
         this.classname = params ? params : '';
         this._parent = parent;
@@ -3456,31 +3469,43 @@ const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 class JilPanel {
     constructor(id, params, parent, projector) {
-        this.createPanel = (id) => this.createComponent('panel', id);
+        this.createPanel = (id, params) => this.createComponent('panel', id, params);
         this.createButton = (id, params) => this.createComponent('button', id, params);
         this.createImage = (id, params) => this.createComponent('image', id, params);
         this.createText = (id, params) => this.createComponent('text', id, params);
         this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
+        this.createRadio = (id, params) => this.createComponent('radio', id, params);
+        this.createCheckbox = (id, params) => this.createComponent('checkbox', id, params);
+        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createInput = (id, params) => this.createComponent('input', id, params);
         this.id = id;
+        this.classnames = '';
+        if (params) {
+            this.classnames = params.class ? params.class : this.classnames;
+        }
         this._parent = parent;
         this._projector = projector;
         this.resetNode('panel');
         this.resetTransform();
         this.resetLayout();
     }
-    render() {
-        return maquette_1.h('div', {
-            id: this.id,
-            key: this.id,
-            class: 'panel',
-            styles: this.getStyle()
-        }, this._childrens.map((x) => x.render()));
-    }
     refreshLayout() {
         const layoutMethod = this.getLayout(this.layout);
         if (layoutMethod) {
             layoutMethod(this, this._childrens);
         }
+    }
+    render() {
+        const classes = ['panel', this.classnames, this.getClassname('panel')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+        return maquette_1.h('div', {
+            id: this.id,
+            key: this.id,
+            class: classes,
+            styles: this.getStyle()
+        }, this._childrens.map((x) => x.render()));
     }
 }
 __decorate([
@@ -3634,10 +3659,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilButton {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = params;
+        this.text = 'Default Text';
+        this.classnames = '';
+        if (params) {
+            if (helpers_1.isString(params)) {
+                this.text = params;
+            }
+            else {
+                this.text = params.text;
+                this.classnames = params.class;
+            }
+        }
+        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
@@ -3645,20 +3682,98 @@ class JilButton {
         this.resetTransform();
     }
     render() {
+        const classes = ['button', this.classnames, this.getClassname('button')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
         return maquette_1.h('button', {
             id: this.id,
             key: this.id,
             type: 'button',
-            class: 'nes-btn',
+            class: classes,
             styles: this.getStyle(),
             onclick: this.click.bind(this)
         }, [this.text]);
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
 ], JilButton.prototype, "this", void 0);
 exports.JilButton = JilButton;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/checkbox.ts":
+/*!****************************************************!*\
+  !*** ./src/library/components/element/checkbox.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilCheckbox {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.text = 'text';
+        this.name = 'checkbox';
+        this.value = 'value';
+        this.classnames = '';
+        this.checked = false;
+        if (params) {
+            this.text = params.text ? params.text : this.text;
+            this.name = params.name ? params.name : this.name;
+            this.value = params.value ? params.value : this.value;
+            this.classnames = params.class ? params.class : this.classnames;
+            this.checked = params.checked ? params.checked : this.checked;
+        }
+        this.styles = params || {};
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetNode('checkbox');
+        this.resetTransform();
+    }
+    render() {
+        const classes = ['checkbox', this.classnames, this.getClassname('checkbox')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+        return maquette_1.h('label', {
+            id: 'label_' + this.id,
+            key: 'label_' + this.id,
+            styles: this.getStyle(),
+            class: classes
+        }, [
+            maquette_1.h('input', {
+                type: 'checkbox',
+                name: this.name,
+                value: this.value,
+                id: this.id,
+                key: this.id,
+                checked: this.checked,
+                class: classes,
+                onclick: this.click.bind(this)
+            }, []),
+            maquette_1.h('span', {}, [this.text])
+        ]);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+], JilCheckbox.prototype, "this", void 0);
+exports.JilCheckbox = JilCheckbox;
 
 
 /***/ }),
@@ -3687,8 +3802,15 @@ class JilImage {
     constructor(id, params, parent, projector) {
         this.id = id;
         this.src = '';
+        this.classnames = '';
         if (params) {
-            this.src = helpers_1.isString(params) ? params : params.src;
+            if (helpers_1.isString(params)) {
+                this.src = params;
+            }
+            else {
+                this.src = params.src;
+                this.classnames = params.class ? params.class : this.classnames;
+            }
         }
         this.styles = params || {};
         this._parent = parent;
@@ -3698,19 +3820,232 @@ class JilImage {
         this.resetTransform();
     }
     render() {
+        const classes = ['image', this.classnames, this.getClassname('image')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
         return maquette_1.h('img', {
             id: this.id,
             key: this.id,
             src: this.src,
             styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle(),
+            class: classes,
             onclick: this.click.bind(this)
         });
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
 ], JilImage.prototype, "this", void 0);
 exports.JilImage = JilImage;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/input.ts":
+/*!*************************************************!*\
+  !*** ./src/library/components/element/input.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilInput {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.name = 'input';
+        this.value = 'value';
+        this.classnames = '';
+        if (params) {
+            this.name = params.name ? params.name : this.name;
+            this.value = params.value ? params.value : this.value;
+            this.classnames = params.class ? params.class : this.classnames;
+        }
+        this.styles = params || {};
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetNode('radio');
+        this.resetTransform();
+    }
+    render() {
+        const classes = ['input', this.classnames, this.getClassname('input')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+        return maquette_1.h('input', {
+            id: this.id,
+            key: this.id,
+            name: this.name,
+            value: this.value,
+            styles: this.getStyle(),
+            class: classes,
+            onclick: this.click.bind(this)
+        }, []);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+], JilInput.prototype, "this", void 0);
+exports.JilInput = JilInput;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/radio.ts":
+/*!*************************************************!*\
+  !*** ./src/library/components/element/radio.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilRadio {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.text = 'text';
+        this.name = 'radio';
+        this.value = 'value';
+        this.classnames = '';
+        this.checked = false;
+        if (params) {
+            this.text = params.text ? params.text : this.text;
+            this.name = params.name ? params.name : this.name;
+            this.value = params.value ? params.value : this.value;
+            this.classnames = params.class ? params.class : this.classnames;
+            this.checked = params.checked ? params.checked : this.checked;
+        }
+        this.styles = params || {};
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetNode('radio');
+        this.resetTransform();
+    }
+    render() {
+        const classes = ['radio', this.classnames, this.getClassname('radio')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+        return maquette_1.h('label', {
+            id: 'label_' + this.id,
+            key: 'label_' + this.id,
+            styles: this.getStyle(),
+            afterCreate: (evt) => {
+                const query = document.querySelector('input[name="' + this.name + '"]:checked');
+                if (!query) {
+                    this.checked = true;
+                    this.refresh();
+                }
+            },
+            class: classes
+        }, [
+            maquette_1.h('input', {
+                type: 'radio',
+                name: this.name,
+                value: this.value,
+                id: this.id,
+                key: this.id,
+                checked: this.checked,
+                class: classes,
+                onclick: this.click.bind(this)
+            }, []),
+            maquette_1.h('span', {}, [this.text])
+        ]);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+], JilRadio.prototype, "this", void 0);
+exports.JilRadio = JilRadio;
+
+
+/***/ }),
+
+/***/ "./src/library/components/element/select.ts":
+/*!**************************************************!*\
+  !*** ./src/library/components/element/select.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+class JilSelect {
+    constructor(id, params, parent, projector) {
+        this.id = id;
+        this.name = 'select';
+        this.value = '';
+        this.classnames = '';
+        this.options = [];
+        if (params) {
+            this.name = params.name ? params.name : this.name;
+            this.value = params.value ? params.value : this.value;
+            this.classnames = params.class ? params.class : this.classnames;
+            this.options = params.options ? params.options : this.options;
+        }
+        this.styles = params || {};
+        this._parent = parent;
+        this._projector = projector;
+        this.resetClickable();
+        this.resetNode('radio');
+        this.resetTransform();
+    }
+    render() {
+        const classes = ['select', this.classnames, this.getClassname('select')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+        const val = !this.value && this.options.length > 0 ? this.options[0].value : this.value;
+        return maquette_1.h('select', {
+            id: this.id,
+            key: this.id,
+            name: this.name,
+            value: val,
+            styles: this.getStyle(),
+            class: classes,
+            onclick: this.click.bind(this)
+        }, this.options.map((x) => {
+            return maquette_1.h('option', { value: x.value }, [x.text]);
+        }));
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+], JilSelect.prototype, "this", void 0);
+exports.JilSelect = JilSelect;
 
 
 /***/ }),
@@ -3756,8 +4091,15 @@ class JilText {
         };
         this.id = id;
         this.text = 'Default Text';
+        this.classnames = '';
         if (params) {
-            this.text = helpers_1.isString(params) ? params : params.text;
+            if (helpers_1.isString(params)) {
+                this.text = params;
+            }
+            else {
+                this.text = params.text;
+                this.classnames = params.class;
+            }
         }
         this.styles = params || {};
         this._parent = parent;
@@ -3815,10 +4157,14 @@ class JilText {
     }
     render() {
         const vnodes = this._childrens.length > 0 ? this._childrens.map((x) => x.render()) : [this.text];
+        const classes = ['text', this.classnames, this.getClassname('text')]
+            .filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
         return maquette_1.h('div', {
             id: this.id,
             key: this.id,
-            class: 'text',
+            class: classes,
             styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle()
         }, vnodes);
     }
@@ -3946,6 +4292,14 @@ var image_1 = __webpack_require__(/*! ./element/image */ "./src/library/componen
 exports.JilImage = image_1.JilImage;
 var text_1 = __webpack_require__(/*! ./element/text */ "./src/library/components/element/text.ts");
 exports.JilText = text_1.JilText;
+var radio_1 = __webpack_require__(/*! ./element/radio */ "./src/library/components/element/radio.ts");
+exports.JilRadio = radio_1.JilRadio;
+var checkbox_1 = __webpack_require__(/*! ./element/checkbox */ "./src/library/components/element/checkbox.ts");
+exports.JilCheckbox = checkbox_1.JilCheckbox;
+var select_1 = __webpack_require__(/*! ./element/select */ "./src/library/components/element/select.ts");
+exports.JilSelect = select_1.JilSelect;
+var input_1 = __webpack_require__(/*! ./element/input */ "./src/library/components/element/input.ts");
+exports.JilInput = input_1.JilInput;
 
 
 /***/ }),
@@ -4116,15 +4470,22 @@ const sceneManager_1 = __webpack_require__(/*! ./sceneManager */ "./src/library/
 exports.SceneManager = sceneManager_1.SceneManager;
 const components_1 = __webpack_require__(/*! ./components */ "./src/library/components/index.ts");
 const behaviours_1 = __webpack_require__(/*! ./behaviours */ "./src/library/behaviours/index.ts");
+exports.registerComponent = behaviours_1.registerComponent;
+exports.registerLayout = behaviours_1.registerLayout;
+exports.registerClassname = behaviours_1.registerClassname;
 const textCharacter_1 = __webpack_require__(/*! ./components/element/textCharacter */ "./src/library/components/element/textCharacter.ts");
 // register component
-behaviours_1.registerComponent('button', components_1.JilButton);
-behaviours_1.registerComponent('panel', components_1.JilPanel);
-behaviours_1.registerComponent('layer', components_1.JilLayer);
-behaviours_1.registerComponent('image', components_1.JilImage);
-behaviours_1.registerComponent('text', components_1.JilText);
-behaviours_1.registerComponent('character', textCharacter_1.JilTextCharacter);
 behaviours_1.registerComponent('canvas', components_1.JilCanvas);
+behaviours_1.registerComponent('layer', components_1.JilLayer);
+behaviours_1.registerComponent('button', components_1.JilButton);
+behaviours_1.registerComponent('checkbox', components_1.JilCheckbox);
+behaviours_1.registerComponent('character', textCharacter_1.JilTextCharacter);
+behaviours_1.registerComponent('image', components_1.JilImage);
+behaviours_1.registerComponent('panel', components_1.JilPanel);
+behaviours_1.registerComponent('radio', components_1.JilRadio);
+behaviours_1.registerComponent('text', components_1.JilText);
+behaviours_1.registerComponent('select', components_1.JilSelect);
+behaviours_1.registerComponent('input', components_1.JilInput);
 // register layout
 behaviours_1.registerLayout('default', behaviours_1.defaultLayout);
 behaviours_1.registerLayout('vertical', behaviours_1.verticalLayout);

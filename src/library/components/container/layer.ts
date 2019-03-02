@@ -7,6 +7,10 @@ import { JilCanvas } from './canvas';
 import { JilButton } from '../element/button';
 import { JilImage } from '../element/image';
 import { JilText } from '../element/text';
+import { JilRadio } from '../element/radio';
+import { JilCheckbox } from '../element/checkbox';
+import { JilSelect } from '../element/select';
+import { JilInput } from '../element/input';
 
 // tslint:disable-next-line:interface-name
 export interface JilLayer extends JilNode, Transform, Factory, TransformTween { }
@@ -30,11 +34,15 @@ export class JilLayer {
 		}
 	}
 
-	public createPanel = (id: string) => this.createComponent('panel', id) as JilPanel;
+	public createPanel = (id: string, params?: string | any) => this.createComponent('panel', id, params) as JilPanel;
 	public createButton = (id: string, params?: string | any) => this.createComponent('button', id, params) as JilButton;
 	public createImage = (id: string, params?: string | any) => this.createComponent('image', id, params) as JilImage;
 	public createText = (id: string, params?: string | any) => this.createComponent('text', id, params) as JilText;
 	public createCanvas = (id: string, params?: string | any) => this.createComponent('canvas', id, params) as JilCanvas;
+	public createRadio = (id: string, params?: string | any) => this.createComponent('radio', id, params) as JilRadio;
+	public createCheckbox = (id: string, params?: string | any) => this.createComponent('checkbox', id, params) as JilCheckbox;
+	public createSelect = (id: string, params?: string | any) => this.createComponent('select', id, params) as JilSelect;
+	public createInput = (id: string, params?: string | any) => this.createComponent('input', id, params) as JilInput;
 
 	public render (): VNode {
 		const styles = {} as any;

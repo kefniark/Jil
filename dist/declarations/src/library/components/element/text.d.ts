@@ -24,6 +24,7 @@ export declare class JilText {
     this: any;
     text: string;
     styles: any;
+    classnames: string;
     constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
     createCharacter: (id: string, params?: any) => JilTextCharacter;
     animate(text: string, params: ITextAnimationParam): void;

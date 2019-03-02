@@ -1,0 +1,31 @@
+body {
+	background-color: black !important;
+}
+
+.fader.layer {
+	background-color: black;
+}
+
+.scene .button {
+	margin-bottom: 1vw;
+	height: 5vw;
+	font-size: 32px;
+	pointer-events: all;
+	backface-visibility: hidden;
+	cursor: pointer;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.scene img {
+	pointer-events: all;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.scene .text {
+	font-size: 32px;
+}
+
+.scene .canvas {
+	pointer-events: all;
+}

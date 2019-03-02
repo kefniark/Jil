@@ -8,6 +8,7 @@
 		"triple-equals": true,
 		"prefer-object-spread": true,
 
+		"max-line-length": [true, 160],
 		"interface-name": [true, "always-prefix"],
 		"semicolon": [true, "always"],
 		"indent": [true, "tabs"],
