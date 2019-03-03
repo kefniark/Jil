@@ -1,6 +1,7 @@
 import { VNode, Projector } from 'maquette';
-import { JilNode, Transform, Factory } from '../../behaviours';
+import { JilNode, Transform, Factory, ITransformParam } from '../../behaviours';
 import { JilLayer } from './layer';
+import { JilAlert, JilAlertParams } from '../popup/alert';
 export interface JilScene extends JilNode, Transform, Factory {
 }
 export declare class JilScene {
@@ -37,7 +38,9 @@ export declare class JilScene {
      * @param id ID of the new layer (need to be unique)
      * @memberof Scene
      */
-    createLayer: (id: string, classname?: string | undefined) => JilLayer;
+    createLayer: (id: string, params?: ITransformParam | undefined) => JilLayer;
+    createAlertPopup: (id: string, params?: JilAlertParams | undefined) => JilAlert;
+    alert(title: string, msg: string): void;
     /**
      * Render the HTML
      * @ignore

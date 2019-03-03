@@ -4,8 +4,8 @@ import { getComponent } from '../../helpers';
 import { Transform } from './transform';
 
 export class JilNode {
-	public id?: string;
-	public type?: string;
+	public id = '';
+	public type = '';
 
 	public get transform (): Transform {
 		return getComponent<Transform>(this);
@@ -24,9 +24,6 @@ export class JilNode {
 	 */
 	public _childrens: JilNode[] = [];
 
-	private createEvent = new SyncEvent<void>();
-	private destroyEvent = new SyncEvent<void>();
-
 	/**
 	 * @ignore
 	 */
@@ -38,25 +35,7 @@ export class JilNode {
 	public resetNode (type: string) {
 		this.type = type;
 		this._childrens = [];
-		if (!this.createEvent) this.createEvent = new SyncEvent<void>();
-		if (!this.destroyEvent) this.destroyEvent = new SyncEvent<void>();
 		if (!this.nodeEvent) this.nodeEvent = new SyncEvent<string>();
-	}
-
-	protected handlerAfterCreate () {
-		if (this.createEvent) this.createEvent.post();
-	}
-
-	protected handleAfterRemoved () {
-		if (this.destroyEvent) this.destroyEvent.post();
-	}
-
-	public onLoad (cb: () => void) {
-		if (this.createEvent) this.createEvent.attach(cb);
-	}
-
-	public onDestroy (cb: () => void) {
-		if (this.destroyEvent) this.destroyEvent.attach(cb);
 	}
 
 	public addChild (element: JilNode) {

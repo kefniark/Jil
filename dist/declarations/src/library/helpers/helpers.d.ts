@@ -1,3 +1,10 @@
+import { Vector2 } from './vector2';
+import { Vector2Extend } from './vector2extend';
 export declare function isString(obj: any): boolean;
 export declare function getComponent<T>(element: any): T;
 export declare function shuffleArray(arr: any): any;
+export declare function getParam(data: any, prop: string, def: string): any;
+export declare function getParamBool(data: any, prop: string, def: boolean): boolean;
+export declare function getParamNum(data: any, prop: string, def: number): any;
+export declare function getParamVec2(data: any, prop: string, defx?: number, defy?: number): Vector2;
+export declare function getParamVec2Extend(data: any, prop: string, defx?: number, defy?: number): Vector2Extend;

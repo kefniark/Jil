@@ -1,18 +1,24 @@
 import { VNode, Projector } from 'maquette';
-import { JilNode, Transform, Clickable, Factory } from '../../behaviours';
-export interface IJilSelectOption {
+import { JilNode, Transform, Clickable, Factory, ITransformParam, KeyboardEvents } from '../../behaviours';
+export interface JilSelect extends JilNode, Factory, Transform, Clickable, KeyboardEvents {
+}
+/**
+ * @ignore
+ */
+export interface JilSelectParams extends ITransformParam {
+    name?: string;
+    value?: string;
+    options?: JilSelectOption[];
+}
+export interface JilSelectOption {
     text: string;
     value: string;
-}
-export interface JilSelect extends JilNode, Factory, Transform, Clickable {
 }
 export declare class JilSelect {
     this: any;
     name: any;
     value: any;
-    styles: any;
-    options: IJilSelectOption[];
-    classnames: string;
-    constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
+    options: JilSelectOption[];
+    constructor(id: string, params: JilSelectParams, parent: JilNode, projector: Projector | undefined);
     render(): VNode;
 }

@@ -1,32 +1,30 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { JilNode, Transform, TransformTween, Factory } from '../../behaviours';
+import { JilNode, Transform, TransformTween, Factory, ITransformParam } from '../../behaviours';
 import { resolution } from '../../config';
 import { JilPanel } from './panel';
 import { JilCanvas } from './canvas';
-import { JilButton } from '../element/button';
-import { JilImage } from '../element/image';
-import { JilText } from '../element/text';
-import { JilRadio } from '../element/radio';
-import { JilCheckbox } from '../element/checkbox';
-import { JilSelect } from '../element/select';
-import { JilInput } from '../element/input';
+import { JilButton, JilButtonParams } from '../element/button';
+import { JilImage, JilImageParams } from '../element/image';
+import { JilText, JilTextParams } from '../element/text';
+import { JilRadio, JilRadioParams } from '../element/radio';
+import { JilCheckbox, JilCheckboxParams } from '../element/checkbox';
+import { JilSelect, JilSelectParams } from '../element/select';
+import { JilInput, JilInputParams } from '../element/input';
 
-// tslint:disable-next-line:interface-name
 export interface JilLayer extends JilNode, Transform, Factory, TransformTween { }
 
 export class JilLayer {
 	@use(JilNode, Transform, Factory, TransformTween) public this: any;
 
-	public classname: string;
-
-	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
+	constructor (id: string, params: ITransformParam, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
-		this.classname = params ? params : '';
 		this._parent = parent;
 		this._projector = projector;
 		this.resetNode('layer');
-		this.resetTransform();
+
+		if (!params) params = {};
+		this.resetTransform(params);
 
 		// tslint:disable-next-line
 		if (typeof(window) !== 'undefined') {
@@ -34,15 +32,16 @@ export class JilLayer {
 		}
 	}
 
-	public createPanel = (id: string, params?: string | any) => this.createComponent('panel', id, params) as JilPanel;
-	public createButton = (id: string, params?: string | any) => this.createComponent('button', id, params) as JilButton;
-	public createImage = (id: string, params?: string | any) => this.createComponent('image', id, params) as JilImage;
-	public createText = (id: string, params?: string | any) => this.createComponent('text', id, params) as JilText;
-	public createCanvas = (id: string, params?: string | any) => this.createComponent('canvas', id, params) as JilCanvas;
-	public createRadio = (id: string, params?: string | any) => this.createComponent('radio', id, params) as JilRadio;
-	public createCheckbox = (id: string, params?: string | any) => this.createComponent('checkbox', id, params) as JilCheckbox;
-	public createSelect = (id: string, params?: string | any) => this.createComponent('select', id, params) as JilSelect;
-	public createInput = (id: string, params?: string | any) => this.createComponent('input', id, params) as JilInput;
+	public createCanvas = (id: string, params?: ITransformParam) => this.createComponent('canvas', id, params) as JilCanvas;
+	public createPanel = (id: string, params?: ITransformParam) => this.createComponent('panel', id, params) as JilPanel;
+
+	public createButton = (id: string, params?: string | JilButtonParams) => this.createComponent('button', id, params) as JilButton;
+	public createCheckbox = (id: string, params?: JilCheckboxParams) => this.createComponent('checkbox', id, params) as JilCheckbox;
+	public createImage = (id: string, params?: string | JilImageParams) => this.createComponent('image', id, params) as JilImage;
+	public createInput = (id: string, params?: string | JilInputParams) => this.createComponent('input', id, params) as JilInput;
+	public createRadio = (id: string, params?: JilRadioParams) => this.createComponent('radio', id, params) as JilRadio;
+	public createSelect = (id: string, params?: JilSelectParams) => this.createComponent('select', id, params) as JilSelect;
+	public createText = (id: string, params?: string | JilTextParams) => this.createComponent('text', id, params) as JilText;
 
 	public render (): VNode {
 		const styles = {} as any;
@@ -65,7 +64,7 @@ export class JilLayer {
 		return h('div', {
 			id: this.id,
 			key: this.id,
-			class: `layer ${this.classname}`.trim(),
+			class: this.getClassnames(),
 			styles
 		}, this._childrens.map((x) => x.render()));
 	}

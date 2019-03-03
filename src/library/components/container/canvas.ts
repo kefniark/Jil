@@ -1,34 +1,30 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { JilNode, Transform, Clickable, TransformTween } from '../../behaviours';
+import { JilNode, Transform, Clickable, TransformTween, MouseEvents } from '../../behaviours';
 import { resolution } from '../../config';
+import { TransformParam } from '../../behaviours/core/transform';
 
-// tslint:disable-next-line:interface-name
-export interface JilCanvas extends JilNode, Transform, Clickable, TransformTween { }
+export interface JilCanvas extends JilNode, Transform, Clickable, MouseEvents, TransformTween { }
 
 export class JilCanvas {
-	@use(JilNode, Transform, Clickable, TransformTween) public this: any;
+	@use(JilNode, Transform, Clickable, MouseEvents, TransformTween) public this: any;
 
-	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
+	constructor (id: string, params: TransformParam, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
 		this._parent = parent;
 		this._projector = projector;
 		this.resetClickable();
+		this.resetMouseEvent();
 		this.resetNode('canvas');
-		this.resetTransform();
+
+		if (!params) params = {};
+		this.resetTransform(params);
 	}
 
 	public render (): VNode {
-		return h('canvas', {
-			id: this.id,
-			key: this.id,
+		return h('canvas', this.getProperties({
 			width: resolution.x,
-			height: resolution.y,
-			class: 'canvas',
-			// styles: this.getStyle(),
-			onclick: this.click.bind(this),
-			afterCreate: this.handlerAfterCreate.bind(this),
-			afterRemoved: this.handleAfterRemoved.bind(this)
-		});
+			height: resolution.y
+		}));
 	}
 }

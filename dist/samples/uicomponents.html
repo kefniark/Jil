@@ -18,10 +18,6 @@
 			background-color: #000000;
 		}
 
-		.clickable {
-			pointer-events: all;
-		}
-
 		#intro.scene {
 			background-color: #FFFFFF;
 		}
@@ -62,15 +58,13 @@
 		jil.registerClassname('checkbox', 'nes-checkbox');
 		// jil.registerClassname('select', 'nes-select');
 		jil.registerClassname('input', 'nes-input');
+		jil.registerClassname('dialog', 'nes-dialog');
 
 		var sceneIntro = jil.SceneManager.create("intro");
 		var layer = sceneIntro.createLayer("layer");
 		var layer2 = sceneIntro.createLayer("layer2");
 
-		var scaleBtn = layer2.createImage("scaleLogo", {
-			src: "https://cdn3.iconfinder.com/data/icons/interface/100/fullscreen-128.png",
-			class: "clickable"
-		});
+		var scaleBtn = layer2.createImage("scaleLogo", "https://cdn3.iconfinder.com/data/icons/interface/100/fullscreen-128.png");
 		scaleBtn.pivot.set(1, 0);
 		scaleBtn.anchor.set(1, 0);
 		scaleBtn.size.set(0.025, 0.05);
@@ -85,10 +79,7 @@
 			}
 		});
 
-		var nesBtn = layer2.createImage("neslogo", {
-			src: "https://user-images.githubusercontent.com/5305599/49061716-da649680-f254-11e8-9a89-d95a7407ec6a.png",
-			class: "clickable"
-		});
+		var nesBtn = layer2.createImage("neslogo", "https://user-images.githubusercontent.com/5305599/49061716-da649680-f254-11e8-9a89-d95a7407ec6a.png");
 		nesBtn.pivot.set(1, 1);
 		nesBtn.anchor.set(1, 1);
 		nesBtn.size.set(0.2, 0.15);
@@ -167,6 +158,10 @@
 		panel.createText("textInput5", " ");
 
 		panel.createText("textLabel6", "Dialogs:");
+		const alertBtn = panel.createPanel("panelProxy1").createButton("btn1", { text: "Alert", class: "is-primary", size: [0.8, 0.5], pivot: [0.5, 0.5], anchor: [0.5, 0.5], position: [0, -0.2] });
+		alertBtn.onClick(() => sceneIntro.alert('test'));
+		const confirmBtn = panel.createPanel("panelProxy1").createButton("btn2", { text: "Confirm", class: "is-success", size: [0.8, 0.5], pivot: [0.5, 0.5], anchor: [0.5, 0.5], position: [0, -0.2] });
+		confirmBtn.onClick(() => console.log('btn2'));
 		panel.createText("textDialog1", " ");
 		panel.createText("textDialog2", " ");
 		panel.createText("textDialog3", " ");

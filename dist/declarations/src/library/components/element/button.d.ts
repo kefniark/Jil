@@ -1,12 +1,13 @@
 import { VNode, Projector } from 'maquette';
-import { JilNode, Transform, Clickable, TransformTween, Factory } from '../../behaviours';
-export interface JilButton extends JilNode, Factory, Transform, Clickable, TransformTween {
+import { JilNode, Transform, Clickable, TransformTween, Factory, ITransformParam, KeyboardEvents } from '../../behaviours';
+export interface JilButton extends JilNode, Factory, Transform, Clickable, KeyboardEvents, TransformTween {
+}
+export interface JilButtonParams extends ITransformParam {
+    text?: string;
 }
 export declare class JilButton {
     this: any;
     text: any;
-    styles: any;
-    classnames: string;
-    constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
+    constructor(id: string, params: JilButtonParams, parent: JilNode, projector: Projector | undefined);
     render(): VNode;
 }

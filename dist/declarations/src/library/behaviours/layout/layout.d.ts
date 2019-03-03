@@ -1,4 +1,4 @@
-export interface ILayoutOption {
+export interface LayoutOption {
     preferedWidth?: number;
     preferedHeight?: number;
     paddingWidth?: number;
@@ -9,8 +9,8 @@ export interface ILayoutOption {
 }
 export declare class Layout {
     layout: string;
-    layoutParams: ILayoutOption;
+    layoutParams: LayoutOption;
     resetLayout(): void;
-    setLayout(layout: string, params?: ILayoutOption): void;
+    setLayout(layout: string, params?: LayoutOption): void;
     refreshLayout(): void;
 }

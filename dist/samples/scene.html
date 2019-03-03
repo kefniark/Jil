@@ -22,10 +22,6 @@
 		#menu.scene {
 			background-color: #3333DD;
 		}
-
-		#scaleLogo {
-			cursor: pointer;
-		}
 	</style>
 </head>
 
@@ -58,6 +54,17 @@
 		introLogo.sizePx.set(512, 512);
 		introLogo.positionPx.set(0, -108);
 		introLogo.moveY(-0.1, 2500).yoyo(250);
+		introLogo.onClick(() => console.log('simple click'));
+		introLogo.onDbClick(() => console.log('double click'));
+		introLogo.onMouseenter((evt) => {
+			console.log('logo enter', evt);
+			introLogo.blurAnimation(1000, 1000);
+		});
+		introLogo.onMouseleave((evt) => {
+			console.log('logo leave', evt);
+			introLogo.blurAnimation(0, 300);
+		});
+		introLogo.onMousemove((evt) => console.log('logo move', evt));
 
 		var introBtn = introLayer.createButton("introBtn", "Next");
 		introBtn.pivot.set(0.5, 0.5);
@@ -68,9 +75,11 @@
 
 		var introText = introLayer.createText("sceneText", {
 			text: "Scene Intro",
-			fontSize: "64px",
-			fontWeight: "bold",
-			color: "#FFFFFF"
+			style: {
+				fontSize: "64px",
+				fontWeight: "bold",
+				color: "#FFFFFF"
+			}
 		});
 		introText.size.set(0.4, 0.1);
 		introText.pivot.set(0, 0.5);
@@ -92,16 +101,18 @@
 
 		var menuText = menuLayer.createText("sceneText", {
 			text: "Scene Menu",
-			fontSize: "64px",
-			fontWeight: "bold",
-			color: "#FFFFFF"
+			size: [0.4, 0.1],
+			pivot: [0, 0.5],
+			anchor: [1, 0.5],
+			position: [-0.06, 0.35],
+			rotation: -90,
+			style: {
+				fontSize: "64px",
+				fontWeight: "bold",
+				color: "#FFFFFF"
+			},
+			blur: 2
 		});
-
-		menuText.size.set(0.4, 0.1);
-		menuText.pivot.set(0, 0.5);
-		menuText.anchor.set(1, 0.5);
-		menuText.position.set(-0.06, 0.35);
-		menuText.rotation = -90;
 
 		jil.SceneManager.use("intro");
 	</script>

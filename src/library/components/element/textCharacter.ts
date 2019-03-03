@@ -2,31 +2,44 @@
 import * as Fatina from 'fatina';
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { JilNode, Transform } from '../../behaviours';
-import { getComponent } from '../../helpers';
+import { JilNode, Transform, ITransformParam } from '../../behaviours';
+import { getComponent, isString, getParam } from '../../helpers';
 
-// tslint:disable-next-line:interface-name
 export interface JilTextCharacter extends JilNode, Transform { }
 
+/**
+ * @ignore
+ */
 export const enum TextAnimationAnim {
 	Fade = 'fade',
 	Zoom = 'zoom'
 }
 
+/**
+ * @ignore
+ */
+export interface JilTextCharacterParams extends ITransformParam {
+	text?: string;
+}
+
+/**
+ * @ignore
+ */
 export class JilTextCharacter {
 	@use(JilNode, Transform) public this: any;
 
 	public text: string;
-	public classname;
 
-	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
+	constructor (id: string, params: JilTextCharacterParams, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
-		this.text = params.text;
-		this.classname = params.class;
 		this._parent = parent;
 		this._projector = projector;
 		this.resetNode('character');
-		this.resetTransform();
+
+		if (!params) params = {};
+		this.resetTransform(params);
+
+		this.text = isString(params) ? params : getParam(params, 'text', 'text');
 	}
 
 	private tween (obj: any, data: any, duration: number, delay: number) {
@@ -70,13 +83,19 @@ export class JilTextCharacter {
 			transform += `rotate(${this.rotation}deg)`;
 		}
 
+		let filter = '';
+		if (this.blur !== 0) {
+			filter += `blur(${this.blur}px) `;
+		}
+
 		return h('span', {
 			id: this.id,
 			key: this.id,
-			class: this.classname,
+			class: this.classnames,
 			styles: {
 				opacity: this.opacity.toString(),
-				transform
+				transform,
+				filter
 			}
 		}, [ this.text ]);
 	}

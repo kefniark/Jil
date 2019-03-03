@@ -1,23 +1,28 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
-import { JilNode, Transform, TransformTween, Factory } from '../../behaviours';
-import { isString } from '../../helpers';
+import { JilNode, Transform, TransformTween, Factory, ITransformParam } from '../../behaviours';
+import { isString, shuffleArray, getParam } from '../../helpers';
 import { JilTextCharacter, TextAnimationAnim } from './textCharacter';
-import { shuffleArray } from '../../helpers/helpers';
 
+/**
+ * @ignore
+ */
 export const enum TextAnimationOrder {
 	Order = 'order',
 	Reverse = 'reverse',
 	Shuffle = 'shuffle'
 }
 
+/**
+ * @ignore
+ */
 export const enum TextAnimationSplit {
 	Character = 'character',
 	Word = 'word',
 	All = 'all'
 }
 
-export interface ITextAnimationParam {
+export interface TextAnimationParam {
 	split?: TextAnimationSplit;
 	order?: TextAnimationOrder;
 	anim?: TextAnimationAnim;
@@ -25,33 +30,30 @@ export interface ITextAnimationParam {
 	duration?: number;
 }
 
-// tslint:disable-next-line:interface-name
 export interface JilText extends JilNode, Factory, Transform, TransformTween { }
+
+/**
+ * @ignore
+ */
+export interface JilTextParams extends ITransformParam {
+	text?: string;
+}
 
 export class JilText {
 	@use(JilNode, Factory, Transform, TransformTween) public this: any;
 
 	public text: string;
-	public styles;
-	public classnames: string;
 
-	constructor (id: string, params: any, parent: JilNode, projector: Projector | undefined) {
+	constructor (id: string, params: JilTextParams, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
-		this.text = 'Default Text';
-		this.classnames = '';
-		if (params) {
-			if (isString(params)) {
-				this.text = params;
-			} else {
-				this.text = params.text;
-				this.classnames = params.class;
-			}
-		}
-		this.styles = params || {};
 		this._parent = parent;
 		this._projector = projector;
 		this.resetNode('text');
-		this.resetTransform();
+
+		if (!params) params = {};
+		this.resetTransform(params);
+
+		this.text = isString(params) ? params : getParam(params, 'text', 'Default Text');
 	}
 
 	// tslint:disable-next-line:max-line-length
@@ -59,7 +61,7 @@ export class JilText {
 		return this.createComponent('character', id, params) as JilTextCharacter;
 	}
 
-	public animate (text: string, params: ITextAnimationParam) {
+	public animate (text: string, params: TextAnimationParam) {
 		if (!params) params = {};
 		this.removeAllChilds();
 		this.text = text;
@@ -113,16 +115,6 @@ export class JilText {
 
 	public render (): VNode {
 		const vnodes = this._childrens.length > 0 ? this._childrens.map((x) => x.render()) : [ this.text ];
-		const classes = ['text', this.classnames, this.getClassname('text')]
-			.filter((x) => x && x.length > 0)
-			.map((x) => x.toString().trim())
-			.join(' ').trim();
-
-		return h('div', {
-			id: this.id,
-			key: this.id,
-			class: classes,
-			styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle()
-		}, vnodes);
+		return h('div', this.getProperties({}), vnodes);
 	}
 }

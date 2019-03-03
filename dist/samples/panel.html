@@ -30,10 +30,6 @@
 			border: 1px solid #55DD55;
 		}
 
-		#scaleLogo {
-			cursor: pointer;
-		}
-
 		#message {
 			color: #333333;
 			background: rgb(230, 230, 230, 0.75);
@@ -150,8 +146,10 @@
 
 		var imgBunny = panelCenter.createImage("imageBunny", {
 			src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/169700/bunny.png",
-			objectFit: 'contain',
-			imageRendering: 'pixelated'
+			style: {
+				objectFit: 'contain',
+				imageRendering: 'pixelated'
+			}
 		});
 		imgBunny.anchor.set(0.5, 0.5);
 		imgBunny.pivot.set(0.5, 0.5);

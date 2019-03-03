@@ -2813,6 +2813,23 @@ class TransformTween {
     rotate(rotate, duration = 150, autostart = true, autokill = true) {
         return this._rotateTween({ rotation: rotate }, duration, autostart, autokill);
     }
+    _blurTween(data, duration, autostart, autokill) {
+        const node = helpers_1.getComponent(this);
+        const tween = Fatina.tween(this)
+            .to(data, duration)
+            .setEasing("inOutQuad" /* InOutQuad */);
+        tween.onUpdate(() => node.refresh());
+        if (autostart) {
+            if (autokill && this.blurTween)
+                this.blurTween.kill();
+            tween.start();
+        }
+        this.blurTween = tween;
+        return tween;
+    }
+    blurAnimation(blur, duration = 150, autostart = true, autokill = true) {
+        return this._blurTween({ blur }, duration, autostart, autokill);
+    }
 }
 exports.TransformTween = TransformTween;
 
@@ -2885,12 +2902,12 @@ const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-even
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilNode {
     constructor() {
+        this.id = '';
+        this.type = '';
         /**
          * @ignore
          */
         this._childrens = [];
-        this.createEvent = new ts_events_1.SyncEvent();
-        this.destroyEvent = new ts_events_1.SyncEvent();
         /**
          * @ignore
          */
@@ -2905,28 +2922,8 @@ class JilNode {
     resetNode(type) {
         this.type = type;
         this._childrens = [];
-        if (!this.createEvent)
-            this.createEvent = new ts_events_1.SyncEvent();
-        if (!this.destroyEvent)
-            this.destroyEvent = new ts_events_1.SyncEvent();
         if (!this.nodeEvent)
             this.nodeEvent = new ts_events_1.SyncEvent();
-    }
-    handlerAfterCreate() {
-        if (this.createEvent)
-            this.createEvent.post();
-    }
-    handleAfterRemoved() {
-        if (this.destroyEvent)
-            this.destroyEvent.post();
-    }
-    onLoad(cb) {
-        if (this.createEvent)
-            this.createEvent.attach(cb);
-    }
-    onDestroy(cb) {
-        if (this.destroyEvent)
-            this.destroyEvent.attach(cb);
     }
     addChild(element) {
         this._childrens.push(element);
@@ -2998,10 +2995,13 @@ exports.JilNode = JilNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
 // tslint:disable-next-line:max-classes-per-file
 class Transform {
     constructor() {
         this.enable = true;
+        this.createEvent = new ts_events_1.SyncEvent();
+        this.destroyEvent = new ts_events_1.SyncEvent();
         // properties overwritable
         this.anchor = new helpers_1.Vector2Extend();
         this.pivot = new helpers_1.Vector2Extend();
@@ -3013,6 +3013,12 @@ class Transform {
         this.scale = new helpers_1.Vector2();
         this.opacity = 1;
         this.rotation = 0;
+        this.blur = 0;
+        // element custom properties
+        this.classnames = '';
+        this.lastStyles = {};
+        this.styles = {};
+        this.properties = {};
     }
     get node() {
         return helpers_1.getComponent(this);
@@ -3020,7 +3026,7 @@ class Transform {
     /**
      * @ignore
      */
-    resetTransform() {
+    resetTransform(params) {
         // tslint:disable:no-console
         const self = this;
         const node = helpers_1.getComponent(this);
@@ -3060,15 +3066,44 @@ class Transform {
             }
         };
         this.enable = true;
-        this.anchor = new Proxy(new helpers_1.Vector2Extend(), handler);
-        this.pivot = new Proxy(new helpers_1.Vector2Extend(), handler);
-        this.position = new Proxy(new helpers_1.Vector2Extend(), handler);
-        this.size = new Proxy(new helpers_1.Vector2Extend(1, 1), handler);
+        this.anchor = new Proxy(helpers_1.getParamVec2Extend(params, 'anchor'), handler);
+        this.pivot = new Proxy(helpers_1.getParamVec2Extend(params, 'pivot'), handler);
+        this.position = new Proxy(helpers_1.getParamVec2Extend(params, 'position'), handler);
+        this.size = new Proxy(helpers_1.getParamVec2Extend(params, 'size', 1, 1), handler);
         this.positionPx = new Proxy(new helpers_1.Vector2(), handlerPos);
         this.sizePx = new Proxy(new helpers_1.Vector2(), handlerSize);
-        this.scale = new Proxy(new helpers_1.Vector2(1, 1), handler);
-        this.opacity = 1;
-        this.rotation = 0;
+        this.scale = new Proxy(helpers_1.getParamVec2(params, 'scale', 1, 1), handler);
+        this.opacity = helpers_1.getParamNum(params, 'opacity', 1);
+        this.rotation = helpers_1.getParamNum(params, 'rotation', 0);
+        this.blur = helpers_1.getParamNum(params, 'blur', 0);
+        this.classnames = params.class || '';
+        this.styles = params.style || {};
+        this.properties = {};
+        this.lastStyles = { rotation: 0, blur: 0, opacity: 0 };
+        if (!this.createEvent)
+            this.createEvent = new ts_events_1.SyncEvent();
+        if (!this.destroyEvent)
+            this.destroyEvent = new ts_events_1.SyncEvent();
+    }
+    handlerAfterCreate() {
+        if (this.createEvent)
+            this.createEvent.post();
+    }
+    handleAfterRemoved() {
+        if (this.destroyEvent)
+            this.destroyEvent.post();
+    }
+    onLoad(cb) {
+        if (this.createEvent)
+            this.createEvent.attach(cb);
+        this.properties.afterCreate = this.handlerAfterCreate.bind(this);
+        console.log('onLoad', this.properties);
+    }
+    onDestroy(cb) {
+        if (this.destroyEvent)
+            this.destroyEvent.attach(cb);
+        this.properties.afterRemoved = this.handleAfterRemoved.bind(this);
+        console.log('onDestroy', this.properties);
     }
     /**
      * @ignore
@@ -3076,22 +3111,59 @@ class Transform {
     getStyle() {
         const x = ((this.anchor.x / this.size.x) - this.pivot.x + (this.position.x / this.size.x)) * 100;
         const y = ((this.anchor.y / this.size.y) - this.pivot.y + (this.position.y / this.size.y)) * 100;
-        let transform = `translate(${x}%, ${y}%) `;
+        const style = {
+            display: (!this.enable || this.opacity <= 0) ? 'none' : 'block'
+        };
+        if (this.size.x !== 1)
+            style.width = `${this.size.x * 100}%`;
+        if (this.size.y !== 1)
+            style.height = `${this.size.y * 100}%`;
+        let transform = '';
+        if (x !== 0 || y !== 0) {
+            transform += `translate(${x}%, ${y}%) `;
+        }
         if (this.scale.x !== 1 || this.scale.y !== 1) {
             transform += `scale(${this.scale.x}, ${this.scale.y}) `;
         }
-        if (this.rotation !== 0) {
+        if (this.rotation !== 0 || this.lastStyles.rotation !== this.rotation) {
             transform += `rotate(${this.rotation}deg)`;
         }
-        return {
-            display: this.enable && this.opacity > 0 ? 'block' : 'none',
-            width: `${this.size.x * 100}%`,
-            height: `${this.size.y * 100}%`,
-            transformOrigin: 'top left',
-            opacity: this.opacity.toString(),
-            transform,
-            willChange: 'transform, opacity'
+        let filter = '';
+        if (this.blur !== 0 || this.lastStyles.blur !== this.blur) {
+            filter += `blur(${this.blur}px) `;
+        }
+        if (transform)
+            style.transform = transform;
+        if (filter)
+            style.filter = filter;
+        if (this.opacity !== 1 || this.lastStyles.opacity !== this.opacity)
+            style.opacity = this.opacity.toString();
+        this.lastStyles = {
+            rotation: this.rotation,
+            opacity: this.opacity,
+            blur: this.blur
         };
+        return style;
+    }
+    getClassnames() {
+        const factory = helpers_1.getComponent(this);
+        const classes = [this.node.type, this.classnames];
+        if (factory.getClassname) {
+            classes.push(factory.getClassname(this.node.type));
+        }
+        return classes.filter((x) => x && x.length > 0)
+            .map((x) => x.toString().trim())
+            .join(' ').trim();
+    }
+    getProperties(prop) {
+        const data = {
+            id: this.node.id,
+            key: this.node.id,
+            styles: Object.assign(this.getStyle(), this.styles),
+            class: this.getClassnames()
+        };
+        // tslint:disable-next-line:prefer-object-spread
+        return Object.assign(prop, this.properties, data);
     }
 }
 exports.Transform = Transform;
@@ -3122,6 +3194,10 @@ exports.Transform = transform_1.Transform;
 // Interaction
 var clickable_1 = __webpack_require__(/*! ./interaction/clickable */ "./src/library/behaviours/interaction/clickable.ts");
 exports.Clickable = clickable_1.Clickable;
+var keyboard_1 = __webpack_require__(/*! ./interaction/keyboard */ "./src/library/behaviours/interaction/keyboard.ts");
+exports.KeyboardEvents = keyboard_1.KeyboardEvents;
+var mouse_1 = __webpack_require__(/*! ./interaction/mouse */ "./src/library/behaviours/interaction/mouse.ts");
+exports.MouseEvents = mouse_1.MouseEvents;
 // Animation
 var transformTween_1 = __webpack_require__(/*! ./animation/transformTween */ "./src/library/behaviours/animation/transformTween.ts");
 exports.TransformTween = transformTween_1.TransformTween;
@@ -3151,25 +3227,236 @@ exports.gridLayout = gridLayout_1.gridLayout;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class Clickable {
     /**
      * @ignore
      */
     resetClickable() {
         this.clickEvent = new ts_events_1.SyncEvent();
+        this.dbClickEvent = new ts_events_1.SyncEvent();
     }
     click() {
         if (!this.clickEvent)
             return;
         this.clickEvent.post();
     }
+    doubleClick() {
+        if (!this.dbClickEvent)
+            return;
+        this.dbClickEvent.post();
+    }
     // helpers
     onClick(cb) {
         if (this.clickEvent)
             this.clickEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.classnames = ('clickable ' + transform.classnames).trim();
+        transform.properties.onclick = this.click.bind(this);
+    }
+    onDbClick(cb) {
+        if (this.dbClickEvent)
+            this.dbClickEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.classnames = ('clickable ' + transform.classnames).trim();
+        transform.properties.ondblclick = this.doubleClick.bind(this);
     }
 }
 exports.Clickable = Clickable;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/interaction/keyboard.ts":
+/*!********************************************************!*\
+  !*** ./src/library/behaviours/interaction/keyboard.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+class KeyboardEvents {
+    /**
+     * @ignore
+     */
+    resetKeyboardEvent() {
+        this.keydownEvent = new ts_events_1.SyncEvent();
+        this.keypressEvent = new ts_events_1.SyncEvent();
+        this.keyupEvent = new ts_events_1.SyncEvent();
+        this.focusEvent = new ts_events_1.SyncEvent();
+        this.blurEvent = new ts_events_1.SyncEvent();
+        this.submitEvent = new ts_events_1.SyncEvent();
+    }
+    keydown(evt) {
+        if (!this.keydownEvent)
+            return;
+        this.keydownEvent.post(evt);
+    }
+    keypress(evt) {
+        if (!this.keypressEvent)
+            return;
+        this.keypressEvent.post(evt);
+    }
+    keyup(evt) {
+        if (!this.keyupEvent)
+            return;
+        this.keyupEvent.post(evt);
+    }
+    focus(evt) {
+        if (!this.focusEvent)
+            return;
+        this.focusEvent.post(evt);
+    }
+    focusblur(evt) {
+        if (!this.blurEvent)
+            return;
+        this.blurEvent.post(evt);
+    }
+    submit(evt) {
+        if (!this.submitEvent)
+            return;
+        this.submitEvent.post(evt);
+    }
+    // helpers
+    onKeydown(cb) {
+        if (this.keydownEvent)
+            this.keydownEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onkeydown = this.keydown.bind(this);
+    }
+    onKeypress(cb) {
+        if (this.keypressEvent)
+            this.keypressEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onkeypress = this.keypress.bind(this);
+    }
+    onKeyup(cb) {
+        if (this.keyupEvent)
+            this.keyupEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onkeyup = this.keyup.bind(this);
+    }
+    onFocus(cb) {
+        if (this.focusEvent)
+            this.focusEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onfocus = this.focus.bind(this);
+    }
+    onBlur(cb) {
+        if (this.blurEvent)
+            this.blurEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onblur = this.focusblur.bind(this);
+    }
+    onSubmit(cb) {
+        if (this.submitEvent)
+            this.submitEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onsubmit = this.submit.bind(this);
+    }
+}
+exports.KeyboardEvents = KeyboardEvents;
+
+
+/***/ }),
+
+/***/ "./src/library/behaviours/interaction/mouse.ts":
+/*!*****************************************************!*\
+  !*** ./src/library/behaviours/interaction/mouse.ts ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+class MouseEvents {
+    /**
+     * @ignore
+     */
+    resetMouseEvent() {
+        this.mousedownEvent = new ts_events_1.SyncEvent();
+        this.mouseupEvent = new ts_events_1.SyncEvent();
+        this.mouseenterEvent = new ts_events_1.SyncEvent();
+        this.mouseleaveEvent = new ts_events_1.SyncEvent();
+        this.mousemoveEvent = new ts_events_1.SyncEvent();
+        this.mousewheelEvent = new ts_events_1.SyncEvent();
+    }
+    mousedown(ev) {
+        if (!this.mousedownEvent)
+            return;
+        this.mousedownEvent.post(ev);
+    }
+    mouseup(ev) {
+        if (!this.mouseupEvent)
+            return;
+        this.mouseupEvent.post(ev);
+    }
+    mouseenter(evt) {
+        if (!this.mouseenterEvent)
+            return;
+        this.mouseenterEvent.post(evt);
+    }
+    mouseleave(evt) {
+        if (!this.mouseleaveEvent)
+            return;
+        this.mouseleaveEvent.post(evt);
+    }
+    mousemove(evt) {
+        if (!this.mousemoveEvent)
+            return;
+        this.mousemoveEvent.post(evt);
+    }
+    mousewheel(evt) {
+        if (!this.mousewheelEvent)
+            return;
+        this.mousewheelEvent.post(evt);
+    }
+    // helpers
+    onMouseup(cb) {
+        if (this.mouseupEvent)
+            this.mouseupEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmouseup = this.mouseup.bind(this);
+    }
+    onMousedown(cb) {
+        if (this.mousedownEvent)
+            this.mousedownEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmousedown = this.mousedown.bind(this);
+    }
+    onMouseenter(cb) {
+        if (this.mouseenterEvent)
+            this.mouseenterEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmouseenter = this.mouseenter.bind(this);
+    }
+    onMouseleave(cb) {
+        if (this.mouseleaveEvent)
+            this.mouseleaveEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmouseleave = this.mouseleave.bind(this);
+    }
+    onMousemove(cb) {
+        if (this.mousemoveEvent)
+            this.mousemoveEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmousemove = this.mousemove.bind(this);
+    }
+    onMousewheel(cb) {
+        if (this.mousewheelEvent)
+            this.mousewheelEvent.attach(cb);
+        const transform = helpers_1.getComponent(this);
+        transform.properties.onmousewheel = this.mousewheel.bind(this);
+    }
+}
+exports.MouseEvents = MouseEvents;
 
 
 /***/ }),
@@ -3350,25 +3637,21 @@ class JilCanvas {
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetMouseEvent();
         this.resetNode('canvas');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
     }
     render() {
-        return maquette_1.h('canvas', {
-            id: this.id,
-            key: this.id,
+        return maquette_1.h('canvas', this.getProperties({
             width: config_1.resolution.x,
-            height: config_1.resolution.y,
-            class: 'canvas',
-            // styles: this.getStyle(),
-            onclick: this.click.bind(this),
-            afterCreate: this.handlerAfterCreate.bind(this),
-            afterRemoved: this.handleAfterRemoved.bind(this)
-        });
+            height: config_1.resolution.y
+        }));
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.MouseEvents, behaviours_1.TransformTween)
 ], JilCanvas.prototype, "this", void 0);
 exports.JilCanvas = JilCanvas;
 
@@ -3397,21 +3680,22 @@ const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/
 const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
 class JilLayer {
     constructor(id, params, parent, projector) {
+        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
         this.createPanel = (id, params) => this.createComponent('panel', id, params);
         this.createButton = (id, params) => this.createComponent('button', id, params);
-        this.createImage = (id, params) => this.createComponent('image', id, params);
-        this.createText = (id, params) => this.createComponent('text', id, params);
-        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
-        this.createRadio = (id, params) => this.createComponent('radio', id, params);
         this.createCheckbox = (id, params) => this.createComponent('checkbox', id, params);
-        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createImage = (id, params) => this.createComponent('image', id, params);
         this.createInput = (id, params) => this.createComponent('input', id, params);
+        this.createRadio = (id, params) => this.createComponent('radio', id, params);
+        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createText = (id, params) => this.createComponent('text', id, params);
         this.id = id;
-        this.classname = params ? params : '';
         this._parent = parent;
         this._projector = projector;
         this.resetNode('layer');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
         // tslint:disable-next-line
         if (typeof (window) !== 'undefined') {
             window.addEventListener('resize', () => this.refresh(), false);
@@ -3435,7 +3719,7 @@ class JilLayer {
         return maquette_1.h('div', {
             id: this.id,
             key: this.id,
-            class: `layer ${this.classname}`.trim(),
+            class: this.getClassnames(),
             styles
         }, this._childrens.map((x) => x.render()));
     }
@@ -3469,24 +3753,22 @@ const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 class JilPanel {
     constructor(id, params, parent, projector) {
+        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
         this.createPanel = (id, params) => this.createComponent('panel', id, params);
         this.createButton = (id, params) => this.createComponent('button', id, params);
-        this.createImage = (id, params) => this.createComponent('image', id, params);
-        this.createText = (id, params) => this.createComponent('text', id, params);
-        this.createCanvas = (id, params) => this.createComponent('canvas', id, params);
-        this.createRadio = (id, params) => this.createComponent('radio', id, params);
         this.createCheckbox = (id, params) => this.createComponent('checkbox', id, params);
-        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createImage = (id, params) => this.createComponent('image', id, params);
         this.createInput = (id, params) => this.createComponent('input', id, params);
+        this.createRadio = (id, params) => this.createComponent('radio', id, params);
+        this.createSelect = (id, params) => this.createComponent('select', id, params);
+        this.createText = (id, params) => this.createComponent('text', id, params);
         this.id = id;
-        this.classnames = '';
-        if (params) {
-            this.classnames = params.class ? params.class : this.classnames;
-        }
         this._parent = parent;
         this._projector = projector;
         this.resetNode('panel');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
         this.resetLayout();
     }
     refreshLayout() {
@@ -3496,14 +3778,10 @@ class JilPanel {
         }
     }
     render() {
-        const classes = ['panel', this.classnames, this.getClassname('panel')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
         return maquette_1.h('div', {
             id: this.id,
             key: this.id,
-            class: classes,
+            class: this.getClassnames(),
             styles: this.getStyle()
         }, this._childrens.map((x) => x.render()));
     }
@@ -3545,13 +3823,14 @@ class JilScene {
          * @param id ID of the new layer (need to be unique)
          * @memberof Scene
          */
-        this.createLayer = (id, classname) => this.createComponent('layer', id, classname);
+        this.createLayer = (id, params) => this.createComponent('layer', id, params);
+        this.createAlertPopup = (id, params) => this.createComponent('alert', id, params);
         this.id = id;
-        this.enterEvent = new ts_events_1.SyncEvent();
-        this.leaveEvent = new ts_events_1.SyncEvent();
         this._projector = projector;
         this.resetNode('scene');
-        this.resetTransform();
+        this.resetTransform({});
+        this.enterEvent = new ts_events_1.SyncEvent();
+        this.leaveEvent = new ts_events_1.SyncEvent();
         this.enable = false;
     }
     /**
@@ -3585,6 +3864,17 @@ class JilScene {
         this.enable = false;
         this.leaveEvent.post();
         this.refresh();
+    }
+    alert(title, msg) {
+        const alert = this.createAlertPopup('alert', { title, content: msg });
+        alert.onLoad(() => {
+            // tslint:disable-next-line:no-console
+            document.getElementById('alert').showModal();
+        });
+        alert.onClick(() => {
+            document.getElementById('alert').close();
+            alert.destroy();
+        });
     }
     /**
      * Render the HTML
@@ -3663,41 +3953,22 @@ const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helper
 class JilButton {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = 'Default Text';
-        this.classnames = '';
-        if (params) {
-            if (helpers_1.isString(params)) {
-                this.text = params;
-            }
-            else {
-                this.text = params.text;
-                this.classnames = params.class;
-            }
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetKeyboardEvent();
         this.resetNode('button');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.text = helpers_1.isString(params) ? params : helpers_1.getParam(params, 'text', 'Default Text');
     }
     render() {
-        const classes = ['button', this.classnames, this.getClassname('button')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
-        return maquette_1.h('button', {
-            id: this.id,
-            key: this.id,
-            type: 'button',
-            class: classes,
-            styles: this.getStyle(),
-            onclick: this.click.bind(this)
-        }, [this.text]);
+        return maquette_1.h('button', this.getProperties({ type: 'button' }), [this.text]);
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.KeyboardEvents, behaviours_1.TransformTween)
 ], JilButton.prototype, "this", void 0);
 exports.JilButton = JilButton;
 
@@ -3723,38 +3994,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilCheckbox {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = 'text';
-        this.name = 'checkbox';
-        this.value = 'value';
-        this.classnames = '';
-        this.checked = false;
-        if (params) {
-            this.text = params.text ? params.text : this.text;
-            this.name = params.name ? params.name : this.name;
-            this.value = params.value ? params.value : this.value;
-            this.classnames = params.class ? params.class : this.classnames;
-            this.checked = params.checked ? params.checked : this.checked;
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetKeyboardEvent();
         this.resetNode('checkbox');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.text = helpers_1.getParam(params, 'text', 'Label');
+        this.name = helpers_1.getParam(params, 'name', 'checkbox');
+        this.value = helpers_1.getParam(params, 'value', 'value');
+        this.checked = helpers_1.getParamBool(params, 'checked', false);
     }
     render() {
-        const classes = ['checkbox', this.classnames, this.getClassname('checkbox')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
         return maquette_1.h('label', {
             id: 'label_' + this.id,
             key: 'label_' + this.id,
             styles: this.getStyle(),
-            class: classes
+            class: this.getClassnames()
         }, [
             maquette_1.h('input', {
                 type: 'checkbox',
@@ -3763,7 +4025,7 @@ class JilCheckbox {
                 id: this.id,
                 key: this.id,
                 checked: this.checked,
-                class: classes,
+                class: this.getClassnames(),
                 onclick: this.click.bind(this)
             }, []),
             maquette_1.h('span', {}, [this.text])
@@ -3771,7 +4033,7 @@ class JilCheckbox {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.KeyboardEvents)
 ], JilCheckbox.prototype, "this", void 0);
 exports.JilCheckbox = JilCheckbox;
 
@@ -3801,41 +4063,22 @@ const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helper
 class JilImage {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.src = '';
-        this.classnames = '';
-        if (params) {
-            if (helpers_1.isString(params)) {
-                this.src = params;
-            }
-            else {
-                this.src = params.src;
-                this.classnames = params.class ? params.class : this.classnames;
-            }
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetMouseEvent();
         this.resetNode('image');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.src = helpers_1.isString(params) ? params : helpers_1.getParam(params, 'src', '');
     }
     render() {
-        const classes = ['image', this.classnames, this.getClassname('image')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
-        return maquette_1.h('img', {
-            id: this.id,
-            key: this.id,
-            src: this.src,
-            styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle(),
-            class: classes,
-            onclick: this.click.bind(this)
-        });
+        return maquette_1.h('img', this.getProperties({ src: this.src }), []);
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.TransformTween)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.MouseEvents, behaviours_1.TransformTween)
 ], JilImage.prototype, "this", void 0);
 exports.JilImage = JilImage;
 
@@ -3861,42 +4104,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilInput {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.name = 'input';
-        this.value = 'value';
-        this.classnames = '';
-        if (params) {
-            this.name = params.name ? params.name : this.name;
-            this.value = params.value ? params.value : this.value;
-            this.classnames = params.class ? params.class : this.classnames;
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
-        this.resetNode('radio');
-        this.resetTransform();
+        this.resetKeyboardEvent();
+        this.resetNode('input');
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.name = helpers_1.getParam(params, 'name', 'input');
+        this.value = helpers_1.getParam(params, 'value', 'value');
     }
     render() {
-        const classes = ['input', this.classnames, this.getClassname('input')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
-        return maquette_1.h('input', {
-            id: this.id,
-            key: this.id,
-            name: this.name,
-            value: this.value,
-            styles: this.getStyle(),
-            class: classes,
-            onclick: this.click.bind(this)
-        }, []);
+        return maquette_1.h('input', this.getProperties({ name: this.name, value: this.value }), []);
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.KeyboardEvents)
 ], JilInput.prototype, "this", void 0);
 exports.JilInput = JilInput;
 
@@ -3922,33 +4150,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilRadio {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = 'text';
-        this.name = 'radio';
-        this.value = 'value';
-        this.classnames = '';
-        this.checked = false;
-        if (params) {
-            this.text = params.text ? params.text : this.text;
-            this.name = params.name ? params.name : this.name;
-            this.value = params.value ? params.value : this.value;
-            this.classnames = params.class ? params.class : this.classnames;
-            this.checked = params.checked ? params.checked : this.checked;
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetKeyboardEvent();
         this.resetNode('radio');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.text = helpers_1.getParam(params, 'text', 'Label');
+        this.name = helpers_1.getParam(params, 'name', 'checkbox');
+        this.value = helpers_1.getParam(params, 'value', 'value');
+        this.checked = helpers_1.getParamBool(params, 'checked', false);
     }
     render() {
-        const classes = ['radio', this.classnames, this.getClassname('radio')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
         return maquette_1.h('label', {
             id: 'label_' + this.id,
             key: 'label_' + this.id,
@@ -3960,7 +4179,7 @@ class JilRadio {
                     this.refresh();
                 }
             },
-            class: classes
+            class: this.getClassnames()
         }, [
             maquette_1.h('input', {
                 type: 'radio',
@@ -3969,7 +4188,7 @@ class JilRadio {
                 id: this.id,
                 key: this.id,
                 checked: this.checked,
-                class: classes,
+                class: this.getClassnames(),
                 onclick: this.click.bind(this)
             }, []),
             maquette_1.h('span', {}, [this.text])
@@ -3977,7 +4196,7 @@ class JilRadio {
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.KeyboardEvents)
 ], JilRadio.prototype, "this", void 0);
 exports.JilRadio = JilRadio;
 
@@ -4003,25 +4222,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 class JilSelect {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.name = 'select';
-        this.value = '';
-        this.classnames = '';
-        this.options = [];
-        if (params) {
-            this.name = params.name ? params.name : this.name;
-            this.value = params.value ? params.value : this.value;
-            this.classnames = params.class ? params.class : this.classnames;
-            this.options = params.options ? params.options : this.options;
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetClickable();
+        this.resetKeyboardEvent();
         this.resetNode('radio');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.name = helpers_1.getParam(params, 'name', 'select');
+        this.value = helpers_1.getParam(params, 'value', '');
+        this.options = params.options ? params.options : [];
     }
     render() {
         const classes = ['select', this.classnames, this.getClassname('select')]
@@ -4029,21 +4244,11 @@ class JilSelect {
             .map((x) => x.toString().trim())
             .join(' ').trim();
         const val = !this.value && this.options.length > 0 ? this.options[0].value : this.value;
-        return maquette_1.h('select', {
-            id: this.id,
-            key: this.id,
-            name: this.name,
-            value: val,
-            styles: this.getStyle(),
-            class: classes,
-            onclick: this.click.bind(this)
-        }, this.options.map((x) => {
-            return maquette_1.h('option', { value: x.value }, [x.text]);
-        }));
+        return maquette_1.h('select', this.getProperties({ name: this.name, value: val }), this.options.map((x) => maquette_1.h('option', { value: x.value }, [x.text])));
     }
 }
 __decorate([
-    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable)
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Factory, behaviours_1.Transform, behaviours_1.Clickable, behaviours_1.KeyboardEvents)
 ], JilSelect.prototype, "this", void 0);
 exports.JilSelect = JilSelect;
 
@@ -4070,13 +4275,18 @@ const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modul
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
-const helpers_2 = __webpack_require__(/*! ../../helpers/helpers */ "./src/library/helpers/helpers.ts");
+/**
+ * @ignore
+ */
 var TextAnimationOrder;
 (function (TextAnimationOrder) {
     TextAnimationOrder["Order"] = "order";
     TextAnimationOrder["Reverse"] = "reverse";
     TextAnimationOrder["Shuffle"] = "shuffle";
 })(TextAnimationOrder = exports.TextAnimationOrder || (exports.TextAnimationOrder = {}));
+/**
+ * @ignore
+ */
 var TextAnimationSplit;
 (function (TextAnimationSplit) {
     TextAnimationSplit["Character"] = "character";
@@ -4090,22 +4300,13 @@ class JilText {
             return this.createComponent('character', id, params);
         };
         this.id = id;
-        this.text = 'Default Text';
-        this.classnames = '';
-        if (params) {
-            if (helpers_1.isString(params)) {
-                this.text = params;
-            }
-            else {
-                this.text = params.text;
-                this.classnames = params.class;
-            }
-        }
-        this.styles = params || {};
         this._parent = parent;
         this._projector = projector;
         this.resetNode('text');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.text = helpers_1.isString(params) ? params : helpers_1.getParam(params, 'text', 'Default Text');
     }
     animate(text, params) {
         if (!params)
@@ -4145,7 +4346,7 @@ class JilText {
                 characters = characters.reverse();
                 break;
             case "shuffle" /* Shuffle */:
-                characters = helpers_2.shuffleArray(characters);
+                characters = helpers_1.shuffleArray(characters);
                 break;
         }
         const anim = params.anim || "fade" /* Fade */;
@@ -4157,16 +4358,7 @@ class JilText {
     }
     render() {
         const vnodes = this._childrens.length > 0 ? this._childrens.map((x) => x.render()) : [this.text];
-        const classes = ['text', this.classnames, this.getClassname('text')]
-            .filter((x) => x && x.length > 0)
-            .map((x) => x.toString().trim())
-            .join(' ').trim();
-        return maquette_1.h('div', {
-            id: this.id,
-            key: this.id,
-            class: classes,
-            styles: this.styles ? Object.assign(this.getStyle(), this.styles) : this.getStyle()
-        }, vnodes);
+        return maquette_1.h('div', this.getProperties({}), vnodes);
     }
 }
 __decorate([
@@ -4198,20 +4390,27 @@ const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modul
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+/**
+ * @ignore
+ */
 var TextAnimationAnim;
 (function (TextAnimationAnim) {
     TextAnimationAnim["Fade"] = "fade";
     TextAnimationAnim["Zoom"] = "zoom";
 })(TextAnimationAnim = exports.TextAnimationAnim || (exports.TextAnimationAnim = {}));
+/**
+ * @ignore
+ */
 class JilTextCharacter {
     constructor(id, params, parent, projector) {
         this.id = id;
-        this.text = params.text;
-        this.classname = params.class;
         this._parent = parent;
         this._projector = projector;
         this.resetNode('character');
-        this.resetTransform();
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.text = helpers_1.isString(params) ? params : helpers_1.getParam(params, 'text', 'text');
     }
     tween(obj, data, duration, delay) {
         const node = helpers_1.getComponent(this);
@@ -4247,13 +4446,18 @@ class JilTextCharacter {
         if (this.rotation !== 0) {
             transform += `rotate(${this.rotation}deg)`;
         }
+        let filter = '';
+        if (this.blur !== 0) {
+            filter += `blur(${this.blur}px) `;
+        }
         return maquette_1.h('span', {
             id: this.id,
             key: this.id,
-            class: this.classname,
+            class: this.classnames,
             styles: {
                 opacity: this.opacity.toString(),
-                transform
+                transform,
+                filter
             }
         }, [this.text]);
     }
@@ -4300,6 +4504,73 @@ var select_1 = __webpack_require__(/*! ./element/select */ "./src/library/compon
 exports.JilSelect = select_1.JilSelect;
 var input_1 = __webpack_require__(/*! ./element/input */ "./src/library/components/element/input.ts");
 exports.JilInput = input_1.JilInput;
+var alert_1 = __webpack_require__(/*! ./popup/alert */ "./src/library/components/popup/alert.ts");
+exports.JilAlert = alert_1.JilAlert;
+
+
+/***/ }),
+
+/***/ "./src/library/components/popup/alert.ts":
+/*!***********************************************!*\
+  !*** ./src/library/components/popup/alert.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+class JilAlert {
+    constructor(id, params, parent, projector) {
+        this.createButton = (id, params) => this.createComponent('button', id, params);
+        this.id = id;
+        this._parent = parent;
+        this._projector = projector;
+        this.resetNode('dialog');
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.clickEvent = new ts_events_1.SyncEvent();
+        this.title = helpers_1.getParam(params, 'title', 'Title');
+        this.content = helpers_1.getParam(params, 'content', 'Content');
+        this.size.set(0.8, 0.5);
+        this.okButton = this.createButton('okBtn', {
+            text: 'OK',
+            size: [0.2, 0.2],
+            anchor: [0.5, 1],
+            pivot: [0.5, 1]
+        });
+        this.okButton.onClick(() => this.clickEvent.post());
+    }
+    onClick(cb) {
+        if (this.clickEvent)
+            this.clickEvent.attach(cb);
+    }
+    render() {
+        return maquette_1.h('dialog', this.getProperties({}), [
+            maquette_1.h('form', { method: 'dialog' }, [
+                maquette_1.h('p', { class: 'title' }, [this.title]),
+                maquette_1.h('p', {}, [this.content]),
+                this.okButton.render()
+            ])
+        ]);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory)
+], JilAlert.prototype, "this", void 0);
+exports.JilAlert = JilAlert;
 
 
 /***/ }),
@@ -4333,6 +4604,8 @@ exports.resolution = new vector2_1.Vector2(1280, 720);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const vector2_1 = __webpack_require__(/*! ./vector2 */ "./src/library/helpers/vector2.ts");
+const vector2extend_1 = __webpack_require__(/*! ./vector2extend */ "./src/library/helpers/vector2extend.ts");
 function isString(obj) {
     return (Object.prototype.toString.call(obj) === '[object String]');
 }
@@ -4345,6 +4618,50 @@ function shuffleArray(arr) {
     return arr.sort(() => Math.random() - 0.5);
 }
 exports.shuffleArray = shuffleArray;
+function getParam(data, prop, def) {
+    if (!data)
+        return def;
+    if (!data[prop])
+        return def;
+    return data[prop];
+}
+exports.getParam = getParam;
+function getParamBool(data, prop, def) {
+    if (!data)
+        return def;
+    if (!data[prop])
+        return def;
+    return !!data[prop];
+}
+exports.getParamBool = getParamBool;
+function getParamNum(data, prop, def) {
+    if (!data)
+        return def;
+    if (data[prop] === undefined || data[prop] === null)
+        return def;
+    return data[prop];
+}
+exports.getParamNum = getParamNum;
+function getParamVec2(data, prop, defx = 0, defy = 0) {
+    if (!data)
+        return new vector2_1.Vector2(defx, defy);
+    if (!data[prop])
+        return new vector2_1.Vector2(defx, defy);
+    if (data[prop].length !== 2)
+        return new vector2_1.Vector2(defx, defy);
+    return new vector2_1.Vector2(data[prop][0], data[prop][1]);
+}
+exports.getParamVec2 = getParamVec2;
+function getParamVec2Extend(data, prop, defx = 0, defy = 0) {
+    if (!data)
+        return new vector2extend_1.Vector2Extend(defx, defy);
+    if (!data[prop])
+        return new vector2extend_1.Vector2Extend(defx, defy);
+    if (data[prop].length !== 2)
+        return new vector2extend_1.Vector2Extend(defx, defy);
+    return new vector2extend_1.Vector2Extend(data[prop][0], data[prop][1]);
+}
+exports.getParamVec2Extend = getParamVec2Extend;
 
 
 /***/ }),
@@ -4366,6 +4683,12 @@ exports.Vector2Extend = vector2extend_1.Vector2Extend;
 var helpers_1 = __webpack_require__(/*! ./helpers */ "./src/library/helpers/helpers.ts");
 exports.isString = helpers_1.isString;
 exports.getComponent = helpers_1.getComponent;
+exports.shuffleArray = helpers_1.shuffleArray;
+exports.getParam = helpers_1.getParam;
+exports.getParamBool = helpers_1.getParamBool;
+exports.getParamNum = helpers_1.getParamNum;
+exports.getParamVec2 = helpers_1.getParamVec2;
+exports.getParamVec2Extend = helpers_1.getParamVec2Extend;
 
 
 /***/ }),
@@ -4486,6 +4809,7 @@ behaviours_1.registerComponent('radio', components_1.JilRadio);
 behaviours_1.registerComponent('text', components_1.JilText);
 behaviours_1.registerComponent('select', components_1.JilSelect);
 behaviours_1.registerComponent('input', components_1.JilInput);
+behaviours_1.registerComponent('alert', components_1.JilAlert);
 // register layout
 behaviours_1.registerLayout('default', behaviours_1.defaultLayout);
 behaviours_1.registerLayout('vertical', behaviours_1.verticalLayout);
@@ -4622,7 +4946,7 @@ const Fatina = __webpack_require__(/*! fatina */ "./node_modules/fatina/build/fa
 function FadeInOut(sceneSrc, SceneDst) {
     const sequence = Fatina.sequence();
     if (sceneSrc) {
-        const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, 'fader');
+        const faderSrc = sceneSrc.createLayer(`FaderOut_${Math.round(Math.random() * 100000)}`, { class: 'fader' });
         faderSrc.opacity = 0;
         sequence.append(faderSrc.show(250, false));
         sequence.appendCallback(() => sceneSrc.leave());
@@ -4631,7 +4955,7 @@ function FadeInOut(sceneSrc, SceneDst) {
     else {
         sequence.appendInterval(500);
     }
-    const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, 'fader');
+    const faderDst = SceneDst.createLayer(`FaderIn_${Math.round(Math.random() * 100000)}`, { class: 'fader' });
     faderDst.opacity = 1;
     sequence.appendCallback(() => SceneDst.enter());
     const tween = faderDst.hide(350, false);

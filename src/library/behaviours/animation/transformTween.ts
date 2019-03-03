@@ -7,6 +7,7 @@ export class TransformTween {
 	private moveTween: Fatina.ITween | undefined;
 	private rotateTween: Fatina.ITween | undefined;
 	private fadeTween: Fatina.ITween | undefined;
+	private blurTween: Fatina.ITween | undefined;
 
 	private _moveTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
 		const transform = getComponent<Transform>(this);
@@ -92,5 +93,26 @@ export class TransformTween {
 
 	public rotate (rotate: number, duration = 150, autostart = true, autokill = true) {
 		return this._rotateTween({ rotation: rotate }, duration, autostart, autokill);
+	}
+
+	private _blurTween (data: any, duration: number, autostart: boolean, autokill: boolean) {
+		const node = getComponent<JilNode>(this);
+		const tween = Fatina.tween(this)
+			.to(data, duration)
+			.setEasing(Fatina.EasingType.InOutQuad);
+
+		tween.onUpdate(() => node.refresh());
+
+		if (autostart) {
+			if (autokill && this.blurTween) this.blurTween.kill();
+			tween.start();
+		}
+
+		this.blurTween = tween;
+		return tween;
+	}
+
+	public blurAnimation (blur: number, duration = 150, autostart = true, autokill = true) {
+		return this._blurTween({ blur }, duration, autostart, autokill);
 	}
 }

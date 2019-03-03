@@ -1,11 +1,11 @@
 import { use } from 'typescript-mix';
 import { h, VNode, Projector } from 'maquette';
 import { SyncEvent } from 'ts-events';
-import { JilNode, Transform, Factory } from '../../behaviours';
+import { JilNode, Transform, Factory, ITransformParam } from '../../behaviours';
 import { resolution } from '../../config';
 import { JilLayer } from './layer';
+import { JilAlert, JilAlertParams } from '../popup/alert';
 
-// tslint:disable-next-line:interface-name
 export interface JilScene extends JilNode, Transform, Factory { }
 
 export class JilScene {
@@ -19,11 +19,13 @@ export class JilScene {
 
 	constructor (id: string, projector: Projector) {
 		this.id = id;
-		this.enterEvent = new SyncEvent<void>();
-		this.leaveEvent = new SyncEvent<void>();
 		this._projector = projector;
 		this.resetNode('scene');
-		this.resetTransform();
+		this.resetTransform({});
+
+		this.enterEvent = new SyncEvent<void>();
+		this.leaveEvent = new SyncEvent<void>();
+
 		this.enable = false;
 	}
 
@@ -65,7 +67,20 @@ export class JilScene {
 	 * @param id ID of the new layer (need to be unique)
 	 * @memberof Scene
 	 */
-	public createLayer = (id: string, classname?: string) => this.createComponent('layer', id, classname) as JilLayer;
+	public createLayer = (id: string, params?: ITransformParam) => this.createComponent('layer', id, params) as JilLayer;
+	public createAlertPopup = (id: string, params?: JilAlertParams) => this.createComponent('alert', id, params) as JilAlert;
+
+	public alert (title: string, msg: string) {
+		const alert = this.createAlertPopup('alert', { title, content: msg });
+		alert.onLoad(() => {
+			// tslint:disable-next-line:no-console
+			(document.getElementById('alert') as any).showModal();
+		});
+		alert.onClick(() => {
+			(document.getElementById('alert') as any).close();
+			alert.destroy();
+		});
+	}
 
 	/**
 	 * Render the HTML

@@ -9,7 +9,7 @@
 		"prefer-object-spread": true,
 
 		"max-line-length": [true, 160],
-		"interface-name": [true, "always-prefix"],
+		"interface-name": [false],
 		"semicolon": [true, "always"],
 		"indent": [true, "tabs"],
 		"ter-indent": [true, "tab"],

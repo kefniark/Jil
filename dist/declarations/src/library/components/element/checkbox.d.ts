@@ -1,15 +1,19 @@
 import { VNode, Projector } from 'maquette';
-import { JilNode, Transform, Clickable, Factory } from '../../behaviours';
-export interface JilCheckbox extends JilNode, Factory, Transform, Clickable {
+import { JilNode, Transform, Clickable, Factory, ITransformParam, KeyboardEvents } from '../../behaviours';
+export interface JilCheckbox extends JilNode, Factory, Transform, Clickable, KeyboardEvents {
+}
+export interface JilCheckboxParams extends ITransformParam {
+    name?: string;
+    value?: string;
+    text?: string;
+    checked?: boolean;
 }
 export declare class JilCheckbox {
     this: any;
     name: any;
     value: any;
     text: any;
-    styles: any;
-    classnames: string;
     checked: boolean;
-    constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
+    constructor(id: string, params: JilCheckboxParams, parent: JilNode, projector: Projector | undefined);
     render(): VNode;
 }

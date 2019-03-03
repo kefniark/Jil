@@ -11,9 +11,6 @@ body {
 	height: 5vw;
 	font-size: 32px;
 	pointer-events: all;
-	backface-visibility: hidden;
-	cursor: pointer;
-	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 .scene img {

@@ -1,17 +1,23 @@
 import { VNode, Projector } from 'maquette';
-import { JilNode, Transform, TransformTween, Factory } from '../../behaviours';
+import { JilNode, Transform, TransformTween, Factory, ITransformParam } from '../../behaviours';
 import { JilTextCharacter, TextAnimationAnim } from './textCharacter';
+/**
+ * @ignore
+ */
 export declare const enum TextAnimationOrder {
     Order = "order",
     Reverse = "reverse",
     Shuffle = "shuffle"
 }
+/**
+ * @ignore
+ */
 export declare const enum TextAnimationSplit {
     Character = "character",
     Word = "word",
     All = "all"
 }
-export interface ITextAnimationParam {
+export interface TextAnimationParam {
     split?: TextAnimationSplit;
     order?: TextAnimationOrder;
     anim?: TextAnimationAnim;
@@ -20,13 +26,17 @@ export interface ITextAnimationParam {
 }
 export interface JilText extends JilNode, Factory, Transform, TransformTween {
 }
+/**
+ * @ignore
+ */
+export interface JilTextParams extends ITransformParam {
+    text?: string;
+}
 export declare class JilText {
     this: any;
     text: string;
-    styles: any;
-    classnames: string;
-    constructor(id: string, params: any, parent: JilNode, projector: Projector | undefined);
+    constructor(id: string, params: JilTextParams, parent: JilNode, projector: Projector | undefined);
     createCharacter: (id: string, params?: any) => JilTextCharacter;
-    animate(text: string, params: ITextAnimationParam): void;
+    animate(text: string, params: TextAnimationParam): void;
     render(): VNode;
 }

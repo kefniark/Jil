@@ -3,6 +3,7 @@ export declare class TransformTween {
     private moveTween;
     private rotateTween;
     private fadeTween;
+    private blurTween;
     private _moveTween;
     moveX(x?: number, duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
     moveY(y?: number, duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
@@ -13,4 +14,6 @@ export declare class TransformTween {
     toggle(duration?: number, autostart?: boolean, autokill?: boolean): void;
     private _rotateTween;
     rotate(rotate: number, duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
+    private _blurTween;
+    blurAnimation(blur: number, duration?: number, autostart?: boolean, autokill?: boolean): Fatina.ITween;
 }

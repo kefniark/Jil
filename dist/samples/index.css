@@ -17,6 +17,33 @@ body {
 	height: 100%;
 }
 
+.clickable {
+	pointer-events: all;
+}
+
+img.clickable {
+	cursor: pointer;
+}
+
+/* transform default */
+.scene, .scene div, .scene img, .scene button, .scene select {
+	width: 100%;
+	height: 100%;
+	display: block;
+	transform-origin: top left;
+	transform: 'translate(0, 0) scale(1, 1) rotate(0)';
+	opacity: 1;
+	will-change: transform, opacity;
+}
+
+.scene input[type=checkbox], .scene input[type=radio] {
+	display: block;
+	transform-origin: top left;
+	transform: 'translate(0, 0) scale(1, 1) rotate(0)';
+	opacity: 1;
+	will-change: transform, opacity;
+}
+
 .scene button {
 	position: absolute;
 	pointer-events: all;
@@ -36,7 +63,7 @@ input[type=checkbox], input[type=radio] {
 	pointer-events: all;
 }
 
-.scene label {
+.scene label.checkbox, .scene label.radio {
 	position: absolute;
 	pointer-events: all;
 }

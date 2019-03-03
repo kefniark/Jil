@@ -1,7 +1,7 @@
 import { JilNode } from '../core/node';
 import { getComponent } from '../../helpers';
 
-export interface ILayoutOption {
+export interface LayoutOption {
 	preferedWidth?: number;
 	preferedHeight?: number;
 	paddingWidth?: number;
@@ -13,7 +13,7 @@ export interface ILayoutOption {
 
 export class Layout {
 	public layout: string = 'default';
-	public layoutParams: ILayoutOption = {};
+	public layoutParams: LayoutOption = {};
 
 	public resetLayout () {
 		const node = getComponent<JilNode>(this);
@@ -27,7 +27,7 @@ export class Layout {
 		}
 	}
 
-	public setLayout (layout: string, params?: ILayoutOption) {
+	public setLayout (layout: string, params?: LayoutOption) {
 		this.layout = layout ? layout : this.layout;
 		this.layoutParams = params ? params : this.layoutParams;
 		this.refreshLayout();
