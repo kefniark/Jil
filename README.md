@@ -7,11 +7,6 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/jil.svg)](https://npmjs.org/package/jil)
 [![License](https://img.shields.io/npm/l/jil.svg)](https://npmjs.org/package/jil)
 
-[![NPM](https://nodei.co/npm/jil.png)](https://nodei.co/npm/jil/)
-
-* [**Demo**](https://kefniark.github.io/jil/dist/samples/)
-* [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
-
 ![Logo](./logo.png)
 
 ## **UI Framework for HTML5 Games**:
@@ -30,44 +25,27 @@ The idea behind **JIL** is to provide the best of both world, in a user friendly
    - Babylon.js
    - Pixi
    - Phaser
-   - Three.js
    - ...
 
-> This is still a project in **early development**
->
-> I plan later, to make a small editor to design scene UI and export them in `*.json`
-
 ---
 
-## Usage
-
-This library is exported with `UMD (Universal Module Definition)`:
-
-### CDN
-You can use directly in your webpage `https://cdn.jsdelivr.net/npm/jil@latest/dist/jil.min.js`
-
-and call ```jil.SceneManager.init()```
-
-### NPM
-Or install it through `npm` / `yarn`
-```sh
-npm install jil
-```
-
-and
-```ts
-import { SceneManager } from 'jil';
-
-SceneManager.init();
-```
----
+## Sample
+* [**Demo**](https://kefniark.github.io/jil/dist/samples/)
+* [**Sample Code**](./dist/samples/)
 
 ## How to use ?
 
-* [Getting Started !](./doc/getting_started.md)
-* [Sample Code](./dist/samples/)
-* [Jil Development](./doc/development.md)
+* [**Install JIL**](./doc/install.md)
+* [**Getting Started !**](./doc/getting_started.md)
+* [**API Doc**](https://kefniark.github.io/jil/dist/docs/)
+* [**Jil Development**](./doc/development.md)
 
 ---
 
-License: [**MIT**](./LICENSE.md)
+## Copyright and license
+
+Code and documentation copyright 2019 [Kefniark](https://github.com/kefniark)
+
+Code released under the [MIT License](./LICENSE.md).
+
+[![NPM](https://nodei.co/npm/jil.png)](https://nodei.co/npm/jil/)
