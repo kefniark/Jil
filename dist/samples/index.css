@@ -88,3 +88,7 @@ input[type=checkbox], input[type=radio] {
 .scene .canvas {
 	position: absolute;
 }
+
+dialog::backdrop {
+	background: linear-gradient(45deg, rgba(68, 68, 68, 0.5), rgba(29, 29, 29, 0.5));
+}

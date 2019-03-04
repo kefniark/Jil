@@ -159,9 +159,16 @@
 
 		panel.createText("textLabel6", "Dialogs:");
 		const alertBtn = panel.createPanel("panelProxy1").createButton("btn1", { text: "Alert", class: "is-primary", size: [0.8, 0.5], pivot: [0.5, 0.5], anchor: [0.5, 0.5], position: [0, -0.2] });
-		alertBtn.onClick(() => sceneIntro.alert('test'));
+		alertBtn.onClick(() => {
+			sceneIntro.alert('title', 'message')
+				.then(() => console.log('closed'));
+		});
 		const confirmBtn = panel.createPanel("panelProxy1").createButton("btn2", { text: "Confirm", class: "is-success", size: [0.8, 0.5], pivot: [0.5, 0.5], anchor: [0.5, 0.5], position: [0, -0.2] });
-		confirmBtn.onClick(() => console.log('btn2'));
+		confirmBtn.onClick(() => {
+			sceneIntro.confirm('title', 'message')
+				.then(() => console.log('closed OK'))
+				.catch(() => console.log('closed Cancel'))
+		});
 		panel.createText("textDialog1", " ");
 		panel.createText("textDialog2", " ");
 		panel.createText("textDialog3", " ");

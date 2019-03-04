@@ -2,27 +2,29 @@ import { JilNode, Transform, Factory, ITransformParam } from '../../behaviours';
 import { use } from 'typescript-mix';
 import { Projector, VNode, h } from 'maquette';
 import { JilButton, JilButtonParams } from '../element/button';
-import { getParam, getComponent } from '../../helpers';
+import { getParam } from '../../helpers';
 import { SyncEvent } from 'ts-events';
 import { resolution } from '../../config';
 
-export interface JilAlert extends JilNode, Transform, Factory { }
+export interface JilConfirm extends JilNode, Transform, Factory { }
 
 /**
  * @ignore
  */
-export interface JilAlertParams extends ITransformParam {
+export interface JilConfirmParams extends ITransformParam {
 	title?: string;
 	content?: string;
 }
 
-export class JilAlert {
+export class JilConfirm {
 	@use(JilNode, Transform, Factory) public this: any;
 
 	public title: string;
 	public content: string;
 	private okButton: JilButton;
+	private cancelButton: JilButton;
 	private clickEvent: SyncEvent<void>;
+	private cancelEvent: SyncEvent<void>;
 
 	constructor (id: string, params: ITransformParam, parent: JilNode, projector: Projector | undefined) {
 		this.id = id;
@@ -34,6 +36,7 @@ export class JilAlert {
 		this.resetTransform(params);
 
 		this.clickEvent = new SyncEvent<void>();
+		this.cancelEvent = new SyncEvent<void>();
 
 		this.title = getParam(params, 'title', 'Title');
 		this.content = getParam(params, 'content', 'Content');
@@ -45,9 +48,18 @@ export class JilAlert {
 			size: [0.2, 0.15],
 			anchor: [0.5, 1],
 			pivot: [0.5, 1],
-			position: [0, -0.35]
+			position: [0.15, -0.35]
 		});
 		this.okButton.onClick(() => this.clickEvent.post());
+
+		this.cancelButton = this.createButton('cancelBtn', {
+			text: 'Cancel',
+			size: [0.2, 0.15],
+			anchor: [0.5, 1],
+			pivot: [0.5, 1],
+			position: [-0.15, -0.35]
+		});
+		this.cancelButton.onClick(() => this.cancelEvent.post());
 	}
 
 	public show () {
@@ -63,6 +75,10 @@ export class JilAlert {
 
 	public onClick (cb: () => void) {
 		if (this.clickEvent) this.clickEvent.attach(cb);
+	}
+
+	public onCancel (cb: () => void) {
+		if (this.cancelEvent) this.cancelEvent.attach(cb);
 	}
 
 	private createButton = (id: string, params?: string | JilButtonParams) => this.createComponent('button', id, params) as JilButton;
@@ -90,7 +106,8 @@ export class JilAlert {
 			h('form', { method: 'dialog' }, [
 				h('p', { class: 'title' }, [ this.title ]),
 				h('p', {}, [ this.content ]),
-				this.okButton.render()
+				this.okButton.render(),
+				this.cancelButton.render()
 			])
 		]);
 	}

@@ -2,6 +2,7 @@ import { VNode, Projector } from 'maquette';
 import { JilNode, Transform, Factory, ITransformParam } from '../../behaviours';
 import { JilLayer } from './layer';
 import { JilAlert, JilAlertParams } from '../popup/alert';
+import { JilConfirm } from '../popup/confirm';
 export interface JilScene extends JilNode, Transform, Factory {
 }
 export declare class JilScene {
@@ -40,7 +41,9 @@ export declare class JilScene {
      */
     createLayer: (id: string, params?: ITransformParam | undefined) => JilLayer;
     createAlertPopup: (id: string, params?: JilAlertParams | undefined) => JilAlert;
-    alert(title: string, msg: string): void;
+    createConfirmPopup: (id: string, params?: JilAlertParams | undefined) => JilConfirm;
+    alert(title: string, msg: string): Promise<{}>;
+    confirm(title: string, msg: string): Promise<{}>;
     /**
      * Render the HTML
      * @ignore

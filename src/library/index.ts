@@ -1,7 +1,7 @@
 import { SceneManager } from './sceneManager';
 import {
 	JilPanel, JilLayer, JilCanvas,
-	JilButton, JilImage, JilText, JilRadio, JilCheckbox, JilSelect, JilInput, JilAlert
+	JilButton, JilImage, JilText, JilRadio, JilCheckbox, JilSelect, JilInput, JilAlert, JilConfirm
 } from './components';
 import {
 	registerComponent, registerLayout, registerClassname,
@@ -23,6 +23,7 @@ registerComponent('text', JilText);
 registerComponent('select', JilSelect);
 registerComponent('input', JilInput);
 registerComponent('alert', JilAlert);
+registerComponent('confirm', JilConfirm);
 
 // register layout
 registerLayout('default', defaultLayout);

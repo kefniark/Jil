@@ -11,6 +11,7 @@ import { JilRadio, JilRadioParams } from '../element/radio';
 import { JilCheckbox, JilCheckboxParams } from '../element/checkbox';
 import { JilSelect, JilSelectParams } from '../element/select';
 import { JilInput, JilInputParams } from '../element/input';
+import { JilAlertParams, JilAlert } from '../popup/alert';
 
 export interface JilLayer extends JilNode, Transform, Factory, TransformTween { }
 

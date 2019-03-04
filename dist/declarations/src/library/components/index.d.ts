@@ -10,3 +10,4 @@ export { JilCheckbox } from './element/checkbox';
 export { JilSelect } from './element/select';
 export { JilInput } from './element/input';
 export { JilAlert } from './popup/alert';
+export { JilConfirm } from './popup/confirm';

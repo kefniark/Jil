@@ -5,6 +5,7 @@ import { JilNode, Transform, Factory, ITransformParam } from '../../behaviours';
 import { resolution } from '../../config';
 import { JilLayer } from './layer';
 import { JilAlert, JilAlertParams } from '../popup/alert';
+import { JilConfirm } from '../popup/confirm';
 
 export interface JilScene extends JilNode, Transform, Factory { }
 
@@ -69,16 +70,34 @@ export class JilScene {
 	 */
 	public createLayer = (id: string, params?: ITransformParam) => this.createComponent('layer', id, params) as JilLayer;
 	public createAlertPopup = (id: string, params?: JilAlertParams) => this.createComponent('alert', id, params) as JilAlert;
+	public createConfirmPopup = (id: string, params?: JilAlertParams) => this.createComponent('confirm', id, params) as JilConfirm;
 
 	public alert (title: string, msg: string) {
-		const alert = this.createAlertPopup('alert', { title, content: msg });
-		alert.onLoad(() => {
-			// tslint:disable-next-line:no-console
-			(document.getElementById('alert') as any).showModal();
+		return new Promise((resolve, reject) => {
+			const alert = this.createAlertPopup('alert', { title, content: msg });
+			alert.onLoad(() => alert.show());
+			alert.onClick(() => {
+				alert.hide();
+				alert.destroy();
+				resolve();
+			});
 		});
-		alert.onClick(() => {
-			(document.getElementById('alert') as any).close();
-			alert.destroy();
+	}
+
+	public confirm (title: string, msg: string) {
+		return new Promise((resolve, reject) => {
+			const confirm = this.createConfirmPopup('confirm', { title, content: msg });
+			confirm.onLoad(() => confirm.show());
+			confirm.onClick(() => {
+				confirm.hide();
+				confirm.destroy();
+				resolve();
+			});
+			confirm.onCancel(() => {
+				confirm.hide();
+				confirm.destroy();
+				reject();
+			});
 		});
 	}
 

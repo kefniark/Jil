@@ -3825,6 +3825,7 @@ class JilScene {
          */
         this.createLayer = (id, params) => this.createComponent('layer', id, params);
         this.createAlertPopup = (id, params) => this.createComponent('alert', id, params);
+        this.createConfirmPopup = (id, params) => this.createComponent('confirm', id, params);
         this.id = id;
         this._projector = projector;
         this.resetNode('scene');
@@ -3866,14 +3867,30 @@ class JilScene {
         this.refresh();
     }
     alert(title, msg) {
-        const alert = this.createAlertPopup('alert', { title, content: msg });
-        alert.onLoad(() => {
-            // tslint:disable-next-line:no-console
-            document.getElementById('alert').showModal();
+        return new Promise((resolve, reject) => {
+            const alert = this.createAlertPopup('alert', { title, content: msg });
+            alert.onLoad(() => alert.show());
+            alert.onClick(() => {
+                alert.hide();
+                alert.destroy();
+                resolve();
+            });
         });
-        alert.onClick(() => {
-            document.getElementById('alert').close();
-            alert.destroy();
+    }
+    confirm(title, msg) {
+        return new Promise((resolve, reject) => {
+            const confirm = this.createConfirmPopup('confirm', { title, content: msg });
+            confirm.onLoad(() => confirm.show());
+            confirm.onClick(() => {
+                confirm.hide();
+                confirm.destroy();
+                resolve();
+            });
+            confirm.onCancel(() => {
+                confirm.hide();
+                confirm.destroy();
+                reject();
+            });
         });
     }
     /**
@@ -4506,6 +4523,8 @@ var input_1 = __webpack_require__(/*! ./element/input */ "./src/library/componen
 exports.JilInput = input_1.JilInput;
 var alert_1 = __webpack_require__(/*! ./popup/alert */ "./src/library/components/popup/alert.ts");
 exports.JilAlert = alert_1.JilAlert;
+var confirm_1 = __webpack_require__(/*! ./popup/confirm */ "./src/library/components/popup/confirm.ts");
+exports.JilConfirm = confirm_1.JilConfirm;
 
 
 /***/ }),
@@ -4531,6 +4550,7 @@ const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modul
 const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
 const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
 const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
 class JilAlert {
     constructor(id, params, parent, projector) {
         this.createButton = (id, params) => this.createComponent('button', id, params);
@@ -4544,20 +4564,45 @@ class JilAlert {
         this.clickEvent = new ts_events_1.SyncEvent();
         this.title = helpers_1.getParam(params, 'title', 'Title');
         this.content = helpers_1.getParam(params, 'content', 'Content');
-        this.size.set(0.8, 0.5);
+        this.size.set(0.6, 0.5);
         this.okButton = this.createButton('okBtn', {
             text: 'OK',
-            size: [0.2, 0.2],
+            size: [0.2, 0.15],
             anchor: [0.5, 1],
-            pivot: [0.5, 1]
+            pivot: [0.5, 1],
+            position: [0, -0.35]
         });
         this.okButton.onClick(() => this.clickEvent.post());
+    }
+    show() {
+        document.getElementById(this.id).showModal();
+        document.getElementById(this.id).focus();
+        this.node.nodeEvent.post('show');
+    }
+    hide() {
+        document.getElementById(this.id).close();
+        this.node.nodeEvent.post('hide');
     }
     onClick(cb) {
         if (this.clickEvent)
             this.clickEvent.attach(cb);
     }
     render() {
+        const styles = {};
+        styles.display = this.enable ? 'block' : 'none';
+        styles.opacity = this.opacity.toString();
+        // tslint:disable-next-line
+        const size = (typeof (window) !== 'undefined') ? { x: window.innerWidth, y: window.innerHeight } : { x: 1, y: 1 };
+        const screenRatio = size.x / size.y;
+        const gameRatio = config_1.resolution.x / config_1.resolution.y;
+        const scaleX = size.x / config_1.resolution.x;
+        const scaleY = size.y / config_1.resolution.y;
+        const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
+        styles.width = `${config_1.resolution.x * this.size.x}px`;
+        styles.height = `${config_1.resolution.y * this.size.y}px`;
+        // styles.transformOrigin = 'center center';
+        styles.transform = `scale(${scale})`;
+        this.styles = styles;
         return maquette_1.h('dialog', this.getProperties({}), [
             maquette_1.h('form', { method: 'dialog' }, [
                 maquette_1.h('p', { class: 'title' }, [this.title]),
@@ -4571,6 +4616,111 @@ __decorate([
     typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory)
 ], JilAlert.prototype, "this", void 0);
 exports.JilAlert = JilAlert;
+
+
+/***/ }),
+
+/***/ "./src/library/components/popup/confirm.ts":
+/*!*************************************************!*\
+  !*** ./src/library/components/popup/confirm.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const behaviours_1 = __webpack_require__(/*! ../../behaviours */ "./src/library/behaviours/index.ts");
+const typescript_mix_1 = __webpack_require__(/*! typescript-mix */ "./node_modules/typescript-mix/dist/index.js");
+const maquette_1 = __webpack_require__(/*! maquette */ "./node_modules/maquette/dist/maquette.umd.js");
+const helpers_1 = __webpack_require__(/*! ../../helpers */ "./src/library/helpers/index.ts");
+const ts_events_1 = __webpack_require__(/*! ts-events */ "./node_modules/ts-events/dist/lib/index.js");
+const config_1 = __webpack_require__(/*! ../../config */ "./src/library/config.ts");
+class JilConfirm {
+    constructor(id, params, parent, projector) {
+        this.createButton = (id, params) => this.createComponent('button', id, params);
+        this.id = id;
+        this._parent = parent;
+        this._projector = projector;
+        this.resetNode('dialog');
+        if (!params)
+            params = {};
+        this.resetTransform(params);
+        this.clickEvent = new ts_events_1.SyncEvent();
+        this.cancelEvent = new ts_events_1.SyncEvent();
+        this.title = helpers_1.getParam(params, 'title', 'Title');
+        this.content = helpers_1.getParam(params, 'content', 'Content');
+        this.size.set(0.6, 0.5);
+        this.okButton = this.createButton('okBtn', {
+            text: 'OK',
+            size: [0.2, 0.15],
+            anchor: [0.5, 1],
+            pivot: [0.5, 1],
+            position: [0.15, -0.35]
+        });
+        this.okButton.onClick(() => this.clickEvent.post());
+        this.cancelButton = this.createButton('cancelBtn', {
+            text: 'Cancel',
+            size: [0.2, 0.15],
+            anchor: [0.5, 1],
+            pivot: [0.5, 1],
+            position: [-0.15, -0.35]
+        });
+        this.cancelButton.onClick(() => this.cancelEvent.post());
+    }
+    show() {
+        document.getElementById(this.id).showModal();
+        document.getElementById(this.id).focus();
+        this.node.nodeEvent.post('show');
+    }
+    hide() {
+        document.getElementById(this.id).close();
+        this.node.nodeEvent.post('hide');
+    }
+    onClick(cb) {
+        if (this.clickEvent)
+            this.clickEvent.attach(cb);
+    }
+    onCancel(cb) {
+        if (this.cancelEvent)
+            this.cancelEvent.attach(cb);
+    }
+    render() {
+        const styles = {};
+        styles.display = this.enable ? 'block' : 'none';
+        styles.opacity = this.opacity.toString();
+        // tslint:disable-next-line
+        const size = (typeof (window) !== 'undefined') ? { x: window.innerWidth, y: window.innerHeight } : { x: 1, y: 1 };
+        const screenRatio = size.x / size.y;
+        const gameRatio = config_1.resolution.x / config_1.resolution.y;
+        const scaleX = size.x / config_1.resolution.x;
+        const scaleY = size.y / config_1.resolution.y;
+        const scale = (screenRatio <= gameRatio) ? scaleX : scaleY;
+        styles.width = `${config_1.resolution.x * this.size.x}px`;
+        styles.height = `${config_1.resolution.y * this.size.y}px`;
+        // styles.transformOrigin = 'center center';
+        styles.transform = `scale(${scale})`;
+        this.styles = styles;
+        return maquette_1.h('dialog', this.getProperties({}), [
+            maquette_1.h('form', { method: 'dialog' }, [
+                maquette_1.h('p', { class: 'title' }, [this.title]),
+                maquette_1.h('p', {}, [this.content]),
+                this.okButton.render(),
+                this.cancelButton.render()
+            ])
+        ]);
+    }
+}
+__decorate([
+    typescript_mix_1.use(behaviours_1.JilNode, behaviours_1.Transform, behaviours_1.Factory)
+], JilConfirm.prototype, "this", void 0);
+exports.JilConfirm = JilConfirm;
 
 
 /***/ }),
@@ -4810,6 +4960,7 @@ behaviours_1.registerComponent('text', components_1.JilText);
 behaviours_1.registerComponent('select', components_1.JilSelect);
 behaviours_1.registerComponent('input', components_1.JilInput);
 behaviours_1.registerComponent('alert', components_1.JilAlert);
+behaviours_1.registerComponent('confirm', components_1.JilConfirm);
 // register layout
 behaviours_1.registerLayout('default', behaviours_1.defaultLayout);
 behaviours_1.registerLayout('vertical', behaviours_1.verticalLayout);
