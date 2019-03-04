@@ -10,10 +10,11 @@ To design the UI of your project, you need to understand Jil structure.
 
  > Scene -> Layer -> Components
 
-1. The whole game is split in `Scene`. Usually you will have few of them (`intro`, `menu`, `game`, `result`) but this is up to you to define which one you want
-2. Each `Scene` contains `Layer`. Usually something like (`background`, `canvas`, `ui`, `effect`) but once again it's up to you to define which one you want
+1. The whole game is split in `Scene`. Usually you will have few of them (`intro`, `menu`, `game`, `result`). You can see them as independant pages.
+2. Each `Scene` contains `Layer`. Usually something like (`background`, `canvas`, `ui`, `effect`). You can imaging them as Photoshop layer, and it's just for you to structure your scene.
 3. `Layer` can contains many UI component, or `Panel` (a container of component)
 
+## Resolution
 At the beginning, you need to initialize the UI and need to define your native resolution.
 ```ts
 jil.SceneManager.init(1280, 720);
