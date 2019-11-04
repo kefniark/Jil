@@ -3,7 +3,7 @@ import { EntityStore, IEntityData } from "kaaya";
 import { TransformComponent } from "./transform";
 import { Component } from "./component";
 import { Event } from "coopa";
-import { ImageComponent, IImageData, ButtonComponent, PanelComponent } from "../../components/ui";
+import { ImageComponent, IImageData, ButtonComponent, PanelComponent, IPanelData } from "../../components/ui";
 import { IGridLayoutData, GridLayoutComponent } from "../../components/layout";
 export interface IGameObjectData extends IEntityData {
     classnames: string[];
@@ -32,7 +32,7 @@ export declare class GameObject {
     getComponent<T extends Component>(id: string): T | undefined;
     created(): void;
     deleted(): void;
-    createPanel(): PanelComponent;
+    createPanel(params?: Partial<IPanelData>): PanelComponent;
     createImage(params?: Partial<IImageData>): ImageComponent;
     createImageComponent(params?: Partial<IImageData>): ImageComponent;
     createButton(): ButtonComponent;

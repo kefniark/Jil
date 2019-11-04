@@ -4201,12 +4201,12 @@ class GameObject {
             this.store.delete(childId);
         }
     }
-    createPanel() {
+    createPanel(params = {}) {
         const id = uid$1();
         const panelId = uid$1();
         this.store.create("gameobject", { id, parentId: this.gameobject.id });
         this.store.create("transform", { parentId: id });
-        this.store.create("panel", { id: panelId, parentId: id });
+        this.store.create("panel", Object.assign({ id: panelId, parentId: id }, params));
         return this.store.getEntity(panelId);
     }
     createImage(params = {}) {
