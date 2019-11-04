@@ -1,31 +1,39 @@
 {
 	"compilerOptions": {
-		// build
-		"lib": [
-			"es2015",
-			"dom"
-		],
-		"target": "es6",
+		"typeRoots": ["node_modules/@types"],
+		"lib": ["esnext", "dom"],
+		"target": "esnext",
+		"outDir": "./lib",
+		"types": ["node"],
 		"module": "commonjs",
-		// build settings
+		"baseUrl": ".",
+		"paths": {
+			"@components/*": ["src/components/*"],
+			"@core/*": ["src/core/*"]
+		},
+
 		"sourceMap": true,
 		"pretty": true,
+		"declaration": true,
 		"preserveConstEnums": true,
-		"removeComments": false,
-		// strict
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+
 		"strict": true,
 		"alwaysStrict": true,
-		"noResolve": false,
-		"noImplicitAny": false,
-		"experimentalDecorators": true,
-		"isolatedModules": false
+		"strictPropertyInitialization": false,
+		"noEmit": false,
+		"importHelpers": false,
+		"noEmitHelpers": false,
+		"noEmitOnError": true,
+		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"esModuleInterop": true
 	},
-	"include":[
-		"./src/**/*",
-		"./tests/**/*"
-	],
-	"exclude": [
-		"./node_modules",
-		"./dist"
-	]
+	"include": ["./src/**/*"],
+	"exclude": ["./tests/**/*", "./node_modules", "./build", "./docs"]
 }

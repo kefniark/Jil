@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="../build/jil.umd.js"></script>
+		<style>
+			html,
+			body {
+				margin: 0;
+				background-color: black;
+			}
+
+			#app {
+				width: 100vw;
+				height: calc(100vh - 2px);
+			}
+
+			#window {
+				background-color: darkslategray;
+				overflow: hidden;
+				user-select: none;
+			}
+
+			#window div {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				cursor: auto;
+				will-change: transform;
+				pointer-events: none;
+			}
+
+			#window button {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				cursor: pointer;
+				pointer-events: all;
+			}
+
+			#window img {
+				position: absolute;
+				image-rendering: pixelated;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+
+			.disabled {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app"></div>
+
+		<script>
+			const win = jil.initialize(document.getElementById("app"))
+
+			const scene1 = win.createScene("Scene1")
+			const scene2 = win.createScene("Scene2")
+			// scene2.gameobject.enable = false
+			scene2.gameobject.createImage({
+				src: "https://hdqwalls.com/download/gradient-geometry-background-abstract-lu-1280x720.jpg"
+			})
+
+			const panel1 = scene1.gameobject.createPanel()
+			panel1.gameobject.createImage({ src: "https://i.ytimg.com/vi/_OjPCcbmWj8/maxresdefault.jpg" })
+
+			const panelGrid = panel1.gameobject.createPanel()
+			panelGrid.gameobject.createImage()
+			panelGrid.gameobject.createImage()
+			const grid = panelGrid.gameobject.createGridLayout({
+				col: 2,
+				row: 2
+			})
+
+			for (var i = 1; i < 10; i++) {
+				const a = i
+				setTimeout(() => {
+					panelGrid.gameobject.createImage()
+
+					if (a === 3) {
+						grid.col = 3
+						grid.row = 3
+					} else if (a === 8) {
+						grid.col = 4
+						grid.row = 4
+					}
+
+					if (a < 5) {
+						panelGrid.gameobject.shake()
+					} else {
+						panelGrid.gameobject.wobble()
+					}
+				}, i * 2000)
+			}
+
+			function CreateCorner(parent, level) {
+				const imgTL = parent.gameobject.createImage()
+				imgTL.transform.position.setPx(0, 0)
+				imgTL.transform.size.setPx(350, 350)
+				imgTL.transform.anchor.set(0, 0)
+				imgTL.transform.pivot.set(0, 0)
+				imgTL.transform.scale.set(1, 1)
+				if (level > 0) CreateCorner(imgTL, level - 1)
+
+				const imgTR = parent.gameobject.createImage()
+				imgTR.transform.position.setPx(0, 0)
+				imgTR.transform.size.setPx(350, 350)
+				imgTR.transform.anchor.set(1, 0)
+				imgTR.transform.pivot.set(1, 0)
+				imgTR.transform.scale.set(1, 1)
+				if (level > 0) CreateCorner(imgTR, level - 1)
+
+				const imgC = parent.gameobject.createImage()
+				imgC.transform.position.setPx(0, 0)
+				imgC.transform.size.setPx(350, 350)
+				imgC.transform.anchor.set(0.5, 0.5)
+				imgC.transform.pivot.set(0.5, 0.5)
+				imgC.transform.scale.set(1, 1)
+				if (level > 0) CreateCorner(imgC, level - 1)
+
+				const btn = imgC.gameobject.createButton()
+				btn.transform.size.setPx(512, 128)
+
+				const imgBL = parent.gameobject.createImage()
+				imgBL.transform.position.setPx(0, 0)
+				imgBL.transform.size.setPx(350, 350)
+				imgBL.transform.anchor.set(0, 1)
+				imgBL.transform.pivot.set(0, 1)
+				imgBL.transform.scale.set(1, 1)
+				if (level > 0) CreateCorner(imgBL, level - 1)
+
+				const imgBR = parent.gameobject.createImage()
+				imgBR.transform.position.setPx(0, 0)
+				imgBR.transform.size.setPx(350, 350)
+				imgBR.transform.anchor.set(1, 1)
+				imgBR.transform.pivot.set(1, 1)
+				imgBR.transform.scale.set(1, 1)
+				if (level > 0) CreateCorner(imgBR, level - 1)
+
+				if (level >= 2) {
+					imgC.gameobject
+						.tween()
+						.to({ opacity: 0 }, 250 + Math.random() * 500)
+						.yoyo(10)
+						.start()
+
+					for (var sprite of [imgTL, imgTR, imgC, imgBL, imgBR]) {
+						sprite.transform.rotation
+							.tween()
+							.to({ x: 90, z: 360 }, 10000)
+							.yoyo(5)
+							.start()
+						sprite.transform.scale
+							.tween()
+							.to({ x: 1.25, y: 1.25 }, 3000)
+							.yoyo(5)
+							.start()
+					}
+				}
+			}
+
+			CreateCorner(panel1, 2)
+
+			// const img2 = img1.gameobject.createImage()
+			// // img2.transform.anchor.x = 0.25
+			// img2.transform.anchor.y = 0.75
+			// // img2.transform.position.x = 0.5
+			// // img2.transform.position.y = 0
+			// img2.transform.rotation.z = 30
+			// img2.transform.scale.x = 0.5
+			// img2.transform.scale.y = 0.5
+
+			// const img3 = img2.gameobject.createImage()
+			// // img3.transform.anchor.x = 0.25
+			// img3.transform.anchor.y = 0.75
+			// // img3.transform.position.x = 0.5
+			// // img3.transform.position.y = 0
+			// img3.transform.rotation.z = 30
+			// img3.transform.scale.x = 0.5
+			// img3.transform.scale.y = 0.5
+
+			// img2.transform.rotation
+			// 	.tween()
+			// 	.to({ z: 90 }, 5000)
+			// 	.yoyo(5)
+			// 	.start()
+
+			// img3.transform
+			// 	.rotateTo({ z: 90 }, 5000)
+			// 	.yoyo(5)
+			// 	.start()
+			console.log(win)
+		</script>
+	</body>
+</html>
